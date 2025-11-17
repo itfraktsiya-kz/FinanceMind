@@ -13,7 +13,8 @@
     <div class="app-container" id="appContainer">
         <!-- App Header - Only shown after login -->
         <div class="app-header" id="appHeader" style="display: none;">
-            <div class="app-title">FinanceMind</div>
+            <div class="header-title" id="headerTitle">Аналитика</div>
+            <div class="header-subtitle" id="headerSubtitle">Анализ ваших финансовых привычек</div>
             <div class="header-actions">
                 <div class="header-icon" onclick="forceSync()" title="Синхронизировать">
                     <i class="fas fa-sync-alt"></i>
@@ -136,14 +137,14 @@
                 <div class="card instruction-card" onclick="showInstructionModal()">
                     <div class="card-header">
                         <i class="fas fa-book"></i>
-                        <h3 data-translate="instructionsTitle">📚 Инструкция по использованию</h3>
+                        <h3 data-translate="instructionsTitle">Инструкция по использованию</h3>
                     </div>
                     <p>Нажмите, чтобы ознакомиться с руководством по использованию приложения</p>
                 </div>
 
                 <!-- Статистика расходов -->
                 <div class="section-header">
-                    <div class="section-title">📊 Ваша статистика</div>
+                    <div class="section-title">Ваша статистика</div>
                 </div>
                 <div class="expense-stats" id="expenseStats">
                     <!-- Статистика будет обновляться динамически -->
@@ -151,7 +152,7 @@
 
                 <!-- Цели -->
                 <div class="section-header">
-                    <div class="section-title" data-translate="myGoals">🎯 Мои цели</div>
+                    <div class="section-title" data-translate="myGoals">Мои цели</div>
                     <button class="btn btn-primary add-goal-btn" onclick="openGoalModal()">
                         <i class="fas fa-plus"></i>
                         <span data-translate="addButton">Добавить</span>
@@ -176,7 +177,6 @@
             <div class="page analytics-page" id="analytics" style="display: none;">
                 <div class="section-header">
                     <div class="section-title" data-translate="analyticsNav">Аналитика</div>
-                    <div class="view-all">Анализ ваших финансовых привычек</div>
                 </div>
 
                 <!-- Статистика -->
@@ -225,7 +225,7 @@
                 <!-- История расходов -->
                 <div class="expense-history">
                     <div class="section-header">
-                        <div class="section-title" data-translate="recentExpenses">📋 Последние расходы</div>
+                        <div class="section-title" data-translate="recentExpenses">Последние расходы</div>
                     </div>
                     <div class="expense-list" id="expenseList">
                         <!-- Расходы будут добавляться динамически -->
@@ -238,7 +238,7 @@
 
                 <!-- Добавление расхода -->
                 <div class="add-expense-form">
-                    <h3 class="section-title" data-translate="addExpenseTitle">➕ Добавить новый расход</h3>
+                    <h3 class="section-title" data-translate="addExpenseTitle">Добавить новый расход</h3>
                     <div class="form-row">
                         <div class="form-col">
                             <div class="form-group">
@@ -288,7 +288,7 @@
                 <!-- Отчеты -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title" data-translate="reportsSection">📊 Отчеты и данные</h3>
+                        <h3 class="card-title" data-translate="reportsSection">Отчеты и данные</h3>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <button onclick="generateMonthlyReport()" class="btn btn-primary">
@@ -307,7 +307,6 @@
             <div class="page missions-page" id="missions" style="display: none;">
                 <div class="section-header">
                     <div class="section-title" data-translate="missionsNav">Миссии</div>
-                    <div class="view-all">Зарабатывайте FinCoins, выполняя задания</div>
                 </div>
 
                 <!-- Баланс -->
@@ -330,7 +329,6 @@
             <div class="page store-page" id="store" style="display: none;">
                 <div class="section-header">
                     <div class="section-title">Магазин</div>
-                    <div class="view-all">Тратьте FinCoins на полезные функции</div>
                 </div>
 
                 <!-- Баланс -->
@@ -345,7 +343,7 @@
 
                 <!-- Премиум подписка -->
                 <div class="store-category">
-                    <h3 class="store-category-title" data-translate="premiumSubscription">👑 Премиум подписка</h3>
+                    <h3 class="store-category-title" data-translate="premiumSubscription">Премиум подписка</h3>
                     <div class="store-item premium-item">
                         <div class="store-item-header">
                             <div class="store-icon">
@@ -373,7 +371,7 @@
 
                 <!-- Премиум функции -->
                 <div class="store-category">
-                    <h3 class="store-category-title" data-translate="premiumFeatures">🚀 Премиум функции</h3>
+                    <h3 class="store-category-title" data-translate="premiumFeatures">Премиум функции</h3>
                     
                     <div class="store-item">
                         <div class="store-item-header">
@@ -423,7 +421,7 @@
 
                 <!-- Персонализация -->
                 <div class="store-category">
-                    <h3 class="store-category-title" data-translate="personalization">🎨 Персонализация</h3>
+                    <h3 class="store-category-title" data-translate="personalization">Персонализация</h3>
                     
                     <div class="store-item">
                         <div class="store-item-header">
@@ -473,7 +471,6 @@
             <div class="page settings-page" id="settings" style="display: none;">
                 <div class="section-header">
                     <div class="section-title">Настройки</div>
-                    <div class="view-all">Управление вашим аккаунтом</div>
                 </div>
 
                 <!-- Профиль -->
@@ -490,7 +487,7 @@
 
                 <!-- Управление аккаунтом -->
                 <div class="settings-section">
-                    <h3 class="settings-section-title" data-translate="accountManagement">👤 Управление аккаунтом</h3>
+                    <h3 class="settings-section-title" data-translate="accountManagement">Управление аккаунтом</h3>
                     
                     <div class="settings-item" onclick="showProfileSection('personal')">
                         <div class="settings-item-left">
@@ -521,7 +518,7 @@
 
                 <!-- Персональные данные -->
                 <div class="profile-section" id="personalSection" style="display: none;">
-                    <h3 class="section-title" data-translate="personalData">📝 Персональные данные</h3>
+                    <h3 class="section-title" data-translate="personalData">Персональные данные</h3>
                     <div class="form-group">
                         <label data-translate="nameLabel">Имя</label>
                         <input type="text" id="profileNameInput" value="Мансур">
@@ -539,7 +536,7 @@
 
                 <!-- Безопасность -->
                 <div class="profile-section" id="securitySection" style="display: none;">
-                    <h3 class="section-title" data-translate="securitySettings">🔐 Безопасность</h3>
+                    <h3 class="section-title" data-translate="securitySettings">Безопасность</h3>
                     
                     <div class="security-item">
                         <div class="security-info">
@@ -560,7 +557,7 @@
 
                 <!-- Системные настройки -->
                 <div class="settings-section">
-                    <h3 class="settings-section-title" data-translate="systemSettings">⚙️ Системные настройки</h3>
+                    <h3 class="settings-section-title" data-translate="systemSettings">Системные настройки</h3>
                     
                     <div class="settings-item">
                         <div class="settings-item-left">
@@ -615,14 +612,13 @@
             <div class="page chat-page" id="chat" style="display: none;">
                 <div class="section-header">
                     <div class="section-title" data-translate="chatNav">ИИ Ассистент</div>
-                    <div class="view-all">Ваш персональный финансовый помощник</div>
                 </div>
 
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message message-ai">
                             <div class="message-content">
-                                Привет! Я ваш AI-помощник по финансам. 🤖<br>
+                                Привет! Я ваш AI-помощник по финансам.<br>
                                 Могу помочь с анализом расходов, советами по экономии и финансовым планированием.
                             </div>
                         </div>
@@ -665,14 +661,14 @@
                 </div>
 
                 <div class="admin-section">
-                    <h3 class="admin-section-title" data-translate="missionManagement">🎯 Управление миссиями</h3>
+                    <h3 class="admin-section-title" data-translate="missionManagement">Управление миссиями</h3>
                     <div class="mission-management" id="missionManagement">
                         <!-- Миссии для управления будут добавляться динамически -->
                     </div>
                 </div>
 
                 <div class="admin-section">
-                    <h3 class="admin-section-title" data-translate="userProgress">👥 Прогресс пользователей</h3>
+                    <h3 class="admin-section-title" data-translate="userProgress">Прогресс пользователей</h3>
                     <div class="user-progress" id="userProgress">
                         <!-- Прогресс пользователей будет добавляться динамически -->
                     </div>
@@ -750,7 +746,7 @@
     <div class="modal-overlay" id="instructionModal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">📚 Инструкция по использованию FinanceMind</h3>
+                <h3 class="modal-title">Инструкция по использованию FinanceMind</h3>
                 <button class="modal-close" onclick="closeInstructionModal()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -829,3 +825,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
