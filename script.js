@@ -42,6 +42,11 @@ const translations = {
         noExpensesText: "У вас пока нет расходов",
         noExpensesChartText: "Нет данных для отображения",
         noExpensesPieText: "Нет данных для отображения",
+        monthlyReportText: "Месячный отчет",
+        advancedAnalyticsText: "Расширенная аналитика",
+        exportDataText: "Экспорт данных",
+        importDataText: "Импорт данных",
+        shareReportText: "Поделиться отчетом",
         
         // Миссии
         yourFincoinsText: "Ваши FinCoins:",
@@ -104,6 +109,11 @@ const translations = {
         noExpensesText: "You don't have expenses yet",
         noExpensesChartText: "No data to display",
         noExpensesPieText: "No data to display",
+        monthlyReportText: "Monthly Report",
+        advancedAnalyticsText: "Advanced Analytics",
+        exportDataText: "Export Data",
+        importDataText: "Import Data",
+        shareReportText: "Share Report",
         
         // Missions
         yourFincoinsText: "Your FinCoins:",
@@ -138,19 +148,92 @@ const translations = {
         goalDeadlineLabel: "Goal Deadline",
         addGoalBtnText: "Add Goal",
         deleteGoalText: "Delete"
+    },
+    kz: {
+        // Навигация
+        homeNavText: "Басты",
+        analyticsNavText: "Аналитика", 
+        gamificationNavText: "Геймификация",
+        aiAssistantNavText: "ЖС Көмекші",
+        
+        // Дашборд
+        yourFinances: "Сіздің қаржыңыз",
+        addGoalText: "Қосу",
+        noGoalsText: "Сізде әлі қаржылық мақсаттар жоқ",
+        
+        // Аналитика
+        expenseTrendTitle: "Шығындар динамикасы",
+        totalExpensesText: "Жалпы шығындар",
+        byCategoriesText: "Санаттар бойынша", 
+        categoryDistributionTitle: "Санаттар бойынша үлестіру",
+        expenseHistoryTitle: "Соңғы шығындар",
+        addExpenseTitle: "Жаңа шығын қосу",
+        amountLabel: "Сома",
+        dateLabel: "Күні",
+        categoryLabel: "Санат",
+        commentLabel: "Түсініктеме",
+        addExpenseBtn: "Шығын қосу",
+        noExpensesText: "Сізде әлі шығындар жоқ",
+        noExpensesChartText: "Көрсету үшін деректер жоқ",
+        noExpensesPieText: "Көрсету үшін деректер жоқ",
+        monthlyReportText: "Айлық есеп",
+        advancedAnalyticsText: "Кеңейтілген аналитика",
+        exportDataText: "Деректерді экспорттау",
+        importDataText: "Деректерді импорттау",
+        shareReportText: "Есеппен бөлісу",
+        
+        // Миссии
+        yourFincoinsText: "Сіздің FinCoins:",
+        storeText: "Дүкен",
+        
+        // Магазин
+        yourFincoinsStoreText: "Сіздің FinCoins:",
+        earnText: "Табу",
+        premiumSubscriptionTitle: "Премиум жазылым",
+        premiumItemTitle: "FinanceMind Premium",
+        premiumBadge: "PREMIUM",
+        premiumSubscriptionDesc: "Барлық премиум функцияларға қол жеткізіңіз",
+        premiumFeaturesTitle: "Премиум функциялар",
+        extendedAnalyticsTitle: "Кеңейтілген аналитика",
+        popularText: "Танымал",
+        extendedAnalyticsDesc: "Егжей-тегжейлі есептер мен шығындар болжамы",
+        aiCoachTitle: "Жеке ЖС жаттықтырушысы",
+        aiCoachDesc: "Жеке қаржылық ұсыныстар",
+        personalizationTitle: "Жекелендіру", 
+        exclusiveThemesTitle: "Эксклюзивті темалар",
+        exclusiveThemesDesc: "5 бірегей түс схемасы",
+        iconPackTitle: "Белгішелер жинағы",
+        iconPackDesc: "Шығындар санаттары үшін стильді белгішелер",
+        buyPremiumText: "Премиумды белсендіру",
+        buyNowText: "Қазір сатып алу",
+        
+        // Цели
+        addGoalTitle: "Жаңа мақсат қосу",
+        goalNameLabel: "Мақсат атауы",
+        goalAmountLabel: "Мақсат сомасы", 
+        goalCurrentLabel: "Ағымдағы сома",
+        goalDeadlineLabel: "Мақсат мерзімі",
+        addGoalBtnText: "Мақсат қосу",
+        deleteGoalText: "Жою"
     }
 };
 
-// Миссии приложения
+// Миссии приложения (увеличил до 15 миссий)
 const appMissions = [
+    // Базовые миссии
     {
         id: 1,
         title: "Экономия на еде",
         description: "Сэкономьте ₸3000 на продуктах за 3 дней",
         reward: 100,
         difficulty: "medium",
+        category: "economy",
         condition: (userData) => {
-            return true;
+            const threeDaysAgo = new Date();
+            threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+            const recentExpenses = userData.expenses.filter(e => new Date(e.date) >= threeDaysAgo);
+            const total = recentExpenses.reduce((sum, e) => sum + e.amount, 0);
+            return total < 3000;
         },
         progress: (userData) => {
             const threeDaysAgo = new Date();
@@ -167,15 +250,16 @@ const appMissions = [
     },
     {
         id: 2,
-        title: "Меньше развлечений",
-        description: "Потратьте на 10% меньше на развлечения в этом месяце",
-        reward: 75,
+        title: "Первая цель",
+        description: "Создайте свою первую финансовую цель",
+        reward: 50,
         difficulty: "easy",
+        category: "goals",
         condition: (userData) => {
-            return true;
+            return userData.goals.length >= 1;
         },
         progress: (userData) => {
-            return userData.goals.length >= 1 ? 100 : 50;
+            return userData.goals.length >= 1 ? 100 : 0;
         },
         requirements: [
             "Создайте хотя бы одну финансовую цель",
@@ -188,22 +272,25 @@ const appMissions = [
         description: "Отложите 10% от вашего дохода в этом месяце",
         reward: 120,
         difficulty: "medium",
+        category: "savings",
         condition: (userData) => {
-            return true;
+            return userData.goals.some(goal => goal.currentAmount > 0);
         },
         progress: (userData) => {
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            const foodExpenses = userData.expenses.filter(e => 
-                e.category === "Еда" && new Date(e.date) >= weekAgo
-            );
-            const total = foodExpenses.reduce((sum, e) => sum + e.amount, 0);
-            const progress = Math.max(0, Math.min(100, 100 - (total / 5000) * 100));
+            const totalSaved = userData.goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+            const monthlyExpenses = userData.expenses
+                .filter(e => {
+                    const date = new Date(e.date);
+                    const now = new Date();
+                    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                })
+                .reduce((sum, e) => sum + e.amount, 0);
+            const progress = monthlyExpenses > 0 ? Math.min(100, (totalSaved / monthlyExpenses) * 10) : 0;
             return progress;
         },
         requirements: [
-            "Потратьте менее ₸5000 на еду за последнюю неделю",
-            "Сократите расходы на питание вне дома"
+            "Накопите 10% от месячных расходов",
+            "Начните откладывать деньги регулярно"
         ]
     },
     {
@@ -212,20 +299,16 @@ const appMissions = [
         description: "Проверьте аналитику расходов 3 дня подряд",
         reward: 150,
         difficulty: "hard",
+        category: "analytics",
         condition: (userData) => {
-            return true;
+            return userData.expenses.length >= 10;
         },
         progress: (userData) => {
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            const entertainmentExpenses = userData.expenses.filter(e => 
-                e.category === "Развлечения" && new Date(e.date) >= weekAgo
-            );
-            return entertainmentExpenses.length === 0 ? 100 : 30;
+            return Math.min(100, (userData.expenses.length / 10) * 100);
         },
         requirements: [
-            "Не тратьте деньги на развлечения в течение недели",
-            "Найдите бесплатные альтернативы развлечениям"
+            "Добавьте не менее 10 расходов",
+            "Регулярно отслеживайте свои траты"
         ]
     },
     {
@@ -234,19 +317,341 @@ const appMissions = [
         description: "Создайте и выполните свою первую финансовую цель",
         reward: 200,
         difficulty: "hard",
+        category: "goals",
         condition: (userData) => {
-            return true;
+            return userData.goals.some(goal => goal.currentAmount >= goal.targetAmount);
         },
         progress: (userData) => {
             const completedGoals = userData.goals.filter(goal => goal.currentAmount >= goal.targetAmount);
-            return completedGoals.length > 0 ? 100 : 20;
+            return completedGoals.length > 0 ? 100 : 0;
         },
         requirements: [
             "Выполните хотя бы одну финансовую цель",
             "Достигните целевой суммы накоплений"
         ]
+    },
+    // Новые миссии
+    {
+        id: 6,
+        title: "Эксперт по бюджету",
+        description: "Создайте бюджет на месяц и придерживайтесь его",
+        reward: 180,
+        difficulty: "medium",
+        category: "budget",
+        condition: (userData) => {
+            const monthlyExpenses = getCurrentMonthExpenses(userData.expenses);
+            return monthlyExpenses < 50000; // Пример лимита бюджета
+        },
+        progress: (userData) => {
+            const monthlyExpenses = getCurrentMonthExpenses(userData.expenses);
+            const progress = Math.max(0, 100 - (monthlyExpenses / 50000) * 100);
+            return progress;
+        },
+        requirements: [
+            "Не превышайте бюджет в ₸50,000 за месяц",
+            "Планируйте расходы заранее"
+        ]
+    },
+    {
+        id: 7,
+        title: "Инвестор-новичок",
+        description: "Изучите основы инвестирования и создайте инвестиционный план",
+        reward: 250,
+        difficulty: "hard",
+        category: "investment",
+        condition: (userData) => {
+            return userData.goals.some(goal => goal.name.toLowerCase().includes('инвест') || goal.name.toLowerCase().includes('investment'));
+        },
+        progress: (userData) => {
+            const investmentGoals = userData.goals.filter(goal => 
+                goal.name.toLowerCase().includes('инвест') || goal.name.toLowerCase().includes('investment')
+            );
+            return investmentGoals.length > 0 ? 100 : 30;
+        },
+        requirements: [
+            "Создайте инвестиционную цель",
+            "Изучите основы финансовых рынков"
+        ]
+    },
+    {
+        id: 8,
+        title: "Экономист месяца",
+        description: "Сократите расходы на 20% по сравнению с прошлым месяцем",
+        reward: 300,
+        difficulty: "hard",
+        category: "economy",
+        condition: (userData) => {
+            const currentMonthExpenses = getCurrentMonthExpenses(userData.expenses);
+            const lastMonthExpenses = getLastMonthExpenses(userData.expenses);
+            return lastMonthExpenses > 0 && currentMonthExpenses < lastMonthExpenses * 0.8;
+        },
+        progress: (userData) => {
+            const currentMonthExpenses = getCurrentMonthExpenses(userData.expenses);
+            const lastMonthExpenses = getLastMonthExpenses(userData.expenses);
+            const progress = lastMonthExpenses > 0 ? Math.min(100, ((lastMonthExpenses - currentMonthExpenses) / lastMonthExpenses) * 100) : 0;
+            return progress;
+        },
+        requirements: [
+            "Сократите расходы на 20%",
+            "Анализируйте категории трат"
+        ]
+    },
+    {
+        id: 9,
+        title: "Планировщик",
+        description: "Запланируйте расходы на неделю вперед",
+        reward: 80,
+        difficulty: "easy",
+        category: "planning",
+        condition: (userData) => {
+            return userData.expenses.some(expense => {
+                const expenseDate = new Date(expense.date);
+                const today = new Date();
+                const weekFromNow = new Date(today);
+                weekFromNow.setDate(today.getDate() + 7);
+                return expenseDate > today && expenseDate <= weekFromNow;
+            });
+        },
+        progress: (userData) => {
+            const plannedExpenses = userData.expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                const today = new Date();
+                const weekFromNow = new Date(today);
+                weekFromNow.setDate(today.getDate() + 7);
+                return expenseDate > today && expenseDate <= weekFromNow;
+            });
+            return plannedExpenses.length > 0 ? 100 : 0;
+        },
+        requirements: [
+            "Запланируйте хотя бы один расход на будущую неделю",
+            "Используйте функцию планирования расходов"
+        ]
+    },
+    {
+        id: 10,
+        title: "Финансовый консультант",
+        description: "Помогите 3 друзьям с финансовым планированием",
+        reward: 400,
+        difficulty: "hard",
+        category: "social",
+        condition: (userData) => {
+            return userData.fincoins >= 1000; // Предположим, что это показатель активности
+        },
+        progress: (userData) => {
+            return Math.min(100, (userData.fincoins / 1000) * 100);
+        },
+        requirements: [
+            "Достигните 1000 FinCoins",
+            "Будьте активны в приложении"
+        ]
+    },
+    {
+        id: 11,
+        title: "Ранняя пташка",
+        description: "Ведите учет расходов 7 дней подряд",
+        reward: 120,
+        difficulty: "medium",
+        category: "consistency",
+        condition: (userData) => {
+            return hasConsecutiveDays(userData.expenses, 7);
+        },
+        progress: (userData) => {
+            return Math.min(100, (getMaxConsecutiveDays(userData.expenses) / 7) * 100);
+        },
+        requirements: [
+            "Добавляйте расходы 7 дней подряд",
+            "Не пропускайте дни учета"
+        ]
+    },
+    {
+        id: 12,
+        title: "Категорийный эксперт",
+        description: "Используйте все 5 основных категорий расходов",
+        reward: 150,
+        difficulty: "medium",
+        category: "organization",
+        condition: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            const baseCategories = ['Еда', 'Транспорт', 'Учеба', 'Развлечения', 'Другое'];
+            return baseCategories.every(cat => categories.includes(cat));
+        },
+        progress: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            const baseCategories = ['Еда', 'Транспорт', 'Учеба', 'Развлечения', 'Другое'];
+            const usedCategories = baseCategories.filter(cat => categories.includes(cat));
+            return (usedCategories.length / baseCategories.length) * 100;
+        },
+        requirements: [
+            "Используйте все основные категории расходов",
+            "Правильно categorizeруйте все траты"
+        ]
+    },
+    {
+        id: 13,
+        title: "Экономия на транспорте",
+        description: "Потратьте на 30% меньше на транспорт в этом месяце",
+        reward: 200,
+        difficulty: "medium",
+        category: "transport",
+        condition: (userData) => {
+            const currentTransport = getCurrentMonthExpensesByCategory(userData.expenses, 'Транспорт');
+            const lastTransport = getLastMonthExpensesByCategory(userData.expenses, 'Транспорт');
+            return lastTransport > 0 && currentTransport < lastTransport * 0.7;
+        },
+        progress: (userData) => {
+            const currentTransport = getCurrentMonthExpensesByCategory(userData.expenses, 'Транспорт');
+            const lastTransport = getLastMonthExpensesByCategory(userData.expenses, 'Транспорт');
+            const progress = lastTransport > 0 ? Math.min(100, ((lastTransport - currentTransport) / lastTransport) * 100) : 0;
+            return progress;
+        },
+        requirements: [
+            "Сократите транспортные расходы на 30%",
+            "Используйте альтернативные способы передвижения"
+        ]
+    },
+    {
+        id: 14,
+        title: "Развлекательный бюджет",
+        description: "Не превышайте лимит в ₸10,000 на развлечения в месяц",
+        reward: 180,
+        difficulty: "medium",
+        category: "entertainment",
+        condition: (userData) => {
+            const entertainmentExpenses = getCurrentMonthExpensesByCategory(userData.expenses, 'Развлечения');
+            return entertainmentExpenses <= 10000;
+        },
+        progress: (userData) => {
+            const entertainmentExpenses = getCurrentMonthExpensesByCategory(userData.expenses, 'Развлечения');
+            const progress = Math.max(0, 100 - (entertainmentExpenses / 10000) * 100);
+            return progress;
+        },
+        requirements: [
+            "Уложитесь в бюджет на развлечения",
+            "Контролируйте спонтанные траты"
+        ]
+    },
+    {
+        id: 15,
+        title: "Финансовый гуру",
+        description: "Выполните 10 различных миссий",
+        reward: 500,
+        difficulty: "hard",
+        category: "mastery",
+        condition: (userData) => {
+            return userData.completedMissions && userData.completedMissions.length >= 10;
+        },
+        progress: (userData) => {
+            const completedCount = userData.completedMissions ? userData.completedMissions.length : 0;
+            return Math.min(100, (completedCount / 10) * 100);
+        },
+        requirements: [
+            "Выполните 10 различных миссий",
+            "Пройдите все этапы финансового развития"
+        ]
     }
 ];
+
+// Вспомогательные функции для миссий
+function getCurrentMonthExpenses(expenses) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    
+    return expenses
+        .filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === currentMonth && 
+                   expenseDate.getFullYear() === currentYear;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+}
+
+function getLastMonthExpenses(expenses) {
+    const currentDate = new Date();
+    const lastMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
+    const lastMonthYear = currentDate.getMonth() === 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+    
+    return expenses
+        .filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === lastMonth && 
+                   expenseDate.getFullYear() === lastMonthYear;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+}
+
+function getCurrentMonthExpensesByCategory(expenses, category) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    
+    return expenses
+        .filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === currentMonth && 
+                   expenseDate.getFullYear() === currentYear &&
+                   expense.category === category;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+}
+
+function getLastMonthExpensesByCategory(expenses, category) {
+    const currentDate = new Date();
+    const lastMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
+    const lastMonthYear = currentDate.getMonth() === 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+    
+    return expenses
+        .filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === lastMonth && 
+                   expenseDate.getFullYear() === lastMonthYear &&
+                   expense.category === category;
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0);
+}
+
+function hasConsecutiveDays(expenses, days) {
+    const dates = [...new Set(expenses.map(e => e.date))].sort();
+    let consecutive = 1;
+    
+    for (let i = 1; i < dates.length; i++) {
+        const prevDate = new Date(dates[i-1]);
+        const currentDate = new Date(dates[i]);
+        const diffTime = Math.abs(currentDate - prevDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+            consecutive++;
+            if (consecutive >= days) return true;
+        } else {
+            consecutive = 1;
+        }
+    }
+    
+    return false;
+}
+
+function getMaxConsecutiveDays(expenses) {
+    const dates = [...new Set(expenses.map(e => e.date))].sort();
+    let maxConsecutive = 1;
+    let currentConsecutive = 1;
+    
+    for (let i = 1; i < dates.length; i++) {
+        const prevDate = new Date(dates[i-1]);
+        const currentDate = new Date(dates[i]);
+        const diffTime = Math.abs(currentDate - prevDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+            currentConsecutive++;
+            maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+        } else {
+            currentConsecutive = 1;
+        }
+    }
+    
+    return maxConsecutive;
+}
 
 // ========== ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
 
@@ -305,7 +710,7 @@ function logoutAndReset() {
     if (bottomNav) bottomNav.style.display = 'none';
     if (dashboard) dashboard.style.display = 'none';
     
-    const pages = ['analytics', 'missions', 'store', 'settings', 'chat'];
+    const pages = ['analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
     pages.forEach(page => {
         const pageElement = document.getElementById(page);
         if (pageElement) {
@@ -326,6 +731,7 @@ function register() {
     const name = document.getElementById('regName').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
+    const role = document.getElementById('regRole').value;
     
     if (!name || !email || !password) {
         showNotification('Пожалуйста, заполните все поля', 'error');
@@ -349,10 +755,11 @@ function register() {
         name: name,
         email: email,
         password: password,
+        role: role,
         createdAt: new Date().toISOString(),
         profile: {
             lastName: '',
-            role: 'Пользователь'
+            role: role === 'admin' ? 'Администратор' : 'Пользователь'
         },
         settings: {
             language: 'ru',
@@ -437,6 +844,11 @@ function showAppInterface() {
     document.getElementById('appHeader').style.display = 'flex';
     document.getElementById('bottomNav').style.display = 'flex';
     
+    // Показать кнопку админа если пользователь админ
+    if (currentUser && currentUser.role === 'admin') {
+        document.getElementById('adminButton').style.display = 'flex';
+    }
+    
     // Инициализация языка при показе интерфейса
     initLanguage();
     showPage('dashboard');
@@ -447,7 +859,7 @@ function showAppInterface() {
 function showPage(page) {
     console.log('Переключение на страницу:', page);
     
-    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat'];
+    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
     mainPages.forEach(p => {
         const pageElement = document.getElementById(p);
         if (pageElement) {
@@ -510,7 +922,8 @@ function updatePageTitle(page) {
         'missions': 'Миссии',
         'store': 'Магазин',
         'settings': 'Настройки',
-        'chat': 'AI Помощник'
+        'chat': 'AI Помощник',
+        'adminPanel': 'Админ панель'
     };
     
     const pageTitleElement = document.getElementById('pageTitle');
@@ -539,6 +952,9 @@ function updatePageContent(page) {
         case 'chat':
             updateChat();
             break;
+        case 'adminPanel':
+            updateAdminPanel();
+            break;
     }
 }
 
@@ -554,7 +970,6 @@ function updateAnalytics() {
     updateExpenseStats();
     updateCharts();
     updateExpenseList();
-    addReportButtons();
 }
 
 function updateMissions() {
@@ -581,6 +996,15 @@ function updateChat() {
         setTimeout(() => {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }, 100);
+    }
+}
+
+function updateAdminPanel() {
+    if (currentUser && currentUser.role === 'admin') {
+        loadAdminData();
+    } else {
+        showNotification('Доступ запрещен. Только для администраторов.', 'error');
+        showPage('dashboard');
     }
 }
 
@@ -618,7 +1042,7 @@ function saveUserData() {
             completedMissions: missions.filter(m => m.completed).map(m => m.id),
             hasPremiumSubscription: purchasedItems.includes('premium_subscription'),
             settings: {
-                language: 'ru',
+                language: currentLanguage,
                 theme: 'light',
                 currency: '₸',
                 notifications: true
@@ -1255,61 +1679,123 @@ function renderMissions() {
         return;
     }
     
-    missionsList.innerHTML = appMissions.map(mission => {
-        const userData = {
-            expenses: expenses,
-            goals: goals,
-            fincoins: fincoins
-        };
+    // Группировка миссий по категориям
+    const missionsByCategory = {};
+    appMissions.forEach(mission => {
+        if (!missionsByCategory[mission.category]) {
+            missionsByCategory[mission.category] = [];
+        }
+        missionsByCategory[mission.category].push(mission);
+    });
+    
+    let missionsHTML = '';
+    
+    Object.keys(missionsByCategory).forEach(category => {
+        const categoryMissions = missionsByCategory[category];
+        const categoryTitle = getCategoryTitle(category);
         
-        const progress = mission.progress(userData);
-        const isCompleted = mission.condition(userData);
-        const difficultyColors = {
-            'easy': '#48BB78',
-            'medium': '#ED8936',
-            'hard': '#E53E3E'
-        };
-        
-        return `
-            <div class="mission-item">
-                <div class="mission-icon">
-                    <i class="fas fa-${getMissionIcon(mission.id)}"></i>
+        missionsHTML += `
+            <div class="mission-category">
+                <h3 class="mission-category-title">${categoryTitle}</h3>
+                <div class="mission-category-list">
+                    ${categoryMissions.map(mission => {
+                        const userData = {
+                            expenses: expenses,
+                            goals: goals,
+                            fincoins: fincoins,
+                            completedMissions: missions.filter(m => m.completed).map(m => m.id)
+                        };
+                        
+                        const progress = mission.progress(userData);
+                        const isCompleted = mission.condition(userData);
+                        const difficultyColors = {
+                            'easy': '#48BB78',
+                            'medium': '#ED8936',
+                            'hard': '#E53E3E'
+                        };
+                        
+                        const isNew = mission.id > 10; // Новые миссии
+                        const isPopular = mission.reward >= 200;
+                        
+                        return `
+                            <div class="mission-item">
+                                <div class="mission-icon">
+                                    <i class="fas fa-${getMissionIcon(mission.id)}"></i>
+                                </div>
+                                <div class="mission-info">
+                                    <div class="mission-title">
+                                        ${mission.title}
+                                        ${isNew ? '<span class="mission-badge badge-new">НОВАЯ</span>' : ''}
+                                        ${isPopular ? '<span class="mission-badge badge-popular">ПОПУЛЯРНАЯ</span>' : ''}
+                                    </div>
+                                    <div class="mission-description">${mission.description}</div>
+                                    <div class="mission-reward">
+                                        Награда: ${mission.reward} FinCoins • 
+                                        <span style="color: ${difficultyColors[mission.difficulty]}">
+                                            ${getDifficultyText(mission.difficulty)}
+                                        </span>
+                                    </div>
+                                    <div class="mission-progress" style="margin-top: 8px;">
+                                        <div style="background: #E2E8F0; height: 4px; border-radius: 2px; overflow: hidden;">
+                                            <div style="background: #4F6DFF; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                        <div style="font-size: 12px; color: #718096; text-align: right; margin-top: 4px;">
+                                            ${Math.round(progress)}% выполнено
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="mission-action" 
+                                        onclick="completeMission(${mission.id})"
+                                        ${!isCompleted ? 'disabled' : ''}>
+                                    ${isCompleted ? 'Получить награду' : 'В процессе'}
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
                 </div>
-                <div class="mission-info">
-                    <div class="mission-title">${mission.title}</div>
-                    <div class="mission-description">${mission.description}</div>
-                    <div class="mission-reward">
-                        Награда: ${mission.reward} FinCoins • 
-                        <span style="color: ${difficultyColors[mission.difficulty]}">
-                            ${getDifficultyText(mission.difficulty)}
-                        </span>
-                    </div>
-                    <div class="mission-progress" style="margin-top: 8px;">
-                        <div style="background: #E2E8F0; height: 4px; border-radius: 2px; overflow: hidden;">
-                            <div style="background: #4F6DFF; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
-                        </div>
-                        <div style="font-size: 12px; color: #718096; text-align: right; margin-top: 4px;">
-                            ${Math.round(progress)}% выполнено
-                        </div>
-                    </div>
-                </div>
-                <button class="mission-action" 
-                        onclick="completeMission(${mission.id})"
-                        style="${isCompleted ? '' : 'opacity: 0.6; cursor: not-allowed;'}">
-                    ${isCompleted ? 'Получить награду' : 'В процессе'}
-                </button>
             </div>
         `;
-    }).join('');
+    });
+    
+    missionsList.innerHTML = missionsHTML;
+}
+
+function getCategoryTitle(category) {
+    const titles = {
+        'economy': 'Экономия',
+        'goals': 'Цели',
+        'savings': 'Накопления',
+        'analytics': 'Аналитика',
+        'budget': 'Бюджет',
+        'investment': 'Инвестиции',
+        'planning': 'Планирование',
+        'social': 'Социальные',
+        'consistency': 'Регулярность',
+        'organization': 'Организация',
+        'transport': 'Транспорт',
+        'entertainment': 'Развлечения',
+        'mastery': 'Мастерство'
+    };
+    return titles[category] || category;
 }
 
 function getMissionIcon(missionId) {
     const icons = {
         1: 'utensils',
-        2: 'gamepad',
+        2: 'bullseye',
         3: 'piggy-bank',
         4: 'chart-line',
-        5: 'bullseye'
+        5: 'trophy',
+        6: 'chart-pie',
+        7: 'chart-bar',
+        8: 'money-bill-wave',
+        9: 'calendar-check',
+        10: 'users',
+        11: 'calendar-day',
+        12: 'tags',
+        13: 'bus',
+        14: 'gamepad',
+        15: 'crown'
     };
     return icons[missionId] || 'star';
 }
@@ -1330,11 +1816,23 @@ function completeMission(missionId) {
     const userData = {
         expenses: expenses,
         goals: goals,
-        fincoins: fincoins
+        fincoins: fincoins,
+        completedMissions: missions.filter(m => m.completed).map(m => m.id)
     };
     
     if (mission.condition(userData)) {
         addFincoins(mission.reward);
+        
+        // Отмечаем миссию как выполненную
+        if (!missions.find(m => m.id === missionId)) {
+            missions.push({
+                id: missionId,
+                completed: true,
+                completedAt: new Date().toISOString()
+            });
+        }
+        
+        saveUserData();
         showNotification(`Миссия "${mission.title}" выполнена! Получено ${mission.reward} FinCoins`, 'success');
         updateMissionsProgress();
     } else {
@@ -1421,28 +1919,64 @@ function sendMessage() {
 function getAIResponse(message) {
     const lowerMessage = message.toLowerCase();
     
-    if (lowerMessage.includes('привет') || lowerMessage.includes('здравствуй')) {
+    // Базовые приветствия
+    if (lowerMessage.includes('привет') || lowerMessage.includes('здравствуй') || lowerMessage.includes('салем') || lowerMessage.includes('hello')) {
         return "Привет! Я ваш AI-помощник по финансам. Чем могу помочь?";
     }
     
-    if (lowerMessage.includes('расход') || lowerMessage.includes('трат')) {
+    // Вопросы о расходах
+    if (lowerMessage.includes('расход') || lowerMessage.includes('трат') || lowerMessage.includes('шығын')) {
         return "Чтобы добавить расход, перейдите в раздел 'Аналитика' и заполните форму внизу страницы. Не забудьте выбрать категорию расхода!";
     }
     
-    if (lowerMessage.includes('цел') || lowerMessage.includes('накоп')) {
+    // Вопросы о целях
+    if (lowerMessage.includes('цел') || lowerMessage.includes('накоп') || lowerMessage.includes('мақсат')) {
         return "Финансовые цели помогают планировать будущее. Вы можете добавить цель на главной странице, нажав кнопку 'Добавить' в разделе 'Мои цели'.";
     }
     
-    if (lowerMessage.includes('совет') || lowerMessage.includes('рекомендац')) {
+    // Советы и рекомендации
+    if (lowerMessage.includes('совет') || lowerMessage.includes('рекомендац') || lowerMessage.includes('кеңес')) {
         return getFinancialAdvice();
     }
     
-    if (lowerMessage.includes('бюджет') || lowerMessage.includes('планирован')) {
-        return "Для эффективного планирования бюджета рекомендую:\n1. Отслеживайте все расходы\n2. Установите лимиты по категориям\n3. Регулярно анализируйте статистику\n4. Корректируйте план по необходимости";
+    // Бюджет и планирование
+    if (lowerMessage.includes('бюджет') || lowerMessage.includes('планирован') || lowerMessage.includes('бюджет')) {
+        return getBudgetAdvice();
     }
     
-    if (lowerMessage.includes('экономи') || lowerMessage.includes('сэконом')) {
-        return "Способы экономии:\n• Планируйте покупки заранее\n• Используйте кэшбэк и скидки\n• Готовьте дома вместо кафе\n• Отказывайтесь от импульсных покупок\n• Сравнивайте цены перед покупкой";
+    // Экономия
+    if (lowerMessage.includes('экономи') || lowerMessage.includes('сэконом') || lowerMessage.includes('үнемдеу')) {
+        return getSavingAdvice();
+    }
+    
+    // Инвестиции
+    if (lowerMessage.includes('инвест') || lowerMessage.includes('вложен') || lowerMessage.includes('инвестиция')) {
+        return getInvestmentAdvice();
+    }
+    
+    // Кредиты и долги
+    if (lowerMessage.includes('кредит') || lowerMessage.includes('долг') || lowerMessage.includes('несие')) {
+        return getDebtAdvice();
+    }
+    
+    // Накопления
+    if (lowerMessage.includes('сбережен') || lowerMessage.includes('копил') || lowerMessage.includes('жинақтау')) {
+        return getSavingsAdvice();
+    }
+    
+    // Финансовая грамотность
+    if (lowerMessage.includes('грамотност') || lowerMessage.includes('финансов') || lowerMessage.includes('сауаттылық')) {
+        return getFinancialLiteracyAdvice();
+    }
+    
+    // Пенсия и будущее
+    if (lowerMessage.includes('пенси') || lowerMessage.includes('будущ') || lowerMessage.includes('зейнет')) {
+        return getRetirementAdvice();
+    }
+    
+    // Миссии и геймификация
+    if (lowerMessage.includes('мисси') || lowerMessage.includes('задан') || lowerMessage.includes('миссия')) {
+        return "Миссии помогут вам развивать хорошие финансовые привычки! Перейдите в раздел 'Геймификация', чтобы увидеть доступные миссии и заработать FinCoins.";
     }
     
     const defaultResponses = [
@@ -1456,6 +1990,7 @@ function getAIResponse(message) {
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 }
 
+// Новые функции для расширенных ответов AI
 function getFinancialAdvice() {
     const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
     const foodExpenses = expenses
@@ -1470,7 +2005,9 @@ function getFinancialAdvice() {
         "Регулярно пересматривайте подписки и регулярные платежи - отмените неиспользуемые сервисы.",
         "Используйте кэшбэк-сервисы и программы лояльности для возврата части потраченных средств.",
         "Планируйте питание на неделю вперед и покупайте продукты по списку - это снизит расходы на еду.",
-        "Установите финансовые цели на разные сроки: краткосрочные (1-3 месяца), среднесрочные (1-2 года) и долгосрочные (5+ лет)."
+        "Установите финансовые цели на разные сроки: краткосрочные (1-3 месяца), среднесрочные (1-2 года) и долгосрочные (5+ лет).",
+        "Ведите ежедневный учет расходов - это поможет выявить незаметные, но регулярные траты.",
+        "Используйте технику 'нужное vs желанное' перед каждой покупкой для принятия взвешенных решений."
     ];
     
     if (foodExpenses > totalExpenses * 0.4) {
@@ -1482,6 +2019,215 @@ function getFinancialAdvice() {
     }
     
     return adviceList[Math.floor(Math.random() * adviceList.length)];
+}
+
+function getBudgetAdvice() {
+    return `Для эффективного планирования бюджета рекомендую:
+
+1. 📊 ОТСЛЕЖИВАЙТЕ ВСЕ РАСХОДЫ
+• Записывайте каждую трату, даже мелкую
+• Используйте категории для анализа
+• Регулярно проверяйте статистику
+
+2. 🎯 УСТАНОВИТЕ ЛИМИТЫ ПО КАТЕГОРИЯМ
+• Определите разумные лимиты для каждой категории
+• Корректируйте их по мере необходимости
+• Используйте правило 50/30/20 как ориентир
+
+3. 📈 АНАЛИЗИРУЙТЕ И КОРРЕКТИРУЙТЕ
+• Еженедельно проверяйте прогресс
+• Выявляйте проблемные зоны
+• Адаптируйте бюджет под изменения
+
+4. 💡 ИСПОЛЬЗУЙТЕ ТЕХНОЛОГИИ
+• Автоматизируйте учет расходов
+• Настройте уведомления о приближении к лимитам
+• Используйте мобильные приложения для контроля`;
+}
+
+function getSavingAdvice() {
+    return `Эффективные способы экономии:
+
+🍽️ НА ПИТАНИИ:
+• Планируйте меню на неделю
+• Покупайте продукты по списку
+• Готовьте дома вместо кафе
+• Покупайте сезонные продукты
+• Используйте скидки и акции разумно
+
+🚗 НА ТРАНСПОРТЕ:
+• Используйте общественный транспорт
+• Объединяйте поездки
+• Рассмотрите каршеринг вместо такси
+• Регулярно обслуживайте автомобиль
+
+🏠 НА КОММУНАЛЬНЫХ УСЛУГАХ:
+• Установите энергосберегающие приборы
+• Выключайте свет и электроприборы
+• Оптимизируйте использование воды
+• Утеплите окна и двери
+
+🎮 НА РАЗВЛЕЧЕНИЯХ:
+• Ищите бесплатные мероприятия
+• Используйте студенческие скидки
+• Планируйте развлечения заранее
+• Отдавайте предпочтение активному отдыху`;
+}
+
+function getInvestmentAdvice() {
+    return `Основы инвестирования для начинающих:
+
+1. 📚 ОБРАЗОВАНИЕ ПРЕЖДЕ ВСЕГО
+• Изучите базовые понятия: акции, облигации, ETF
+• Понимайте риски и доходность
+• Начните с консервативных инструментов
+
+2. 💰 НАЧНИТЕ С МАЛОГО
+• Не вкладывайте последние деньги
+• Начните с суммы, которую не страшно потерять
+• Диверсифицируйте инвестиции
+
+3. ⏰ ДОЛГОСРОЧНЫЙ ПОДХОД
+• Инвестируйте регулярно
+• Не поддавайтесь панике при колебаниях рынка
+• Реинвестируйте доходы
+
+4. 🛡️ УПРАВЛЕНИЕ РИСКАМИ
+• Диверсификация - ключ к успеху
+• Соотносите риск с временным горизонтом
+• Имейте финансовую подушку безопасности
+
+5. 🔄 РЕГУЛЯРНЫЙ АНАЛИЗ
+• Пересматривайте портфель раз в квартал
+• Адаптируйте стратегию под изменения
+• Фиксируйте прибыль при необходимости`;
+}
+
+function getDebtAdvice() {
+    return `Стратегии управления долгами:
+
+1. 📋 СОСТАВЬТЕ ПОЛНЫЙ СПИСОК ДОЛГОВ
+• Запишите все кредиты и займы
+• Укажите суммы, проценты и сроки
+• Определите ежемесячные платежи
+
+2. 🎯 ВЫБЕРИТЕ СТРАТЕГИЮ ПОГАШЕНИЯ
+• Метод снежного кома: начинайте с мелких долгов
+• Метод лавины: сначала высокопроцентные долги
+• Выберите то, что мотивирует вас больше
+
+3. 💸 УВЕЛИЧЬТЕ ПЛАТЕЖИ
+• Направляйте дополнительные доходы на погашение
+• Сократите расходы для увеличения платежей
+• Рассмотрите рефинансирование под меньший процент
+
+4. 🚫 ИЗБЕГАЙТЕ НОВЫХ ДОЛГОВ
+• Откажитесь от импульсных покупок
+• Создайте бюджет и придерживайтесь его
+• Стройте финансовую подушку безопасности
+
+5. 📞 ОБРАЩАЙТЕСЬ ЗА ПОМОЩЬЮ
+• Консультируйтесь с финансовыми советниками
+• Рассмотрите кредитные консультации
+• Не стесняйтесь просить о реструктуризации`;
+}
+
+function getSavingsAdvice() {
+    return `Эффективные стратегии накоплений:
+
+1. 🎯 ПОСТАВЬТЕ КОНКРЕТНЫЕ ЦЕЛИ
+• Определите, на что копите
+• Установите четкие сроки
+• Разбейте большие цели на этапы
+
+2. 💰 АВТОМАТИЗИРУЙТЕ НАКОПЛЕНИЯ
+• Настройте автоматические переводы
+• Используйте правило 'сначала заплати себе'
+• Откладывайте сразу после получения дохода
+
+3. 📊 ОПТИМИЗИРУЙТЕ РАСХОДЫ
+• Проанализируйте текущие траты
+• Найдите возможности для сокращения
+• Направляйте сэкономленные средства на накопления
+
+4. 🏦 ВЫБИРАЙТЕ ПРАВИЛЬНЫЕ ИНСТРУМЕНТЫ
+• Накопительные счета для краткосрочных целей
+• Депозиты для среднесрочных целей
+• Инвестиции для долгосрочных целей
+
+5. 📈 РЕГУЛЯРНО ПЕРЕСМАТРИВАЙТЕ
+• Корректируйте цели по мере необходимости
+• Увеличивайте суммы накоплений при росте доходов
+• Празднуйте достижение промежуточных целей`;
+}
+
+function getFinancialLiteracyAdvice() {
+    return `Путь к финансовой грамотности:
+
+1. 📖 ОСНОВНЫЕ ПОНЯТИЯ
+• Изучите базовые финансовые термины
+• Понимайте разницу между активами и пассивами
+• Разберитесь в понятиях инфляции и процентов
+
+2. 💼 ЛИЧНЫЙ БЮДЖЕТ
+• Научитесь составлять реалистичный бюджет
+• Освойте методы учета расходов
+• Практикуйтесь в планировании на разные периоды
+
+3. 🏦 БАНКОВСКИЕ ПРОДУКТЫ
+• Изучите виды банковских счетов
+• Разберитесь в кредитных продуктах
+• Понимайте условия депозитов и инвестиций
+
+4. 📊 НАЛОГИ И ОТЧЕТНОСТЬ
+• Узнайте о своих налоговых обязательствах
+• Изучите налоговые вычеты и льготы
+• Научитесь заполнять базовые отчеты
+
+5. 🔄 ПОСТОЯННОЕ ОБУЧЕНИЕ
+• Читайте финансовую литературу
+• Посещайте семинары и курсы
+• Следите за экономическими новостями
+
+6. 🤝 ПРАКТИКА И ОПЫТ
+• Начинайте с малого
+• Учитесь на своих ошибках
+• Консультируйтесь с профессионалами`;
+}
+
+function getRetirementAdvice() {
+    return `Планирование пенсии и будущего:
+
+1. ⏰ НАЧНИТЕ РАНЬШЕ
+• Чем раньше начнете, тем меньше нужно откладывать
+• Используйте сложный процент в свою пользу
+• Даже небольшие суммы имеют значение
+
+2. 💰 ОПРЕДЕЛИТЕ ЦЕЛЕВУЮ СУММУ
+• Рассчитайте ожидаемые расходы в пенсии
+• Учтите инфляцию и рост стоимости жизни
+• Планируйте с запасом на непредвиденные расходы
+
+3. 🏦 ВЫБЕРИТЕ ПРАВИЛЬНЫЕ ИНСТРУМЕНТЫ
+• Государственные пенсионные программы
+• Частные пенсионные фонды
+• Долгосрочные инвестиционные счета
+• Недвижимость и другие активы
+
+4. 📈 ДИВЕРСИФИЦИРУЙТЕ НАКОПЛЕНИЯ
+• Не храните все яйца в одной корзине
+• Сочетайте консервативные и рискованные инструменты
+• Адаптируйте стратегию с возрастом
+
+5. 🔄 РЕГУЛЯРНО ПЕРЕСМАТРИВАЙТЕ ПЛАН
+• Корректируйте цели каждые 5 лет
+• Учитывайте изменения в жизни и доходах
+• Консультируйтесь с финансовыми советниками
+
+6. 🏥 УЧТИТЕ ЗДРАВООХРАНЕНИЕ
+• Планируйте расходы на медицинское обслуживание
+• Рассмотрите страховые программы
+• Создайте резерв на непредвиденные медицинские расходы`;
 }
 
 // ========== ФУНКЦИИ ДЛЯ НАСТРОЕК ==========
@@ -1552,13 +2298,7 @@ function changeLanguage(lang) {
         btn.classList.remove('active');
     });
     
-    // Находим и активируем правильную кнопку
-    document.querySelectorAll('.language-btn').forEach(btn => {
-        if ((lang === 'ru' && btn.textContent.includes('Русский')) || 
-            (lang === 'en' && btn.textContent.includes('English'))) {
-            btn.classList.add('active');
-        }
-    });
+    event.target.classList.add('active');
     
     // Сохраняем язык
     localStorage.setItem('language', lang);
@@ -1566,7 +2306,13 @@ function changeLanguage(lang) {
     // Применяем переводы
     applyTranslations(lang);
     
-    showNotification(`Язык изменен на ${lang === 'ru' ? 'русский' : 'английский'}`, 'success');
+    const langNames = {
+        'ru': 'русский',
+        'en': 'английский',
+        'kz': 'казахский'
+    };
+    
+    showNotification(`Язык изменен на ${langNames[lang]}`, 'success');
 }
 
 // Функция применения переводов
@@ -1595,7 +2341,12 @@ function applyTranslations(lang) {
     });
     
     // Обновляем заголовок страницы
-    document.title = lang === 'ru' ? 'FinanceMind — Умный финансовый помощник' : 'FinanceMind — Smart Finance Assistant';
+    const titles = {
+        'ru': 'FinanceMind — Умный финансовый помощник',
+        'en': 'FinanceMind — Smart Finance Assistant',
+        'kz': 'FinanceMind — Ақылды қаржы көмекшісі'
+    };
+    document.title = titles[lang] || titles['ru'];
     
     // Обновляем навигацию
     updateNavigationText(lang);
@@ -1629,7 +2380,18 @@ function updateNavigationText(lang) {
 function initLanguage() {
     const savedLang = localStorage.getItem('language') || 'ru';
     console.log('Initializing language:', savedLang);
-    changeLanguage(savedLang);
+    
+    // Устанавливаем активную кнопку языка
+    document.querySelectorAll('.language-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if ((savedLang === 'ru' && btn.textContent.includes('Русский')) || 
+            (savedLang === 'en' && btn.textContent.includes('English')) ||
+            (savedLang === 'kz' && btn.textContent.includes('Қазақша'))) {
+            btn.classList.add('active');
+        }
+    });
+    
+    applyTranslations(savedLang);
 }
 
 function changeTheme(theme) {
@@ -1654,270 +2416,198 @@ function logout() {
     }
 }
 
-// ========== ЭТАП 2: РАСШИРЕННЫЕ ВОЗМОЖНОСТИ ==========
+// ========== АДМИН ПАНЕЛЬ ==========
 
-function addCustomCategory() {
-    const categoryName = prompt('Введите название новой категории:');
-    if (categoryName && categoryName.trim()) {
-        if (currentUser) {
-            if (!currentUser.customCategories) {
-                currentUser.customCategories = [];
-            }
-            
-            if (!currentUser.customCategories.includes(categoryName.trim())) {
-                currentUser.customCategories.push(categoryName.trim());
-                
-                const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                if (userIndex !== -1) {
-                    users[userIndex] = currentUser;
-                    localStorage.setItem('financemind_users', JSON.stringify(users));
-                }
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                showNotification(`Категория "${categoryName}" успешно добавлена!`, 'success');
-                updateCategoryButtons();
-            } else {
-                showNotification('Такая категория уже существует!', 'error');
-            }
+function showAdminPanel() {
+    if (currentUser && currentUser.role === 'admin') {
+        showPage('adminPanel');
+    } else {
+        showNotification('Доступ запрещен. Только для администраторов.', 'error');
+    }
+}
+
+function loadAdminData() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    
+    const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
+    const regularUsers = users.filter(u => u.role !== 'admin');
+    
+    // Общая статистика
+    document.getElementById('totalUsers').textContent = regularUsers.length;
+    document.getElementById('totalMissions').textContent = appMissions.length;
+    
+    let totalCompletedMissions = 0;
+    let totalFincoins = 0;
+    
+    regularUsers.forEach(user => {
+        const userData = JSON.parse(localStorage.getItem(`userData_${user.id}`) || '{}');
+        if (userData.completedMissions) {
+            totalCompletedMissions += userData.completedMissions.length;
         }
-    }
+        totalFincoins += userData.fincoins || 0;
+    });
+    
+    document.getElementById('completedMissions').textContent = totalCompletedMissions;
+    document.getElementById('totalFincoins').textContent = totalFincoins.toLocaleString();
+    
+    // Управление миссиями
+    renderMissionManagement();
+    
+    // Прогресс пользователей
+    renderUserProgress(regularUsers);
 }
 
-function updateCategoryButtons() {
-    const categoryOptions = document.querySelector('.category-options');
-    if (!categoryOptions) return;
+function renderMissionManagement() {
+    const missionManagement = document.getElementById('missionManagement');
+    if (!missionManagement) return;
     
-    const baseCategories = ['Еда', 'Транспорт', 'Учеба', 'Развлечения', 'Другое'];
-    const customCategories = currentUser?.customCategories || [];
-    
-    categoryOptions.innerHTML = '';
-    
-    // Базовые категории с правильными классами
-    baseCategories.forEach(category => {
-        const button = document.createElement('div');
-        button.className = 'category-btn';
-        button.setAttribute('data-category', category);
-        button.innerHTML = `
-            <i class="fas fa-${getCategoryIcon(category)} category-icon category-${getCategoryClass(category)}"></i>
-            <span>${category}</span>
+    missionManagement.innerHTML = appMissions.map(mission => {
+        const userData = {
+            expenses: expenses,
+            goals: goals,
+            fincoins: fincoins,
+            completedMissions: missions.filter(m => m.completed).map(m => m.id)
+        };
+        
+        const progress = mission.progress(userData);
+        const completionRate = calculateMissionCompletionRate(mission.id);
+        
+        return `
+            <div class="admin-mission-item">
+                <div class="admin-mission-header">
+                    <div class="admin-mission-title">${mission.title}</div>
+                    <div class="admin-mission-reward">${mission.reward} FinCoins</div>
+                </div>
+                <div class="admin-mission-progress">
+                    <div class="admin-progress-bar">
+                        <div class="admin-progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="admin-progress-text">
+                        Прогресс: ${Math.round(progress)}% | Выполнение: ${completionRate}%
+                    </div>
+                </div>
+                <div class="mission-description">${mission.description}</div>
+                <div class="mission-requirements">
+                    <strong>Требования:</strong> ${mission.requirements.join(', ')}
+                </div>
+            </div>
         `;
-        button.addEventListener('click', function() {
-            selectCategory(this, category);
-        });
-        categoryOptions.appendChild(button);
-    });
-    
-    // Пользовательские категории
-    customCategories.forEach(category => {
-        const button = document.createElement('div');
-        button.className = 'category-btn';
-        button.setAttribute('data-category', category);
-        button.innerHTML = `
-            <i class="fas fa-tag category-icon"></i>
-            <span>${category}</span>
-        `;
-        button.addEventListener('click', function() {
-            selectCategory(this, category);
-        });
-        categoryOptions.appendChild(button);
-    });
-    
-    // Кнопка добавления новой категории
-    const addButton = document.createElement('div');
-    addButton.className = 'category-btn add-category';
-    addButton.innerHTML = `
-        <i class="fas fa-plus"></i>
-        <span>Добавить категорию</span>
-    `;
-    addButton.addEventListener('click', addCustomCategory);
-    categoryOptions.appendChild(addButton);
+    }).join('');
 }
 
-// Добавьте эту новую функцию после updateCategoryButtons
-function getCategoryClass(category) {
-    const classes = {
-        'Еда': 'food',
-        'Транспорт': 'transport',
-        'Учеба': 'study',
-        'Развлечения': 'entertainment',
-        'Другое': 'other'
-    };
-    return classes[category] || 'other';
-}
-
-function selectCategory(button, category) {
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    button.classList.add('selected');
-    selectedCategory = category;
-}
-
-function getCategoryIcon(category) {
-    const icons = {
-        'Еда': 'utensils',
-        'Транспорт': 'bus',
-        'Учеба': 'graduation-cap',
-        'Развлечения': 'gamepad',
-        'Другое': 'ellipsis-h'
-    };
-    return icons[category] || 'tag';
-}
-
-// ========== ЭТАП 3: РАСШИРЕННАЯ АНАЛИТИКА И ОТЧЕТЫ ==========
-
-function generateMonthlyReport() {
-    if (!expenses || expenses.length === 0) {
-        showNotification('Нет данных для генерации отчета', 'error');
-        return;
-    }
+function calculateMissionCompletionRate(missionId) {
+    const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
+    const regularUsers = users.filter(u => u.role !== 'admin');
     
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
+    let completedCount = 0;
     
-    const monthlyExpenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.date);
-        return expenseDate.getMonth() === currentMonth && 
-               expenseDate.getFullYear() === currentYear;
-    });
-    
-    if (monthlyExpenses.length === 0) {
-        showNotification('Нет расходов за текущий месяц', 'error');
-        return;
-    }
-    
-    const expensesByCategory = {};
-    monthlyExpenses.forEach(expense => {
-        if (!expensesByCategory[expense.category]) {
-            expensesByCategory[expense.category] = 0;
+    regularUsers.forEach(user => {
+        const userData = JSON.parse(localStorage.getItem(`userData_${user.id}`) || '{}');
+        if (userData.completedMissions && userData.completedMissions.includes(missionId)) {
+            completedCount++;
         }
-        expensesByCategory[expense.category] += expense.amount;
     });
     
-    const totalExpenses = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-    const averageDaily = Math.round(totalExpenses / currentDate.getDate());
-    
-    let report = `📊 ФИНАНСОВЫЙ ОТЧЕТ ЗА ${currentDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }).toUpperCase()}\n\n`;
-    report += `Общие расходы: ${formatAmount(totalExpenses)}\n`;
-    report += `Среднедневные расходы: ${formatAmount(averageDaily)}\n`;
-    report += `Количество транзакций: ${monthlyExpenses.length}\n\n`;
-    report += `РАСПРЕДЕЛЕНИЕ ПО КАТЕГОРИЯМ:\n`;
-    
-    const sortedCategories = Object.entries(expensesByCategory)
-        .sort((a, b) => b[1] - a[1]);
-    
-    sortedCategories.forEach(([category, amount]) => {
-        const percentage = ((amount / totalExpenses) * 100).toFixed(1);
-        report += `• ${category}: ${formatAmount(amount)} (${percentage}%)\n`;
-    });
-    
-    report += `\nАНАЛИЗ ТРЕНДОВ:\n`;
-    
-    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-    
-    const prevMonthExpenses = expenses.filter(expense => {
-        const expenseDate = new Date(expense.date);
-        return expenseDate.getMonth() === prevMonth && 
-               expenseDate.getFullYear() === prevYear;
-    });
-    
-    const prevMonthTotal = prevMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-    
-    if (prevMonthTotal > 0) {
-        const change = ((totalExpenses - prevMonthTotal) / prevMonthTotal * 100).toFixed(1);
-        const trend = totalExpenses > prevMonthTotal ? 'рост' : 'снижение';
-        report += `По сравнению с прошлым месяцем: ${trend} на ${Math.abs(change)}%\n`;
-    }
-    
-    report += `\nРЕКОМЕНДАЦИИ:\n`;
-    const largestCategory = sortedCategories[0];
-    if (largestCategory) {
-        report += `• Самые большие расходы в категории "${largestCategory[0]}" - рассмотрите возможность оптимизации\n`;
-    }
-    
-    if (totalExpenses > 50000) {
-        report += `• Общие расходы высокие - рекомендую проанализировать обязательные и необязательные траты\n`;
-    }
-    
-    if (monthlyExpenses.length > 50) {
-        report += `• Большое количество мелких транзакций - возможно, стоит объединять некоторые покупки\n`;
-    }
-    
-    showReportModal(report);
+    return regularUsers.length > 0 ? Math.round((completedCount / regularUsers.length) * 100) : 0;
 }
 
-function showReportModal(report) {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    `;
+function renderUserProgress(users) {
+    const userProgress = document.getElementById('userProgress');
+    if (!userProgress) return;
     
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 500px; width: 90%;">
-            <div class="modal-header">
-                <h3 class="modal-title">Финансовый отчет</h3>
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
+    userProgress.innerHTML = users.map(user => {
+        const userData = JSON.parse(localStorage.getItem(`userData_${user.id}`) || '{}');
+        const completedMissions = userData.completedMissions ? userData.completedMissions.length : 0;
+        const totalExpenses = userData.expenses ? userData.expenses.reduce((sum, e) => sum + e.amount, 0) : 0;
+        const goalsCount = userData.goals ? userData.goals.length : 0;
+        
+        return `
+            <div class="admin-user-item">
+                <div class="admin-user-header">
+                    <div class="admin-user-name">${user.name}</div>
+                    <div class="admin-user-email">${user.email}</div>
+                </div>
+                <div class="admin-user-stats">
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${completedMissions}</div>
+                        <div class="admin-user-stat-label">Выполнено миссий</div>
+                    </div>
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${userData.fincoins || 0}</div>
+                        <div class="admin-user-stat-label">FinCoins</div>
+                    </div>
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${goalsCount}</div>
+                        <div class="admin-user-stat-label">Целей</div>
+                    </div>
+                </div>
+                <div class="admin-user-stats">
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${userData.expenses ? userData.expenses.length : 0}</div>
+                        <div class="admin-user-stat-label">Расходов</div>
+                    </div>
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${formatAmount(totalExpenses)}</div>
+                        <div class="admin-user-stat-label">Общие расходы</div>
+                    </div>
+                    <div class="admin-user-stat">
+                        <div class="admin-user-stat-value">${new Date(user.createdAt).toLocaleDateString()}</div>
+                        <div class="admin-user-stat-label">Дата регистрации</div>
+                    </div>
+                </div>
             </div>
-            <pre style="
-                white-space: pre-wrap;
-                font-family: inherit;
-                background: var(--light-bg);
-                padding: 20px;
-                border-radius: var(--radius-sm);
-                font-size: 14px;
-                line-height: 1.5;
-                max-height: 400px;
-                overflow-y: auto;
-                margin: 0 0 20px 0;
-            ">${report}</pre>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="downloadReport('${btoa(unescape(encodeURIComponent(report)))}')" 
-                        class="btn btn-primary" style="flex: 1;">
-                    <i class="fas fa-download"></i> Скачать отчет
-                </button>
-                <button onclick="this.closest('.modal-overlay').remove()" 
-                        class="btn btn-outline" style="flex: 1;">
-                    Закрыть
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
+        `;
+    }).join('');
 }
 
-function downloadReport(reportData) {
-    try {
-        const reportText = decodeURIComponent(escape(atob(reportData)));
-        const blob = new Blob([reportText], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `financial-report-${new Date().toISOString().split('T')[0]}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showNotification('Отчет успешно скачан!', 'success');
-    } catch (error) {
-        showNotification('Ошибка при скачивании отчета', 'error');
-    }
+function exportAllData() {
+    const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
+    const regularUsers = users.filter(u => u.role !== 'admin');
+    
+    const adminData = {
+        exportDate: new Date().toISOString(),
+        totalUsers: regularUsers.length,
+        totalMissions: appMissions.length,
+        users: regularUsers.map(user => {
+            const userData = JSON.parse(localStorage.getItem(`userData_${user.id}`) || '{}');
+            return {
+                name: user.name,
+                email: user.email,
+                registrationDate: user.createdAt,
+                fincoins: userData.fincoins || 0,
+                completedMissions: userData.completedMissions ? userData.completedMissions.length : 0,
+                totalExpenses: userData.expenses ? userData.expenses.reduce((sum, e) => sum + e.amount, 0) : 0,
+                goalsCount: userData.goals ? userData.goals.length : 0,
+                expensesCount: userData.expenses ? userData.expenses.length : 0
+            };
+        }),
+        missions: appMissions.map(mission => {
+            return {
+                id: mission.id,
+                title: mission.title,
+                description: mission.description,
+                reward: mission.reward,
+                difficulty: mission.difficulty,
+                completionRate: calculateMissionCompletionRate(mission.id)
+            };
+        })
+    };
+    
+    const dataStr = JSON.stringify(adminData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `financemind-admin-data-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Все данные администратора успешно экспортированы!', 'success');
 }
+
+// ========== ЭКСПОРТ И ИМПОРТ ДАННЫХ ==========
 
 function exportData() {
     if (!currentUser) return;
@@ -1925,14 +2615,23 @@ function exportData() {
     const userData = {
         user: {
             name: currentUser.name,
-            email: currentUser.email
+            email: currentUser.email,
+            registrationDate: currentUser.createdAt
         },
         expenses: expenses,
         goals: goals,
+        missions: missions,
+        fincoins: fincoins,
+        purchasedItems: purchasedItems,
         exportDate: new Date().toISOString(),
-        totalExpenses: expenses.reduce((sum, e) => sum + e.amount, 0),
-        totalGoals: goals.length,
-        completedGoals: goals.filter(g => g.completed).length
+        statistics: {
+            totalExpenses: expenses.reduce((sum, e) => sum + e.amount, 0),
+            totalGoals: goals.length,
+            completedGoals: goals.filter(g => g.completed).length,
+            completedMissions: missions.filter(m => m.completed).length,
+            averageExpense: expenses.length > 0 ? Math.round(expenses.reduce((sum, e) => sum + e.amount, 0) / expenses.length) : 0
+        },
+        monthlyReport: generateMonthlyReportText()
     };
     
     const dataStr = JSON.stringify(userData, null, 2);
@@ -1940,7 +2639,7 @@ function exportData() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `financemind-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `financemind-data-${currentUser.name}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1961,6 +2660,9 @@ function importData(event) {
             if (confirm('Вы уверены, что хотите импортировать данные? Текущие данные будут перезаписаны.')) {
                 if (importedData.expenses) expenses = importedData.expenses;
                 if (importedData.goals) goals = importedData.goals;
+                if (importedData.missions) missions = importedData.missions;
+                if (importedData.fincoins) fincoins = importedData.fincoins;
+                if (importedData.purchasedItems) purchasedItems = importedData.purchasedItems;
                 
                 saveUserData();
                 updateDashboard();
@@ -1976,35 +2678,149 @@ function importData(event) {
     event.target.value = '';
 }
 
-function addReportButtons() {
-    const analyticsPage = document.getElementById('analytics');
-    if (analyticsPage && !document.getElementById('reportButtons')) {
-        const addExpenseForm = analyticsPage.querySelector('.add-expense-form');
-        if (addExpenseForm) {
-            const reportSection = document.createElement('div');
-            reportSection.id = 'reportButtons';
-            reportSection.style.cssText = 'margin-top: 30px;';
-            reportSection.innerHTML = `
-                <div class="section-header">
-                    <h3 class="section-title">Отчеты и данные</h3>
-                </div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <button onclick="generateMonthlyReport()" class="btn btn-primary">
-                        <i class="fas fa-chart-bar"></i> Месячный отчет
-                    </button>
-                    <button onclick="exportData()" class="btn btn-outline">
-                        <i class="fas fa-download"></i> Экспорт данных
-                    </button>
-                    <label class="btn btn-outline" style="cursor: pointer;">
-                        <i class="fas fa-upload"></i> Импорт данных
-                        <input type="file" accept=".json" onchange="importData(event)" 
-                               style="display: none;">
-                    </label>
-                </div>
-            `;
-            analyticsPage.insertBefore(reportSection, addExpenseForm);
-        }
+function shareReport() {
+    const report = generateMonthlyReportText();
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Мой финансовый отчет - FinanceMind',
+            text: report,
+            url: window.location.href
+        })
+        .then(() => showNotification('Отчет успешно опубликован!', 'success'))
+        .catch(error => {
+            console.log('Error sharing:', error);
+            copyToClipboard(report);
+        });
+    } else {
+        copyToClipboard(report);
     }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => showNotification('Отчет скопирован в буфер обмена!', 'success'))
+        .catch(err => {
+            console.error('Error copying text: ', err);
+            showNotification('Не удалось скопировать отчет', 'error');
+        });
+}
+
+// ========== ОТЧЕТЫ И АНАЛИТИКА ==========
+
+function generateMonthlyReport() {
+    if (!expenses || expenses.length === 0) {
+        showNotification('Нет данных для генерации отчета', 'error');
+        return;
+    }
+    
+    const report = generateMonthlyReportText();
+    showReportModal(report);
+}
+
+function generateMonthlyReportText() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    
+    const monthlyExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === currentMonth && 
+               expenseDate.getFullYear() === currentYear;
+    });
+    
+    if (monthlyExpenses.length === 0) {
+        return "Нет расходов за текущий месяц для генерации отчета.";
+    }
+    
+    const expensesByCategory = {};
+    monthlyExpenses.forEach(expense => {
+        if (!expensesByCategory[expense.category]) {
+            expensesByCategory[expense.category] = 0;
+        }
+        expensesByCategory[expense.category] += expense.amount;
+    });
+    
+    const totalExpenses = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const averageDaily = Math.round(totalExpenses / currentDate.getDate());
+    
+    let report = `📊 ФИНАНСОВЫЙ ОТЧЕТ ЗА ${currentDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }).toUpperCase()}\n\n`;
+    report += `💰 ОБЩАЯ СТАТИСТИКА:\n`;
+    report += `• Общие расходы: ${formatAmount(totalExpenses)}\n`;
+    report += `• Среднедневные расходы: ${formatAmount(averageDaily)}\n`;
+    report += `• Количество транзакций: ${monthlyExpenses.length}\n`;
+    report += `• Дней с расходами: ${new Set(monthlyExpenses.map(e => e.date)).size}\n\n`;
+    
+    report += `📈 РАСПРЕДЕЛЕНИЕ ПО КАТЕГОРИЯМ:\n`;
+    
+    const sortedCategories = Object.entries(expensesByCategory)
+        .sort((a, b) => b[1] - a[1]);
+    
+    sortedCategories.forEach(([category, amount]) => {
+        const percentage = ((amount / totalExpenses) * 100).toFixed(1);
+        report += `• ${category}: ${formatAmount(amount)} (${percentage}%)\n`;
+    });
+    
+    report += `\n📅 АНАЛИЗ ТРЕНДОВ:\n`;
+    
+    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    
+    const prevMonthExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === prevMonth && 
+               expenseDate.getFullYear() === prevYear;
+    });
+    
+    const prevMonthTotal = prevMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    
+    if (prevMonthTotal > 0) {
+        const change = ((totalExpenses - prevMonthTotal) / prevMonthTotal * 100).toFixed(1);
+        const trend = totalExpenses > prevMonthTotal ? 'рост' : 'снижение';
+        report += `• По сравнению с прошлым месяцем: ${trend} на ${Math.abs(change)}%\n`;
+    }
+    
+    // Анализ по дням недели
+    const weekDays = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+    const expensesByWeekDay = {};
+    weekDays.forEach(day => expensesByWeekDay[day] = 0);
+    
+    monthlyExpenses.forEach(expense => {
+        const expenseDate = new Date(expense.date);
+        const dayOfWeek = weekDays[expenseDate.getDay()];
+        expensesByWeekDay[dayOfWeek] += expense.amount;
+    });
+    
+    const maxDay = Object.entries(expensesByWeekDay).reduce((a, b) => a[1] > b[1] ? a : b);
+    report += `• Самый затратный день: ${maxDay[0]} (${formatAmount(maxDay[1])})\n`;
+    
+    report += `\n🎯 РЕКОМЕНДАЦИИ:\n`;
+    const largestCategory = sortedCategories[0];
+    if (largestCategory) {
+        report += `• Самые большие расходы в категории "${largestCategory[0]}" - рассмотрите возможность оптимизации\n`;
+    }
+    
+    if (totalExpenses > 50000) {
+        report += `• Общие расходы высокие - рекомендую проанализировать обязательные и необязательные траты\n`;
+    }
+    
+    if (monthlyExpenses.length > 50) {
+        report += `• Большое количество мелких транзакций - возможно, стоит объединять некоторые покупки\n`;
+    }
+    
+    // Цели и прогресс
+    if (goals.length > 0) {
+        report += `\n🎯 ПРОГРЕСС ЦЕЛЕЙ:\n`;
+        const activeGoals = goals.filter(goal => !goal.completed);
+        activeGoals.slice(0, 3).forEach(goal => {
+            const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
+            report += `• ${goal.name}: ${Math.round(progress)}% (${formatAmount(goal.currentAmount)} / ${formatAmount(goal.targetAmount)})\n`;
+        });
+    }
+    
+    report += `\n---\nСгенерировано в FinanceMind • ${new Date().toLocaleDateString('ru-RU')}`;
+    
+    return report;
 }
 
 function showAdvancedAnalytics() {
@@ -2044,17 +2860,150 @@ function showAdvancedAnalytics() {
         .sort((a, b) => b.amount - a.amount)
         .slice(0, 5);
     
-    analyticsReport += `\nСАМЫЕ КРУПНЫЕ РАСХОДЫ:\n`;
+    analyticsReport += `\nТОП-5 САМЫХ КРУПНЫХ РАСХОДОВ:\n`;
     topExpenses.forEach((expense, index) => {
         analyticsReport += `${index + 1}. ${expense.category}: ${formatAmount(expense.amount)} (${formatDate(expense.date)})\n`;
+        if (expense.description && expense.description !== 'Без описания') {
+            analyticsReport += `   📝 ${expense.description}\n`;
+        }
     });
     
-    analyticsReport += `\nРЕКОМЕНДАЦИИ ПО ВРЕМЕНИ ПОКУПОК:\n`;
+    // Анализ по времени суток (предположительный)
+    analyticsReport += `\n⏰ РЕКОМЕНДАЦИИ ПО ВРЕМЕНИ ПОКУПОК:\n`;
     analyticsReport += `• Старайтесь делать крупные покупки в начале недели\n`;
     analyticsReport += `• Планируйте продуктовые закупки на выходные\n`;
     analyticsReport += `• Избегайте импульсных покупок вечером\n`;
+    analyticsReport += `• Крупные покупки планируйте на середину месяца\n`;
+    
+    // Тенденции
+    analyticsReport += `\n📊 ФИНАНСОВЫЕ ТЕНДЕНЦИИ:\n`;
+    const monthlyTrend = calculateMonthlyTrend();
+    analyticsReport += `• ${monthlyTrend}\n`;
+    
+    // Рекомендации по категориям
+    analyticsReport += `\n💡 РЕКОМЕНДАЦИИ ПО КАТЕГОРИЯМ:\n`;
+    const categoryRecommendations = getCategoryRecommendations();
+    categoryRecommendations.forEach(rec => {
+        analyticsReport += `• ${rec}\n`;
+    });
     
     showReportModal(analyticsReport);
+}
+
+function calculateMonthlyTrend() {
+    const currentMonthExpenses = getCurrentMonthExpenses(expenses);
+    const lastMonthExpenses = getLastMonthExpenses(expenses);
+    
+    if (lastMonthExpenses === 0) return "Недостаточно данных для анализа трендов";
+    
+    const change = ((currentMonthExpenses - lastMonthExpenses) / lastMonthExpenses * 100);
+    
+    if (change > 20) return "⚠️ Высокий рост расходов - рекомендуется пересмотреть бюджет";
+    if (change > 10) return "📈 Умеренный рост расходов - следите за тенденцией";
+    if (change > -10) return "✅ Стабильная ситуация - расходы под контролем";
+    if (change > -20) return "📉 Умеренное снижение расходов - хороший результат";
+    return "🎉 Значительное снижение расходов - отличная работа!";
+}
+
+function getCategoryRecommendations() {
+    const expensesByCategory = {};
+    expenses.forEach(expense => {
+        if (!expensesByCategory[expense.category]) {
+            expensesByCategory[expense.category] = 0;
+        }
+        expensesByCategory[expense.category] += expense.amount;
+    });
+    
+    const totalExpenses = Object.values(expensesByCategory).reduce((a, b) => a + b, 0);
+    const recommendations = [];
+    
+    Object.entries(expensesByCategory).forEach(([category, amount]) => {
+        const percentage = (amount / totalExpenses) * 100;
+        
+        if (percentage > 40) {
+            recommendations.push(`${category}: Высокая доля расходов (${percentage.toFixed(1)}%) - рассмотрите оптимизацию`);
+        } else if (percentage < 10) {
+            recommendations.push(`${category}: Низкая доля расходов (${percentage.toFixed(1)}%) - хороший баланс`);
+        }
+    });
+    
+    if (recommendations.length === 0) {
+        recommendations.push("Сбалансированное распределение расходов по категориям");
+    }
+    
+    return recommendations.slice(0, 3);
+}
+
+function showReportModal(report) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">Финансовый отчет</h3>
+                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <pre style="
+                white-space: pre-wrap;
+                font-family: inherit;
+                background: var(--light-bg);
+                padding: 20px;
+                border-radius: var(--radius-sm);
+                font-size: 14px;
+                line-height: 1.5;
+                margin: 0 0 20px 0;
+            ">${report}</pre>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="downloadReport('${btoa(unescape(encodeURIComponent(report)))}')" 
+                        class="btn btn-primary" style="flex: 1; min-width: 120px;">
+                    <i class="fas fa-download"></i> Скачать
+                </button>
+                <button onclick="shareReport()" 
+                        class="btn btn-outline" style="flex: 1; min-width: 120px;">
+                    <i class="fas fa-share"></i> Поделиться
+                </button>
+                <button onclick="this.closest('.modal-overlay').remove()" 
+                        class="btn btn-outline" style="flex: 1; min-width: 120px;">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function downloadReport(reportData) {
+    try {
+        const reportText = decodeURIComponent(escape(atob(reportData)));
+        const blob = new Blob([reportText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `financemind-report-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showNotification('Отчет успешно скачан!', 'success');
+    } catch (error) {
+        showNotification('Ошибка при скачивании отчета', 'error');
+    }
 }
 
 // ========== ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ ==========
@@ -2147,6 +3096,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currentUser) {
         updateCategoryButtons();
     }
+    
+    // Инициализация языка
+    initLanguage();
     
     console.log('FinanceMind инициализирован');
 });
