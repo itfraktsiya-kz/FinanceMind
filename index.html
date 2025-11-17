@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceMind — Умный финансовый помощник</title>
+    <title data-translate="appTitle">FinanceMind — Умный финансовый помощник</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -13,15 +13,15 @@
     <div class="app-container" id="appContainer">
         <!-- App Header - Only shown after login -->
         <div class="app-header" id="appHeader" style="display: none;">
-            <div class="app-title" id="pageTitle">FinanceMind</div>
+            <div class="app-title" id="pageTitle" data-translate="appTitle">FinanceMind</div>
             <div class="header-actions">
-                <div class="header-icon" id="syncButton" onclick="forceSync()">
+                <div class="header-icon" id="syncButton" onclick="forceSync()" data-tooltip="Синхронизировать">
                     <i class="fas fa-sync-alt"></i>
                 </div>
-                <div class="header-icon" id="adminButton" onclick="showAdminPanel()" style="display: none;">
+                <div class="header-icon" id="adminButton" onclick="showAdminPanel()" style="display: none;" data-tooltip="Админ панель">
                     <i class="fas fa-cog"></i>
                 </div>
-                <div class="header-icon" onclick="showPage('settings')">
+                <div class="header-icon" onclick="showPage('settings')" data-tooltip="Настройки">
                     <i class="fas fa-user"></i>
                 </div>
             </div>
@@ -36,78 +36,78 @@
                         <div class="auth-logo">
                             <i class="fas fa-brain"></i>
                         </div>
-                        <h1 class="auth-title">FinanceMind</h1>
-                        <p class="auth-subtitle">Управляйте деньгами с умом, отслеживая расходы и копя с помощью AI-помощника</p>
+                        <h1 class="auth-title" data-translate="appTitle">FinanceMind</h1>
+                        <p class="auth-subtitle" data-translate="appSubtitle">Управляйте деньгами с умом, отслеживая расходы и копя с помощью AI-помощника</p>
                     </div>
 
                     <!-- Форма регистрации -->
                     <div class="auth-form" id="registerForm">
                         <div class="form-group">
-                            <label for="regName">Имя</label>
-                            <input type="text" id="regName" placeholder="Ваше имя" value="Мансур">
+                            <label for="regName" data-translate="nameLabel">Имя</label>
+                            <input type="text" id="regName" placeholder="Ваше имя" data-translate-placeholder="namePlaceholder" value="Мансур">
                         </div>
 
                         <div class="form-group">
-                            <label for="regEmail">Электронная почта</label>
-                            <input type="email" id="regEmail" placeholder="user@example.com" value="mansurerzhigit843@gmail.com">
+                            <label for="regEmail" data-translate="emailLabel">Электронная почта</label>
+                            <input type="email" id="regEmail" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder" value="mansurerzhigit843@gmail.com">
                         </div>
 
                         <div class="form-group">
-                            <label for="regPassword">Пароль</label>
-                            <input type="password" id="regPassword" placeholder="••••••••">
+                            <label for="regPassword" data-translate="passwordLabel">Пароль</label>
+                            <input type="password" id="regPassword" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
                         </div>
 
                         <div class="form-group">
-                            <label for="regRole">Роль</label>
+                            <label for="regRole" data-translate="roleLabel">Роль</label>
                             <select id="regRole" class="role-select">
-                                <option value="user">Пользователь</option>
-                                <option value="admin">Администратор</option>
+                                <option value="user" data-translate="userRole">Пользователь</option>
+                                <option value="admin" data-translate="adminRole">Администратор</option>
                             </select>
                         </div>
 
                         <button class="btn btn-primary" onclick="register()">
                             <i class="fas fa-user-plus"></i>
-                            Зарегистрироваться
+                            <span data-translate="registerButton">Зарегистрироваться</span>
                         </button>
 
                         <div class="auth-switch">
-                            <span>Уже есть аккаунт? </span>
-                            <a href="#" onclick="showLoginForm()">Войти</a>
+                            <span data-translate="haveAccount">Уже есть аккаунт?</span>
+                            <a href="#" onclick="showLoginForm()" data-translate="loginLink">Войти</a>
                         </div>
 
                         <!-- Блок сброса данных -->
                         <div class="reset-section">
-                            <span>Проблемы с входом? </span>
-                            <a href="#" class="reset-btn" onclick="resetAllData()">Сбросить все данные</a>
+                            <span data-translate="loginProblems">Проблемы с входом?</span>
+                            <a href="#" class="reset-btn" onclick="resetAllData()" data-translate="resetData">Сбросить все данные</a>
                         </div>
                     </div>
 
                     <!-- Форма входа -->
                     <div class="auth-form" id="loginForm" style="display: none;">
                         <div class="form-group">
-                            <label for="email">Электронная почта</label>
-                            <input type="email" id="email" placeholder="user@example.com">
+                            <label for="email" data-translate="emailLabel">Электронная почта</label>
+                            <input type="email" id="email" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
                         </div>
                         
                         <div class="form-group">
-                            <label for="password">Пароль</label>
-                            <input type="password" id="password" placeholder="••••••••">
+                            <label for="password" data-translate="passwordLabel">Пароль</label>
+                            <input type="password" id="password" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
                         </div>
                         
                         <button class="btn btn-primary" onclick="login()">
                             <i class="fas fa-sign-in-alt"></i>
-                            Войти
+                            <span data-translate="loginButton">Войти</span>
                         </button>
 
                         <div class="auth-switch">
-                            <span>Нет аккаунта? </span>
-                            <a href="#" onclick="showRegisterForm()">Зарегистрироваться</a>
+                            <span data-translate="noAccount">Нет аккаунта?</span>
+                            <a href="#" onclick="showRegisterForm()" data-translate="registerLink">Зарегистрироваться</a>
                         </div>
 
                         <!-- Блок сброса данных -->
                         <div class="reset-section">
-                            <span>Проблемы с входом? </span>
-                            <a href="#" class="reset-btn" onclick="resetAllData()">Сбросить все данные</a>
+                            <span data-translate="loginProblems">Проблемы с входом?</span>
+                            <a href="#" class="reset-btn" onclick="resetAllData()" data-translate="resetData">Сбросить все данные</a>
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
             <div class="dashboard" id="dashboard" style="display: none;">
                 <div class="user-info">
                     <div>
-                        <div class="user-greeting" id="userGreeting">Добро пожаловать!</div>
+                        <div class="user-greeting" id="userGreeting" data-translate="welcome">Добро пожаловать!</div>
                         <div class="user-name" id="userName">Пользователь</div>
                     </div>
                     <div class="user-avatar" id="userAvatar">
@@ -130,8 +130,8 @@
                         <i class="fas fa-lightbulb"></i>
                     </div>
                     <div class="ai-content">
-                        <h3 class="ai-title" id="aiTitle">AI Совет дня</h3>
-                        <p class="ai-message" id="aiMessage">Начните добавлять расходы, чтобы получить персонализированные советы по управлению финансами!</p>
+                        <h3 class="ai-title" data-translate="aiAdviceTitle">AI Совет дня</h3>
+                        <p class="ai-message" id="aiMessage" data-translate="aiAdviceDefault">Начните добавлять расходы, чтобы получить персонализированные советы по управлению финансами!</p>
                     </div>
                 </div>
 
@@ -143,10 +143,10 @@
                 <!-- Прогресс целей -->
                 <div class="goals-progress">
                     <div class="section-header">
-                        <h3 class="goals-title" id="goalsTitle">Мои цели</h3>
+                        <h3 class="goals-title" data-translate="myGoals">Мои цели</h3>
                         <button class="add-goal-btn" onclick="openGoalModal()">
                             <i class="fas fa-plus"></i>
-                            <span id="addGoalText">Добавить</span>
+                            <span data-translate="addButton">Добавить</span>
                         </button>
                     </div>
                     
@@ -156,7 +156,7 @@
                     
                     <div id="emptyGoals" class="empty-goals" style="display: none;">
                         <i class="fas fa-bullseye"></i>
-                        <p id="noGoalsText">У вас пока нет финансовых целей</p>
+                        <p data-translate="noGoals">У вас пока нет финансовых целей</p>
                     </div>
                 </div>
             </div>
@@ -170,24 +170,24 @@
 
                 <!-- График расходов -->
                 <div class="analytics-chart" id="lineChartContainer">
-                    <h3 class="section-title" id="expenseTrendTitle">Динамика расходов</h3>
+                    <h3 class="section-title" data-translate="expenseTrend">Динамика расходов</h3>
                     
                     <div class="chart-type-selector">
                         <button class="chart-type-btn active" onclick="changeChartType('total')" id="totalChartBtn">
                             <i class="fas fa-chart-line"></i>
-                            <span id="totalExpensesText">Общие расходы</span>
+                            <span data-translate="totalExpenses">Общие расходы</span>
                         </button>
                         <button class="chart-type-btn" onclick="changeChartType('categories')" id="categoriesChartBtn">
                             <i class="fas fa-chart-bar"></i>
-                            <span id="byCategoriesText">По категориям</span>
+                            <span data-translate="byCategories">По категориям</span>
                         </button>
                     </div>
                     
                     <div class="chart-container" id="lineChartContainerInner">
                         <div class="empty-chart" id="emptyLineChart">
                             <i class="fas fa-chart-line"></i>
-                            <p id="noExpensesChartText">Нет данных для отображения</p>
-                            <p>Добавьте расходы, чтобы увидеть график</p>
+                            <p data-translate="noChartData">Нет данных для отображения</p>
+                            <p data-translate="addExpensesChart">Добавьте расходы, чтобы увидеть график</p>
                         </div>
                         <canvas id="lineChart" style="display: none;"></canvas>
                     </div>
@@ -195,12 +195,12 @@
 
                 <!-- Круговая диаграмма -->
                 <div class="pie-chart-container" id="pieChartContainer">
-                    <h3 class="section-title" id="categoryDistributionTitle">Распределение по категориям</h3>
+                    <h3 class="section-title" data-translate="categoryDistribution">Распределение по категориям</h3>
                     <div class="chart-container" id="pieChartContainerInner">
                         <div class="empty-chart" id="emptyPieChart">
                             <i class="fas fa-chart-pie"></i>
-                            <p id="noExpensesPieText">Нет данных для отображения</p>
-                            <p>Добавьте расходы, чтобы увидеть диаграмму</p>
+                            <p data-translate="noChartData">Нет данных для отображения</p>
+                            <p data-translate="addExpensesChart">Добавьте расходы, чтобы увидеть диаграмму</p>
                         </div>
                         <canvas id="pieChart" style="display: none;"></canvas>
                     </div>
@@ -208,81 +208,77 @@
                 
                 <!-- История расходов -->
                 <div class="expense-history" id="expenseHistoryContainer">
-                    <h3 class="expense-history-title" id="expenseHistoryTitle">Последние расходы</h3>
+                    <h3 class="expense-history-title" data-translate="recentExpenses">Последние расходы</h3>
                     <div class="expense-list" id="expenseList">
                         <!-- Расходы будут добавляться динамически -->
                     </div>
                     <div id="emptyExpenses" class="empty-expenses" style="display: none;">
                         <i class="fas fa-receipt"></i>
-                        <p id="noExpensesText">У вас пока нет расходов</p>
+                        <p data-translate="noExpenses">У вас пока нет расходов</p>
                     </div>
                 </div>
                 
                 <div class="add-expense-form">
-                    <h3 style="margin-bottom: 20px; font-weight: 600;" id="addExpenseTitle">Добавить новый расход</h3>
+                    <h3 style="margin-bottom: 20px; font-weight: 600;" data-translate="addExpenseTitle">Добавить новый расход</h3>
                     <div class="form-row">
                         <div class="form-col">
-                            <label id="amountLabel">Сумма</label>
-                            <input type="number" placeholder="₸0" id="expenseAmount">
+                            <label data-translate="amountLabel">Сумма</label>
+                            <input type="number" placeholder="₸0" id="expenseAmount" data-translate-placeholder="amountPlaceholder">
                         </div>
                         <div class="form-col">
-                            <label id="dateLabel">Дата</label>
+                            <label data-translate="dateLabel">Дата</label>
                             <input type="date" id="expenseDate" style="height: 50px;">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label id="categoryLabel">Категория</label>
+                        <label data-translate="categoryLabel">Категория</label>
                         <div class="category-options">
                             <div class="category-btn" data-category="Еда" id="foodCategory">
                                 <i class="fas fa-utensils category-icon category-food"></i>
-                                <span>Еда</span>
+                                <span data-translate="foodCategory">Еда</span>
                             </div>
                             <div class="category-btn" data-category="Транспорт" id="transportCategory">
                                 <i class="fas fa-bus category-icon category-transport"></i>
-                                <span>Транспорт</span>
+                                <span data-translate="transportCategory">Транспорт</span>
                             </div>
                             <div class="category-btn" data-category="Учеба" id="studyCategory">
                                 <i class="fas fa-graduation-cap category-icon category-study"></i>
-                                <span>Учеба</span>
+                                <span data-translate="studyCategory">Учеба</span>
                             </div>
                             <div class="category-btn" data-category="Развлечения" id="entertainmentCategory">
                                 <i class="fas fa-gamepad category-icon category-entertainment"></i>
-                                <span>Развлечения</span>
+                                <span data-translate="entertainmentCategory">Развлечения</span>
                             </div>
                             <div class="category-btn" data-category="Другое" id="otherCategory">
                                 <i class="fas fa-ellipsis-h category-icon category-other"></i>
-                                <span>Другое</span>
+                                <span data-translate="otherCategory">Другое</span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label id="commentLabel">Комментарий</label>
-                        <input type="text" placeholder="Например: Обед в кафе" id="expenseDescription">
+                        <label data-translate="commentLabel">Комментарий</label>
+                        <input type="text" placeholder="Например: Обед в кафе" id="expenseDescription" data-translate-placeholder="commentPlaceholder">
                     </div>
-                    <button class="btn btn-primary" onclick="addExpense()" style="width: 100%;" id="addExpenseBtn">Добавить расход</button>
+                    <button class="btn btn-primary" onclick="addExpense()" style="width: 100%;" data-translate="addExpenseButton">Добавить расход</button>
                 </div>
 
                 <!-- Отчеты и данные -->
                 <div id="reportButtons" style="margin-top: 30px;">
                     <div class="section-header">
-                        <h3 class="section-title">Отчеты и данные</h3>
+                        <h3 class="section-title" data-translate="reportsSection">Отчеты и данные</h3>
                     </div>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
                         <button onclick="generateMonthlyReport()" class="btn btn-primary">
-                            <i class="fas fa-chart-bar"></i> <span id="monthlyReportText">Месячный отчет</span>
+                            <i class="fas fa-chart-bar"></i> 
+                            <span data-translate="monthlyReport">Месячный отчет</span>
                         </button>
                         <button onclick="showAdvancedAnalytics()" class="btn btn-outline">
-                            <i class="fas fa-chart-line"></i> <span id="advancedAnalyticsText">Расширенная аналитика</span>
+                            <i class="fas fa-chart-line"></i> 
+                            <span data-translate="advancedAnalytics">Расширенная аналитика</span>
                         </button>
-                        <button onclick="exportData()" class="btn btn-outline">
-                            <i class="fas fa-download"></i> <span id="exportDataText">Экспорт данных</span>
-                        </button>
-                        <label class="btn btn-outline" style="cursor: pointer;">
-                            <i class="fas fa-upload"></i> <span id="importDataText">Импорт данных</span>
-                            <input type="file" accept=".json" onchange="importData(event)" style="display: none;">
-                        </label>
                         <button onclick="shareReport()" class="btn btn-outline">
-                            <i class="fas fa-share"></i> <span id="shareReportText">Поделиться отчетом</span>
+                            <i class="fas fa-share"></i> 
+                            <span data-translate="shareReport">Поделиться отчетом</span>
                         </button>
                     </div>
                 </div>
@@ -291,10 +287,10 @@
             <!-- Missions Page -->
             <div class="missions-page" id="missions" style="display: none;">
                 <div class="missions-balance">
-                    <div class="fincoins-text" id="yourFincoinsText">Ваши FinCoins: <span class="fincoins-amount" id="fincoinsBalance">0</span></div>
+                    <div class="fincoins-text" data-translate="yourFincoins">Ваши FinCoins: <span class="fincoins-amount" id="fincoinsBalance">0</span></div>
                     <button class="store-btn" onclick="showPage('store')">
                         <i class="fas fa-store"></i>
-                        <span id="storeText">Магазин</span>
+                        <span data-translate="storeButton">Магазин</span>
                     </button>
                 </div>
 
@@ -306,16 +302,16 @@
             <!-- Store Page -->
             <div class="store-page" id="store" style="display: none;">
                 <div class="store-balance">
-                    <div class="fincoins-text" id="yourFincoinsStoreText">Ваши FinCoins: <span class="fincoins-amount" id="storeBalance">0</span></div>
+                    <div class="fincoins-text" data-translate="yourFincoins">Ваши FinCoins: <span class="fincoins-amount" id="storeBalance">0</span></div>
                     <button class="earn-btn" onclick="showPage('missions')">
                         <i class="fas fa-coins"></i>
-                        <span id="earnText">Заработать</span>
+                        <span data-translate="earnButton">Заработать</span>
                     </button>
                 </div>
 
                 <!-- РАЗДЕЛ ПРЕМИУМ-ПОДПИСКИ -->
                 <div class="store-category">
-                    <h3 class="store-category-title" id="premiumSubscriptionTitle">Премиум подписка</h3>
+                    <h3 class="store-category-title" data-translate="premiumSubscription">Премиум подписка</h3>
                     
                     <div class="store-item premium-item">
                         <div class="store-item-header">
@@ -324,10 +320,10 @@
                             </div>
                             <div class="store-title-container">
                                 <div class="store-title">
-                                    <span id="premiumItemTitle">FinanceMind Premium</span>
-                                    <span class="premium-badge" id="premiumBadge">PREMIUM</span>
+                                    <span data-translate="premiumTitle">FinanceMind Premium</span>
+                                    <span class="premium-badge" data-translate="premiumBadge">PREMIUM</span>
                                 </div>
-                                <div class="store-description" id="premiumSubscriptionDesc">Получите доступ ко всем премиум-функциям: расширенная аналитика, AI-коуч, эксклюзивные темы и многое другое</div>
+                                <div class="store-description" data-translate="premiumDescription">Получите доступ ко всем премиум-функциям: расширенная аналитика, AI-коуч, эксклюзивные темы и многое другое</div>
                             </div>
                         </div>
                         <div class="store-price">
@@ -337,13 +333,13 @@
                             </div>
                         </div>
                         <button class="buy-btn" onclick="buyPremiumSubscription()" id="buyPremiumBtn">
-                            <span id="buyPremiumText">Активировать премиум</span>
+                            <span data-translate="activatePremium">Активировать премиум</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="store-category">
-                    <h3 class="store-category-title" id="premiumFeaturesTitle">Премиум функции</h3>
+                    <h3 class="store-category-title" data-translate="premiumFeatures">Премиум функции</h3>
                     
                     <div class="store-item">
                         <div class="store-item-header">
@@ -352,10 +348,10 @@
                             </div>
                             <div class="store-title-container">
                                 <div class="store-title">
-                                    <span id="extendedAnalyticsTitle">Расширенная аналитика</span>
-                                    <span class="store-popular" id="popularText">Популярное</span>
+                                    <span data-translate="extendedAnalytics">Расширенная аналитика</span>
+                                    <span class="store-popular" data-translate="popular">Популярное</span>
                                 </div>
-                                <div class="store-description" id="extendedAnalyticsDesc">Подробные отчеты и прогнозы расходов на 6 месяцев</div>
+                                <div class="store-description" data-translate="extendedAnalyticsDesc">Подробные отчеты и прогнозы расходов на 6 месяцев</div>
                             </div>
                         </div>
                         <div class="store-price">
@@ -365,7 +361,7 @@
                             </div>
                         </div>
                         <button class="buy-btn" onclick="buyItem('extended_analytics', 500)" id="buyNowBtn1">
-                            <span id="buyNowText">Купить сейчас</span>
+                            <span data-translate="buyNow">Купить сейчас</span>
                         </button>
                     </div>
 
@@ -375,8 +371,8 @@
                                 <i class="fas fa-robot"></i>
                             </div>
                             <div class="store-title-container">
-                                <div class="store-title" id="aiCoachTitle">Персональный AI-коуч</div>
-                                <div class="store-description" id="aiCoachDesc">Индивидуальные финансовые рекомендации и стратегии</div>
+                                <div class="store-title" data-translate="aiCoachTitle">Персональный AI-коуч</div>
+                                <div class="store-description" data-translate="aiCoachDesc">Индивидуальные финансовые рекомендации и стратегии</div>
                             </div>
                         </div>
                         <div class="store-price">
@@ -386,13 +382,13 @@
                             </div>
                         </div>
                         <button class="buy-btn" onclick="buyItem('ai_coach', 800)" id="buyNowBtn2">
-                            <span id="buyNowText2">Купить сейчас</span>
+                            <span data-translate="buyNow">Купить сейчас</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="store-category">
-                    <h3 class="store-category-title" id="personalizationTitle">Персонализация</h3>
+                    <h3 class="store-category-title" data-translate="personalization">Персонализация</h3>
                     
                     <div class="store-item">
                         <div class="store-item-header">
@@ -400,8 +396,8 @@
                                 <i class="fas fa-palette"></i>
                             </div>
                             <div class="store-title-container">
-                                <div class="store-title" id="exclusiveThemesTitle">Эксклюзивные темы</div>
-                                <div class="store-description" id="exclusiveThemesDesc">5 уникальных цветовых схем для приложения</div>
+                                <div class="store-title" data-translate="exclusiveThemes">Эксклюзивные темы</div>
+                                <div class="store-description" data-translate="exclusiveThemesDesc">5 уникальных цветовых схем для приложения</div>
                             </div>
                         </div>
                         <div class="store-price">
@@ -411,7 +407,7 @@
                             </div>
                         </div>
                         <button class="buy-btn" onclick="buyItem('themes', 300)" id="buyNowBtn3">
-                            <span id="buyNowText3">Купить сейчас</span>
+                            <span data-translate="buyNow">Купить сейчас</span>
                         </button>
                     </div>
 
@@ -421,8 +417,8 @@
                                 <i class="fas fa-icons"></i>
                             </div>
                             <div class="store-title-container">
-                                <div class="store-title" id="iconPackTitle">Набор иконок</div>
-                                <div class="store-description" id="iconPackDesc">Стильные иконки для категорий расходов</div>
+                                <div class="store-title" data-translate="iconPack">Набор иконок</div>
+                                <div class="store-description" data-translate="iconPackDesc">Стильные иконки для категорий расходов</div>
                             </div>
                         </div>
                         <div class="store-price">
@@ -432,7 +428,7 @@
                             </div>
                         </div>
                         <button class="buy-btn" onclick="buyItem('icons', 200)" id="buyNowBtn4">
-                            <span id="buyNowText4">Купить сейчас</span>
+                            <span data-translate="buyNow">Купить сейчас</span>
                         </button>
                     </div>
                 </div>
@@ -447,12 +443,12 @@
                     <div class="profile-info">
                         <h2 class="profile-name" id="profileName">Мансур</h2>
                         <p class="profile-email" id="profileEmail">mansurerzhigit843@gmail.com</p>
-                        <span class="profile-role">Пользователь</span>
+                        <span class="profile-role" data-translate="userRole">Пользователь</span>
                     </div>
                 </div>
 
                 <div class="settings-section">
-                    <h3 class="settings-section-title">Управление аккаунтом</h3>
+                    <h3 class="settings-section-title" data-translate="accountManagement">Управление аккаунтом</h3>
                     
                     <div class="settings-item" onclick="showProfileSection('personal')">
                         <div class="settings-item-left">
@@ -460,8 +456,8 @@
                                 <i class="fas fa-user-circle"></i>
                             </div>
                             <div class="settings-item-content">
-                                <div class="settings-item-label">Персональные данные</div>
-                                <div class="settings-item-value">Настройте вашу личную информацию</div>
+                                <div class="settings-item-label" data-translate="personalData">Персональные данные</div>
+                                <div class="settings-item-value" data-translate="personalDataDesc">Настройте вашу личную информацию</div>
                             </div>
                         </div>
                         <div class="settings-item-check">
@@ -475,8 +471,8 @@
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <div class="settings-item-content">
-                                <div class="settings-item-label">Безопасность и вход</div>
-                                <div class="settings-item-value">Пароль и методы входа</div>
+                                <div class="settings-item-label" data-translate="securitySettings">Безопасность и вход</div>
+                                <div class="settings-item-value" data-translate="securitySettingsDesc">Пароль и методы входа</div>
                             </div>
                         </div>
                         <div class="settings-item-check">
@@ -487,45 +483,45 @@
 
                 <!-- Personal Data Section -->
                 <div class="profile-section" id="personalSection" style="display: none;">
-                    <h3 class="section-title">Персональные данные</h3>
+                    <h3 class="section-title" data-translate="personalData">Персональные данные</h3>
                     <div class="form-group">
-                        <label>Имя</label>
+                        <label data-translate="nameLabel">Имя</label>
                         <input type="text" id="profileNameInput" value="Мансур">
                     </div>
                     <div class="form-group">
-                        <label>Фамилия</label>
+                        <label data-translate="lastNameLabel">Фамилия</label>
                         <input type="text" id="profileLastNameInput" value="Ержигит">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
+                        <label data-translate="emailLabel">Email</label>
                         <input type="email" id="profileEmailInput" value="mansurerzhigit843@gmail.com">
                     </div>
-                    <button class="btn btn-primary" onclick="saveProfile()">Сохранить изменения</button>
+                    <button class="btn btn-primary" onclick="saveProfile()" data-translate="saveChanges">Сохранить изменения</button>
                 </div>
 
                 <!-- Security Section -->
                 <div class="profile-section" id="securitySection" style="display: none;">
-                    <h3 class="section-title">Безопасность и вход</h3>
+                    <h3 class="section-title" data-translate="securitySettings">Безопасность и вход</h3>
                     
                     <div class="security-item">
                         <div class="security-info">
-                            <h4>Пароль</h4>
-                            <p>Последнее изменение: сегодня</p>
+                            <h4 data-translate="password">Пароль</h4>
+                            <p data-translate="lastChanged">Последнее изменение: сегодня</p>
                         </div>
-                        <button class="btn btn-outline" onclick="changePassword()">Изменить пароль</button>
+                        <button class="btn btn-outline" onclick="changePassword()" data-translate="changePassword">Изменить пароль</button>
                     </div>
 
                     <div class="security-item">
                         <div class="security-info">
-                            <h4>Методы входа</h4>
-                            <p>Email и пароль</p>
+                            <h4 data-translate="loginMethods">Методы входа</h4>
+                            <p data-translate="emailPassword">Email и пароль</p>
                         </div>
-                        <div class="security-status active">Активно</div>
+                        <div class="security-status active" data-translate="active">Активно</div>
                     </div>
                 </div>
 
                 <div class="settings-section">
-                    <h3 class="settings-section-title">Системные настройки</h3>
+                    <h3 class="settings-section-title" data-translate="systemSettings">Системные настройки</h3>
                     
                     <div class="settings-item">
                         <div class="settings-item-left">
@@ -533,16 +529,16 @@
                                 <i class="fas fa-globe"></i>
                             </div>
                             <div class="settings-item-content">
-                                <div class="settings-item-label">Язык</div>
-                                <div class="settings-item-value">Русский</div>
+                                <div class="settings-item-label" data-translate="language">Язык</div>
+                                <div class="settings-item-value" id="currentLanguage">Русский</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="language-selector">
-                        <button class="language-btn active" onclick="changeLanguage('ru')">Русский</button>
-                        <button class="language-btn" onclick="changeLanguage('en')">English</button>
-                        <button class="language-btn" onclick="changeLanguage('kz')">Қазақша</button>
+                        <button class="language-btn active" onclick="changeLanguage('ru')" data-translate="russian">Русский</button>
+                        <button class="language-btn" onclick="changeLanguage('en')" data-translate="english">English</button>
+                        <button class="language-btn" onclick="changeLanguage('kz')" data-translate="kazakh">Қазақша</button>
                     </div>
                     
                     <div class="settings-item">
@@ -551,8 +547,8 @@
                                 <i class="fas fa-palette"></i>
                             </div>
                             <div class="settings-item-content">
-                                <div class="settings-item-label">Тема</div>
-                                <div class="settings-item-value">Светлая</div>
+                                <div class="settings-item-label" data-translate="theme">Тема</div>
+                                <div class="settings-item-value" id="currentTheme">Светлая</div>
                             </div>
                         </div>
                     </div>
@@ -560,18 +556,18 @@
                     <div class="theme-selector">
                         <button class="theme-btn active" onclick="changeTheme('light')">
                             <i class="fas fa-sun"></i>
-                            <span>Светлая</span>
+                            <span data-translate="lightTheme">Светлая</span>
                         </button>
                         <button class="theme-btn" onclick="changeTheme('dark')">
                             <i class="fas fa-moon"></i>
-                            <span>Тёмная</span>
+                            <span data-translate="darkTheme">Тёмная</span>
                         </button>
                     </div>
                 </div>
 
                 <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>Выйти из аккаунта</span>
+                    <span data-translate="logout">Выйти из аккаунта</span>
                 </button>
             </div>
 
@@ -580,7 +576,7 @@
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message message-ai">
-                            <div class="message-content" id="welcomeMessage">
+                            <div class="message-content" id="welcomeMessage" data-translate="welcomeMessage">
                                 Привет! Я ваш AI-помощник по финансам. Чем могу помочь? Я могу:
                                 <br><br>
                                 • Проанализировать ваши расходы<br>
@@ -593,7 +589,7 @@
                 </div>
                 <div class="chat-input-fixed-container">
                     <div class="chat-input-container">
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Напишите ваш вопрос...">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Напишите ваш вопрос..." data-translate-placeholder="chatPlaceholder">
                         <button class="chat-send-btn" onclick="sendMessage()">
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -604,38 +600,38 @@
             <!-- Admin Panel -->
             <div class="admin-page" id="adminPanel" style="display: none;">
                 <div class="admin-header">
-                    <h2 class="admin-title">Панель администратора</h2>
-                    <p class="admin-subtitle">Управление миссиями и отслеживание прогресса пользователей</p>
+                    <h2 class="admin-title" data-translate="adminPanel">Панель администратора</h2>
+                    <p class="admin-subtitle" data-translate="adminSubtitle">Управление миссиями и отслеживание прогресса пользователей</p>
                 </div>
 
                 <div class="admin-stats">
                     <div class="admin-stat-card">
                         <div class="admin-stat-value" id="totalUsers">0</div>
-                        <div class="admin-stat-label">Всего пользователей</div>
+                        <div class="admin-stat-label" data-translate="totalUsers">Всего пользователей</div>
                     </div>
                     <div class="admin-stat-card">
                         <div class="admin-stat-value" id="totalMissions">0</div>
-                        <div class="admin-stat-label">Всего миссий</div>
+                        <div class="admin-stat-label" data-translate="totalMissions">Всего миссий</div>
                     </div>
                     <div class="admin-stat-card">
                         <div class="admin-stat-value" id="completedMissions">0</div>
-                        <div class="admin-stat-label">Выполнено миссий</div>
+                        <div class="admin-stat-label" data-translate="completedMissions">Выполнено миссий</div>
                     </div>
                     <div class="admin-stat-card">
                         <div class="admin-stat-value" id="totalFincoins">0</div>
-                        <div class="admin-stat-label">Выдано FinCoins</div>
+                        <div class="admin-stat-label" data-translate="totalFincoins">Выдано FinCoins</div>
                     </div>
                 </div>
 
                 <div class="admin-section">
-                    <h3 class="admin-section-title">Управление миссиями</h3>
+                    <h3 class="admin-section-title" data-translate="missionManagement">Управление миссиями</h3>
                     <div class="mission-management" id="missionManagement">
                         <!-- Миссии для управления будут добавляться динамически -->
                     </div>
                 </div>
 
                 <div class="admin-section">
-                    <h3 class="admin-section-title">Прогресс пользователей</h3>
+                    <h3 class="admin-section-title" data-translate="userProgress">Прогресс пользователей</h3>
                     <div class="user-progress" id="userProgress">
                         <!-- Прогресс пользователей будет добавляться динамически -->
                     </div>
@@ -643,7 +639,7 @@
 
                 <button class="btn btn-primary" onclick="exportAllData()" style="width: 100%; margin-top: 20px;">
                     <i class="fas fa-download"></i>
-                    <span>Экспорт всех данных</span>
+                    <span data-translate="exportAllData">Экспорт всех данных</span>
                 </button>
             </div>
         </div>
@@ -654,25 +650,25 @@
                 <div class="nav-icon">
                     <i class="fas fa-home"></i>
                 </div>
-                <span id="homeNavText">Главная</span>
+                <span data-translate="homeNav">Главная</span>
             </a>
             <a href="#" class="nav-item" onclick="showPage('analytics')">
                 <div class="nav-icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <span id="analyticsNavText">Аналитика</span>
+                <span data-translate="analyticsNav">Аналитика</span>
             </a>
             <a href="#" class="nav-item" onclick="showPage('missions')">
                 <div class="nav-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
-                <span id="gamificationNavText">Геймификация</span>
+                <span data-translate="missionsNav">Геймификация</span>
             </a>
             <a href="#" class="nav-item" onclick="showPage('chat')">
                 <div class="nav-icon">
                     <i class="fas fa-robot"></i>
                 </div>
-                <span id="aiAssistantNavText">ИИ Ассистент</span>
+                <span data-translate="chatNav">ИИ Ассистент</span>
             </a>
         </div>
     </div>
@@ -681,85 +677,31 @@
     <div class="modal-overlay" id="goalModal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="addGoalTitle">Добавить новую цель</h3>
+                <h3 class="modal-title" data-translate="addGoalTitle">Добавить новую цель</h3>
                 <button class="modal-close" onclick="closeGoalModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="form-group">
-                <label for="goalName" id="goalNameLabel">Название цели</label>
-                <input type="text" id="goalName" placeholder="Например: Новый ноутбук">
+                <label for="goalName" data-translate="goalNameLabel">Название цели</label>
+                <input type="text" id="goalName" placeholder="Например: Новый ноутбук" data-translate-placeholder="goalNamePlaceholder">
             </div>
             <div class="form-group">
-                <label for="goalAmount" id="goalAmountLabel">Сумма цели</label>
-                <input type="number" id="goalAmount" placeholder="₸0">
+                <label for="goalAmount" data-translate="goalAmountLabel">Сумма цели</label>
+                <input type="number" id="goalAmount" placeholder="₸0" data-translate-placeholder="goalAmountPlaceholder">
             </div>
             <div class="form-group">
-                <label for="goalCurrent" id="goalCurrentLabel">Текущая сумма</label>
-                <input type="number" id="goalCurrent" placeholder="₸0" value="0">
+                <label for="goalCurrent" data-translate="goalCurrentLabel">Текущая сумма</label>
+                <input type="number" id="goalCurrent" placeholder="₸0" value="0" data-translate-placeholder="goalCurrentPlaceholder">
             </div>
             <div class="form-group">
-                <label for="goalDeadline" id="goalDeadlineLabel">Срок цели</label>
+                <label for="goalDeadline" data-translate="goalDeadlineLabel">Срок цели</label>
                 <input type="date" id="goalDeadline">
             </div>
             <button class="btn btn-primary" onclick="addNewGoal()" style="width: 100%;">
                 <i class="fas fa-plus"></i>
-                <span id="addGoalBtnText">Добавить цель</span>
+                <span data-translate="addGoalButton">Добавить цель</span>
             </button>
-        </div>
-    </div>
-
-    <!-- Modal for Mission Details -->
-    <div class="modal-overlay" id="missionModal" style="display: none;">
-        <div class="modal-content mission-modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="missionModalTitle">Детали миссии</h3>
-                <button class="modal-close" onclick="closeMissionModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="mission-modal-content">
-                <div class="mission-details">
-                    <div class="mission-detail-item">
-                        <span class="mission-detail-label" id="missionNameLabel">Название:</span>
-                        <span class="mission-detail-value" id="missionNameValue">-</span>
-                    </div>
-                    <div class="mission-detail-item">
-                        <span class="mission-detail-label" id="missionDescriptionLabel">Описание:</span>
-                        <span class="mission-detail-value" id="missionDescriptionValue">-</span>
-                    </div>
-                    <div class="mission-detail-item">
-                        <span class="mission-detail-label" id="missionRewardLabel">Награда:</span>
-                        <span class="mission-detail-value" id="missionRewardValue">-</span>
-                    </div>
-                    <div class="mission-detail-item">
-                        <span class="mission-detail-label" id="missionDifficultyLabel">Сложность:</span>
-                        <span class="mission-detail-value" id="missionDifficultyValue">-</span>
-                    </div>
-                </div>
-                
-                <div class="mission-progress">
-                    <div class="mission-progress-title" id="missionProgressTitle">Прогресс выполнения:</div>
-                    <div class="mission-progress-bar">
-                        <div class="mission-progress-fill" id="missionProgressFill" style="width: 0%"></div>
-                    </div>
-                    <div class="mission-info">
-                        <span id="missionProgressText">0% выполнено</span>
-                    </div>
-                </div>
-                
-                <div class="mission-requirements">
-                    <div class="mission-requirements-title" id="missionRequirementsTitle">Требования для выполнения:</div>
-                    <ul class="mission-requirements-list" id="missionRequirementsList">
-                        <!-- Требования будут добавляться динамически -->
-                    </ul>
-                </div>
-                
-                <button class="btn btn-primary" onclick="completeMissionFromModal()" style="width: 100%; margin-top: 20px;" id="completeMissionBtn">
-                    <i class="fas fa-check"></i>
-                    <span id="completeMissionText">Выполнить миссию</span>
-                </button>
-            </div>
         </div>
     </div>
 
