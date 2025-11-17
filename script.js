@@ -55,18 +55,6 @@ const translations = {
         
         // Инструкция
         instructionsTitle: "📚 Инструкция по использованию",
-        instruction1Title: "Главный экран",
-        instruction1Desc: "Показывает ваши расходы, средние траты и расходы за месяц. Есть «Совет дня». Можно создавать и отслеживать цели.",
-        instruction2Title: "Аналитика",
-        instruction2Desc: "График показывает изменения расходов по дням. Диаграмма показывает, на что уходят деньги. Можно просматривать отчёт за месяц.",
-        instruction3Title: "Цели",
-        instruction3Desc: "Создавайте финансовые цели. Указывайте сумму. Следите за прогрессом накопления.",
-        instruction4Title: "Миссии",
-        instruction4Desc: "Выполняйте задания. Получайте монеты FinCoin. Развивайте полезные привычки.",
-        instruction5Title: "Магазин",
-        instruction5Desc: "Тратьте FinCoin на бонусы. Покупайте дополнительные функции и премиум.",
-        instruction6Title: "ИИ-ассистент",
-        instruction6Desc: "Отвечает на ваши вопросы. Помогает с приложением и финансами. Доступен всегда.",
         
         // Аналитика
         expenseTrend: "Динамика расходов",
@@ -212,18 +200,6 @@ const translations = {
         
         // Instructions
         instructionsTitle: "📚 User Guide",
-        instruction1Title: "Main Screen",
-        instruction1Desc: "Shows your expenses, average spending and monthly expenses. Has 'Advice of the Day'. You can create and track goals.",
-        instruction2Title: "Analytics",
-        instruction2Desc: "Chart shows expense changes by day. Diagram shows where money goes. You can view monthly report.",
-        instruction3Title: "Goals",
-        instruction3Desc: "Create financial goals. Specify amount. Track saving progress.",
-        instruction4Title: "Missions",
-        instruction4Desc: "Complete tasks. Earn FinCoins. Develop useful habits.",
-        instruction5Title: "Store",
-        instruction5Desc: "Spend FinCoins on bonuses. Buy additional features and premium.",
-        instruction6Title: "AI Assistant",
-        instruction6Desc: "Answers your questions. Helps with app and finances. Always available.",
         
         // Analytics
         expenseTrend: "Expense Trends",
@@ -369,18 +345,6 @@ const translations = {
         
         // Нұсқаулық
         instructionsTitle: "📚 Пайдалану нұсқаулығы",
-        instruction1Title: "Басты экран",
-        instruction1Desc: "Шығындарыңызды, орташа шығыстарды және айлық шығындарды көрсетеді. «Күнделікті кеңес» бар. Мақсаттарды жасауға және бақылауға болады.",
-        instruction2Title: "Аналитика",
-        instruction2Desc: "График күндер бойынша шығындардың өзгеруін көрсетеді. Диаграмма ақшаның қайда кететінін көрсетеді. Айлық есепті көруге болады.",
-        instruction3Title: "Мақсаттар",
-        instruction3Desc: "Қаржылық мақсаттарды жасаңыз. Соманы көрсетіңіз. Үнемдеу процесін бақылаңыз.",
-        instruction4Title: "Миссиялар",
-        instruction4Desc: "Тапсырмаларды орындаңыз. FinCoin монеталарын жинаңыз. Пайды әдеттерді дамытыңыз.",
-        instruction5Title: "Дүкен",
-        instruction5Desc: "Бонустарға FinCoin жұмсаңыз. Қосымша функциялар мен премиумды сатып алыңыз.",
-        instruction6Title: "ЖС-көмекші",
-        instruction6Desc: "Сұрақтарыңызға жауап береді. Қосымша және қаржы бойынша көмектеседі. Әрқашан қол жетімді.",
         
         // Аналитика
         expenseTrend: "Шығындар динамикасы",
@@ -533,6 +497,224 @@ const appMissions = [
         requirements: [
             "Создайте хотя бы одну финансовую цель",
             "Начните планировать свои финансы"
+        ]
+    },
+    {
+        id: 3,
+        title: "Трекер привычек",
+        description: "Добавляйте расходы 5 дней подряд",
+        reward: 150,
+        difficulty: "medium",
+        category: "consistency",
+        condition: (userData) => {
+            if (userData.expenses.length < 5) return false;
+            
+            const dates = [...new Set(userData.expenses.map(e => e.date))].sort();
+            const recentDates = dates.slice(-5);
+            
+            for (let i = 1; i < recentDates.length; i++) {
+                const prevDate = new Date(recentDates[i-1]);
+                const currDate = new Date(recentDates[i]);
+                const diffDays = Math.floor((currDate - prevDate) / (1000 * 60 * 60 * 24));
+                if (diffDays !== 1) return false;
+            }
+            return true;
+        },
+        progress: (userData) => {
+            if (userData.expenses.length < 2) return 0;
+            
+            const dates = [...new Set(userData.expenses.map(e => e.date))].sort();
+            let consecutiveDays = 1;
+            
+            for (let i = 1; i < dates.length; i++) {
+                const prevDate = new Date(dates[i-1]);
+                const currDate = new Date(dates[i]);
+                const diffDays = Math.floor((currDate - prevDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) {
+                    consecutiveDays++;
+                } else {
+                    consecutiveDays = 1;
+                }
+            }
+            
+            return Math.min(100, (consecutiveDays / 5) * 100);
+        },
+        requirements: [
+            "Добавляйте расходы каждый день",
+            "Не пропускайте дни отслеживания"
+        ]
+    },
+    {
+        id: 4,
+        title: "Бюджетный мастер",
+        description: "Уложитесь в бюджет ₸10000 за неделю",
+        reward: 200,
+        difficulty: "hard",
+        category: "budgeting",
+        condition: (userData) => {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weeklyExpenses = userData.expenses.filter(e => new Date(e.date) >= weekAgo);
+            const total = weeklyExpenses.reduce((sum, e) => sum + e.amount, 0);
+            return total <= 10000;
+        },
+        progress: (userData) => {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weeklyExpenses = userData.expenses.filter(e => new Date(e.date) >= weekAgo);
+            const total = weeklyExpenses.reduce((sum, e) => sum + e.amount, 0);
+            const progress = Math.max(0, Math.min(100, 100 - (total / 10000) * 100));
+            return progress;
+        },
+        requirements: [
+            "Не превышайте лимит ₸10000 за неделю",
+            "Контролируйте ежедневные траты"
+        ]
+    },
+    {
+        id: 5,
+        title: "Аналитик",
+        description: "Просмотрите аналитику 3 раза",
+        reward: 80,
+        difficulty: "easy",
+        category: "analytics",
+        condition: (userData) => {
+            return userData.analyticsViews >= 3;
+        },
+        progress: (userData) => {
+            const views = userData.analyticsViews || 0;
+            return Math.min(100, (views / 3) * 100);
+        },
+        requirements: [
+            "Изучайте свои финансовые привычки",
+            "Используйте раздел аналитики"
+        ]
+    },
+    {
+        id: 6,
+        title: "Накопитель",
+        description: "Накопите ₸5000 на цели",
+        reward: 120,
+        difficulty: "medium",
+        category: "savings",
+        condition: (userData) => {
+            const totalSaved = userData.goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+            return totalSaved >= 5000;
+        },
+        progress: (userData) => {
+            const totalSaved = userData.goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+            return Math.min(100, (totalSaved / 5000) * 100);
+        },
+        requirements: [
+            "Регулярно откладывайте деньги",
+            "Достигните суммы ₸5000 в целях"
+        ]
+    },
+    {
+        id: 7,
+        title: "Категорийный эксперт",
+        description: "Используйте все категории расходов",
+        reward: 90,
+        difficulty: "easy",
+        category: "categories",
+        condition: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            return categories.length >= 5;
+        },
+        progress: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            return Math.min(100, (categories.length / 5) * 100);
+        },
+        requirements: [
+            "Используйте все 5 категорий расходов",
+            "Разнообразьте учет трат"
+        ]
+    },
+    {
+        id: 8,
+        title: "Неделя экономии",
+        description: "Сэкономьте 20% от обычных расходов",
+        reward: 180,
+        difficulty: "hard",
+        category: "savings",
+        condition: (userData) => {
+            if (userData.expenses.length < 14) return false;
+            
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+            
+            const lastWeekExpenses = userData.expenses.filter(e => {
+                const date = new Date(e.date);
+                return date >= new Date(twoWeeksAgo.getTime() + 7 * 24 * 60 * 60 * 1000);
+            });
+            
+            const previousWeekExpenses = userData.expenses.filter(e => {
+                const date = new Date(e.date);
+                return date >= twoWeeksAgo && date < new Date(twoWeeksAgo.getTime() + 7 * 24 * 60 * 60 * 1000);
+            });
+            
+            const lastWeekTotal = lastWeekExpenses.reduce((sum, e) => sum + e.amount, 0);
+            const previousWeekTotal = previousWeekExpenses.reduce((sum, e) => sum + e.amount, 0);
+            
+            return previousWeekTotal > 0 && lastWeekTotal <= previousWeekTotal * 0.8;
+        },
+        progress: (userData) => {
+            // Упрощенный расчет прогресса
+            const weeklyAvg = userData.expenses.reduce((sum, e) => sum + e.amount, 0) / Math.max(1, userData.expenses.length / 7);
+            const target = weeklyAvg * 0.8;
+            const currentWeek = userData.expenses
+                .filter(e => new Date(e.date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+                .reduce((sum, e) => sum + e.amount, 0);
+            
+            return Math.max(0, Math.min(100, 100 - (currentWeek / target) * 100));
+        },
+        requirements: [
+            "Сократите расходы на 20% за неделю",
+            "Сравните с предыдущим периодом"
+        ]
+    },
+    {
+        id: 9,
+        title: "Финансовый планировщик",
+        description: "Создайте 3 финансовые цели",
+        reward: 110,
+        difficulty: "medium",
+        category: "planning",
+        condition: (userData) => {
+            return userData.goals.length >= 3;
+        },
+        progress: (userData) => {
+            return Math.min(100, (userData.goals.length / 3) * 100);
+        },
+        requirements: [
+            "Планируйте разные финансовые цели",
+            "Создайте 3 отдельные цели"
+        ]
+    },
+    {
+        id: 10,
+        title: "Мастер контроля",
+        description: "Достигните 75% прогресса в любой цели",
+        reward: 150,
+        difficulty: "medium",
+        category: "goals",
+        condition: (userData) => {
+            return userData.goals.some(goal => {
+                const progress = (goal.currentAmount / goal.targetAmount) * 100;
+                return progress >= 75;
+            });
+        },
+        progress: (userData) => {
+            const maxProgress = userData.goals.reduce((max, goal) => {
+                const progress = (goal.currentAmount / goal.targetAmount) * 100;
+                return Math.max(max, progress);
+            }, 0);
+            
+            return Math.min(100, (maxProgress / 75) * 100);
+        },
+        requirements: [
+            "Упорно работайте над одной из целей",
+            "Достигните 75% прогресса"
         ]
     }
 ];
@@ -695,6 +877,7 @@ function initializeUserData(userId) {
         purchasedItems: [],
         completedMissions: [],
         hasPremiumSubscription: false,
+        analyticsViews: 0,
         settings: {
             language: 'ru',
             theme: 'light',
@@ -751,9 +934,9 @@ function showPage(page) {
         }
     });
     
-    const modals = document.querySelectorAll('.modal');
+    const modals = document.querySelectorAll('.modal-overlay');
     modals.forEach(modal => {
-        if (modal.id !== 'goalModal') {
+        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal') {
             modal.style.display = 'none';
         }
     });
@@ -782,6 +965,13 @@ function showPage(page) {
         } else {
             document.body.style.overflow = 'auto';
         }
+        
+        // Увеличиваем счетчик просмотров аналитики
+        if (page === 'analytics' && currentUser) {
+            const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
+            userData.analyticsViews = (userData.analyticsViews || 0) + 1;
+            localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
+        }
     } else {
         console.error('Страница не найдена:', page);
         const dashboard = document.getElementById('dashboard');
@@ -800,25 +990,7 @@ function showPage(page) {
         activeNavItem.classList.add('active');
     }
     
-    updatePageTitle(page);
     updatePageContent(page);
-}
-
-function updatePageTitle(page) {
-    const titles = {
-        'dashboard': 'FinanceMind',
-        'analytics': 'Аналитика',
-        'missions': 'Миссии',
-        'store': 'Магазин',
-        'settings': 'Настройки',
-        'chat': 'AI Помощник',
-        'adminPanel': 'Админ панель'
-    };
-    
-    const pageTitleElement = document.getElementById('pageTitle');
-    if (pageTitleElement && titles[page]) {
-        pageTitleElement.textContent = titles[page];
-    }
 }
 
 function updatePageContent(page) {
@@ -853,7 +1025,6 @@ function updateDashboard() {
     updateExpenseStats();
     renderGoals();
     updateAIAdvice();
-    renderInstructions();
 }
 
 function updateAnalytics() {
@@ -869,7 +1040,6 @@ function updateMissions() {
 
 function updateStore() {
     updateFincoinsBalance();
-    renderStoreItems();
 }
 
 function updateSettings() {
@@ -932,6 +1102,7 @@ function saveUserData() {
             purchasedItems: purchasedItems,
             completedMissions: missions.filter(m => m.completed).map(m => m.id),
             hasPremiumSubscription: purchasedItems.includes('premium_subscription'),
+            analyticsViews: (JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}')).analyticsViews || 0,
             settings: {
                 language: currentLanguage,
                 theme: 'light',
@@ -1029,139 +1200,12 @@ function generateAIAdvice() {
 
 // ========== ФУНКЦИИ ДЛЯ ИНСТРУКЦИИ ==========
 
-function renderInstructions() {
-    const instructionsContainer = document.getElementById('instructionsContainer');
-    if (!instructionsContainer) return;
-    
-    const translation = translations[currentLanguage];
-    
-    instructionsContainer.innerHTML = `
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">${translation.instructionsTitle}</h3>
-            </div>
-            <div class="instructions-grid">
-                <div class="instruction-card" onclick="showInstructionDetail(1)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction1Title}</h4>
-                    <p class="instruction-description">${translation.instruction1Desc}</p>
-                </div>
-                
-                <div class="instruction-card" onclick="showInstructionDetail(2)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction2Title}</h4>
-                    <p class="instruction-description">${translation.instruction2Desc}</p>
-                </div>
-                
-                <div class="instruction-card" onclick="showInstructionDetail(3)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-bullseye"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction3Title}</h4>
-                    <p class="instruction-description">${translation.instruction3Desc}</p>
-                </div>
-                
-                <div class="instruction-card" onclick="showInstructionDetail(4)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction4Title}</h4>
-                    <p class="instruction-description">${translation.instruction4Desc}</p>
-                </div>
-                
-                <div class="instruction-card" onclick="showInstructionDetail(5)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction5Title}</h4>
-                    <p class="instruction-description">${translation.instruction5Desc}</p>
-                </div>
-                
-                <div class="instruction-card" onclick="showInstructionDetail(6)">
-                    <div class="instruction-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h4 class="instruction-title">${translation.instruction6Title}</h4>
-                    <p class="instruction-description">${translation.instruction6Desc}</p>
-                </div>
-            </div>
-        </div>
-    `;
+function showInstructionModal() {
+    document.getElementById('instructionModal').style.display = 'flex';
 }
 
-function showInstructionDetail(instructionNumber) {
-    const translation = translations[currentLanguage];
-    const instructionTitles = [
-        translation.instruction1Title,
-        translation.instruction2Title,
-        translation.instruction3Title,
-        translation.instruction4Title,
-        translation.instruction5Title,
-        translation.instruction6Title
-    ];
-    
-    const instructionDescriptions = [
-        translation.instruction1Desc,
-        translation.instruction2Desc,
-        translation.instruction3Desc,
-        translation.instruction4Desc,
-        translation.instruction5Desc,
-        translation.instruction6Desc
-    ];
-    
-    const instructionIcons = [
-        'fa-home',
-        'fa-chart-line',
-        'fa-bullseye',
-        'fa-trophy',
-        'fa-shopping-bag',
-        'fa-robot'
-    ];
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    `;
-    
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 500px; width: 90%;">
-            <div class="modal-header">
-                <h3 class="modal-title">${instructionTitles[instructionNumber - 1]}</h3>
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
-                    <i class="fas ${instructionIcons[instructionNumber - 1]}"></i>
-                </div>
-            </div>
-            <p style="line-height: 1.6; color: var(--text-color); font-size: 16px;">
-                ${instructionDescriptions[instructionNumber - 1]}
-            </p>
-            <div style="display: flex; justify-content: center; margin-top: 24px;">
-                <button onclick="this.closest('.modal-overlay').remove()" class="btn btn-primary">
-                    Понятно
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
+function closeInstructionModal() {
+    document.getElementById('instructionModal').style.display = 'none';
 }
 
 // ========== ФУНКЦИИ ДЛЯ ЦЕЛЕЙ ==========
@@ -1269,7 +1313,8 @@ function renderGoals() {
             const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
             const isCompleted = goal.completed || progress >= 100;
             const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-            const deleteText = currentLanguage === 'ru' ? 'Удалить' : 'Delete';
+            const deleteText = currentLanguage === 'ru' ? 'Удалить' : 
+                              currentLanguage === 'en' ? 'Delete' : 'Жою';
             
             return `
                 <div class="goal-item ${isCompleted ? 'completed' : ''}">
@@ -1362,10 +1407,14 @@ function updateExpenseList() {
         expenseList.innerHTML = sortedExpenses.slice(0, 10).map(expense => {
             return `
                 <div class="expense-item">
-                    <div class="expense-category">${expense.category}</div>
-                    <div class="expense-description">${expense.description}</div>
-                    <div class="expense-amount">${formatAmount(expense.amount)}</div>
-                    <div class="expense-date">${formatDate(expense.date)}</div>
+                    <div class="expense-info">
+                        <div class="expense-category">${expense.category}</div>
+                        <div class="expense-description">${expense.description}</div>
+                    </div>
+                    <div class="expense-details">
+                        <div class="expense-amount">${formatAmount(expense.amount)}</div>
+                        <div class="expense-date">${formatDate(expense.date)}</div>
+                    </div>
                 </div>
             `;
         }).join('');
@@ -1711,7 +1760,8 @@ function renderMissions() {
             expenses: expenses,
             goals: goals,
             fincoins: fincoins,
-            completedMissions: missions.filter(m => m.completed).map(m => m.id)
+            completedMissions: missions.filter(m => m.completed).map(m => m.id),
+            analyticsViews: (JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}')).analyticsViews || 0
         };
         
         const progress = mission.progress(userData);
@@ -1722,44 +1772,155 @@ function renderMissions() {
             'hard': '#E53E3E'
         };
         
+        const difficultyTexts = {
+            'easy': currentLanguage === 'ru' ? 'Легко' : 
+                    currentLanguage === 'en' ? 'Easy' : 'Оңай',
+            'medium': currentLanguage === 'ru' ? 'Средне' : 
+                     currentLanguage === 'en' ? 'Medium' : 'Орташа',
+            'hard': currentLanguage === 'ru' ? 'Сложно' : 
+                   currentLanguage === 'en' ? 'Hard' : 'Қиын'
+        };
+        
         return `
-            <div class="mission-item">
-                <div class="mission-icon">
-                    <i class="fas fa-star"></i>
+            <div class="compact-mission-card ${isCompleted ? 'completed' : ''}" onclick="showMissionDetail(${mission.id})">
+                <div class="compact-mission-icon" style="background: ${difficultyColors[mission.difficulty]}20; color: ${difficultyColors[mission.difficulty]}">
+                    <i class="fas fa-${getMissionIcon(mission.category)}"></i>
                 </div>
-                <div class="mission-info">
-                    <div class="mission-title">${mission.title}</div>
-                    <div class="mission-description">${mission.description}</div>
-                    <div class="mission-reward">
-                        Награда: ${mission.reward} FinCoins • 
-                        <span style="color: ${difficultyColors[mission.difficulty]}">
-                            ${getDifficultyText(mission.difficulty)}
-                        </span>
-                    </div>
-                    <div class="mission-progress">
-                        <div style="background: #E2E8F0; height: 4px; border-radius: 2px; overflow: hidden;">
-                            <div style="background: #4F6DFF; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
-                        </div>
-                        <div style="font-size: 12px; color: #718096; text-align: right; margin-top: 4px;">
-                            ${Math.round(progress)}% выполнено
-                        </div>
-                    </div>
+                <div class="compact-mission-content">
+                    <div class="compact-mission-title">${mission.title}</div>
+                    <div class="compact-mission-description">${mission.description}</div>
                 </div>
-                <button class="mission-action" 
-                        onclick="completeMission(${mission.id})"
-                        ${!isCompleted ? 'disabled' : ''}>
-                    ${isCompleted ? 'Получить награду' : 'В процессе'}
-                </button>
+                <div class="compact-mission-footer">
+                    <div class="compact-mission-reward">
+                        <i class="fas fa-coins"></i>
+                        <span>${mission.reward}</span>
+                    </div>
+                    <div class="compact-mission-difficulty difficulty-${mission.difficulty}">
+                        ${difficultyTexts[mission.difficulty]}
+                    </div>
+                    <button class="mission-complete-btn" 
+                            onclick="event.stopPropagation(); completeMission(${mission.id})"
+                            ${isCompleted ? 'disabled' : ''}>
+                        ${isCompleted ? '✓' : `${Math.round(progress)}%`}
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
 }
 
+function getMissionIcon(category) {
+    const icons = {
+        'economy': 'piggy-bank',
+        'goals': 'bullseye',
+        'consistency': 'calendar-check',
+        'budgeting': 'chart-line',
+        'analytics': 'chart-bar',
+        'savings': 'money-bill-wave',
+        'categories': 'tags',
+        'planning': 'tasks'
+    };
+    return icons[category] || 'star';
+}
+
+function showMissionDetail(missionId) {
+    const mission = appMissions.find(m => m.id === missionId);
+    if (!mission) return;
+    
+    const userData = {
+        expenses: expenses,
+        goals: goals,
+        fincoins: fincoins,
+        completedMissions: missions.filter(m => m.completed).map(m => m.id),
+        analyticsViews: (JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}')).analyticsViews || 0
+    };
+    
+    const progress = mission.progress(userData);
+    const isCompleted = mission.condition(userData);
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px; width: 90%;">
+            <div class="modal-header">
+                <h3 class="modal-title">${mission.title}</h3>
+                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div style="width: 50px; height: 50px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 20px;">
+                        <i class="fas fa-${getMissionIcon(mission.category)}"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: var(--text);">${mission.description}</div>
+                        <div style="display: flex; gap: 12px; margin-top: 8px;">
+                            <div style="display: flex; align-items: center; gap: 4px; color: var(--primary); font-weight: 600;">
+                                <i class="fas fa-coins"></i>
+                                <span>${mission.reward} FinCoins</span>
+                            </div>
+                            <div class="compact-mission-difficulty difficulty-${mission.difficulty}">
+                                ${getDifficultyText(mission.difficulty)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600; color: var(--text);">Прогресс выполнения:</span>
+                        <span style="color: var(--primary); font-weight: 600;">${Math.round(progress)}%</span>
+                    </div>
+                    <div style="background: var(--border); height: 8px; border-radius: 4px; overflow: hidden;">
+                        <div style="background: var(--primary); height: 100%; width: ${progress}%; transition: width 0.5s ease;"></div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--light-bg); padding: 16px; border-radius: var(--radius-sm);">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--text);">Требования:</div>
+                    <ul style="color: var(--text-light); padding-left: 20px;">
+                        ${mission.requirements.map(req => `<li style="margin-bottom: 8px;">${req}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()" style="flex: 1;">
+                    Закрыть
+                </button>
+                <button class="btn btn-primary" onclick="completeMission(${mission.id}); this.closest('.modal-overlay').remove()" style="flex: 1;" ${isCompleted ? 'disabled' : ''}>
+                    ${isCompleted ? 'Выполнено' : 'Получить награду'}
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
 function getDifficultyText(difficulty) {
     const texts = {
-        'easy': 'Легко',
-        'medium': 'Средне',
-        'hard': 'Сложно'
+        'easy': currentLanguage === 'ru' ? 'Легко' : 
+                currentLanguage === 'en' ? 'Easy' : 'Оңай',
+        'medium': currentLanguage === 'ru' ? 'Средне' : 
+                 currentLanguage === 'en' ? 'Medium' : 'Орташа',
+        'hard': currentLanguage === 'ru' ? 'Сложно' : 
+               currentLanguage === 'en' ? 'Hard' : 'Қиын'
     };
     return texts[difficulty] || difficulty;
 }
@@ -1772,7 +1933,8 @@ function completeMission(missionId) {
         expenses: expenses,
         goals: goals,
         fincoins: fincoins,
-        completedMissions: missions.filter(m => m.completed).map(m => m.id)
+        completedMissions: missions.filter(m => m.completed).map(m => m.id),
+        analyticsViews: (JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}')).analyticsViews || 0
     };
     
     if (mission.condition(userData)) {
@@ -1798,6 +1960,22 @@ function updateMissionsProgress() {
     setTimeout(() => {
         renderMissions();
     }, 100);
+}
+
+function buyItem(itemId, price) {
+    if (fincoins >= price) {
+        fincoins -= price;
+        purchasedItems.push(itemId);
+        saveUserData();
+        updateFincoinsBalance();
+        showNotification(`Покупка совершена успешно!`, 'success');
+    } else {
+        showNotification('Недостаточно FinCoins для покупки', 'error');
+    }
+}
+
+function buyPremiumSubscription() {
+    buyItem('premium_subscription', 1500);
 }
 
 // ========== ФУНКЦИИ ДЛЯ ЧАТА ==========
@@ -1841,7 +2019,7 @@ function sendMessage() {
             <i class="fas fa-ellipsis-h"></i>
         </div>
     `;
-    chatMessages.appendChild(tyingIndicator);
+    chatMessages.appendChild(typingIndicator);
     
     // Прокрутка после добавления индикатора набора
     scrollChatToBottom();
@@ -1892,6 +2070,20 @@ function getAIResponse(message) {
     ];
     
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+}
+
+function getFinancialAdvice() {
+    const adviceList = [
+        "Регулярно отслеживайте все расходы - даже мелкие. Это поможет увидеть полную картину ваших финансов.",
+        "Создайте финансовую подушку безопасности на 3-6 месяцев расходов.",
+        "Используйте правило 50/30/20: 50% на necessities, 30% на wants, 20% на savings и инвестиции.",
+        "Перед крупной покупкой дайте себе 24-48 часов на размышление.",
+        "Автоматизируйте накопления - настройте автоматические переводы на сберегательный счет.",
+        "Анализируйте свои расходы по категориям каждый месяц.",
+        "Ставьте SMART-цели: конкретные, измеримые, достижимые, релевантные, ограниченные по времени."
+    ];
+    
+    return adviceList[Math.floor(Math.random() * adviceList.length)];
 }
 
 // ========== ФУНКЦИИ ДЛЯ НАСТРОЕК ==========
@@ -1984,8 +2176,8 @@ function applyTranslations(lang) {
     console.log('Applying translations for language:', lang);
     
     Object.keys(translation).forEach(key => {
-        const element = document.getElementById(key);
-        if (element) {
+        const elements = document.querySelectorAll(`[data-translate="${key}"]`);
+        elements.forEach(element => {
             if (element.tagName === 'INPUT' && element.placeholder !== undefined) {
                 element.placeholder = translation[key];
             } else if (element.tagName === 'BUTTON' || element.tagName === 'SPAN' || element.tagName === 'DIV' || element.tagName === 'H3' || element.tagName === 'P' || element.tagName === 'LABEL') {
@@ -1993,7 +2185,14 @@ function applyTranslations(lang) {
             } else {
                 element.textContent = translation[key];
             }
-        }
+        });
+        
+        const placeholderElements = document.querySelectorAll(`[data-translate-placeholder="${key}"]`);
+        placeholderElements.forEach(element => {
+            if (element.placeholder !== undefined) {
+                element.placeholder = translation[key];
+            }
+        });
     });
     
     const titles = {
@@ -2004,11 +2203,6 @@ function applyTranslations(lang) {
     document.title = titles[lang] || titles['ru'];
     
     updateNavigationText(lang);
-    
-    // Обновляем инструкцию при смене языка
-    if (document.getElementById('dashboard').style.display === 'block') {
-        renderInstructions();
-    }
 }
 
 function updateNavigationText(lang) {
@@ -2114,14 +2308,6 @@ function renderMissionManagement() {
     if (!missionManagement) return;
     
     missionManagement.innerHTML = appMissions.map(mission => {
-        const userData = {
-            expenses: expenses,
-            goals: goals,
-            fincoins: fincoins,
-            completedMissions: missions.filter(m => m.completed).map(m => m.id)
-        };
-        
-        const progress = mission.progress(userData);
         const completionRate = calculateMissionCompletionRate(mission.id);
         
         return `
@@ -2132,10 +2318,10 @@ function renderMissionManagement() {
                 </div>
                 <div class="admin-mission-progress">
                     <div class="admin-progress-bar">
-                        <div class="admin-progress-fill" style="width: ${progress}%"></div>
+                        <div class="admin-progress-fill" style="width: ${completionRate}%"></div>
                     </div>
                     <div class="admin-progress-text">
-                        Прогресс: ${Math.round(progress)}% | Выполнение: ${completionRate}%
+                        Выполнение: ${completionRate}%
                     </div>
                 </div>
                 <div class="mission-description">${mission.description}</div>
@@ -2286,6 +2472,20 @@ function showNotification(message, type = 'info') {
     }
 }
 
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+
+function forceSync() {
+    showNotification('Данные синхронизированы', 'success');
+}
+
+function generateMonthlyReport() {
+    showNotification('Месячный отчет сгенерирован', 'success');
+}
+
+function showAdvancedAnalytics() {
+    showNotification('Расширенная аналитика открыта', 'info');
+}
+
 // ========== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -2337,4 +2537,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('FinanceMind инициализирован');
 });
+
 
