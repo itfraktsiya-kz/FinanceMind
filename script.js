@@ -1810,6 +1810,9 @@ function renderMissions() {
     const missionsList = document.getElementById('missionsList');
     if (!missionsList) return;
     
+    // Сброс прогресса миссий
+    missions = [];
+    
     if (appMissions.length === 0) {
         missionsList.innerHTML = `
             <div class="empty-state">
@@ -2133,6 +2136,36 @@ function getAIResponse(message) {
         return getFinancialAdvice();
     }
     
+    if (translatedMessage.includes('бюджет') || translatedMessage.includes('budget') || translatedMessage.includes('бюджет')) {
+        return currentLanguage === 'ru' ? "Для управления бюджетом рекомендую отслеживать все расходы, устанавливать лимиты по категориям и регулярно анализировать статистику." :
+               currentLanguage === 'en' ? "For budget management, I recommend tracking all expenses, setting category limits, and regularly analyzing statistics." :
+               "Бюджетті басқару үшін барлық шығындарды бақылау, санаттар бойынша шектеулер белгілеу және статистиканы үнемі талдауға кеңес беремін.";
+    }
+    
+    if (translatedMessage.includes('экономи') || translatedMessage.includes('save') || translatedMessage.includes('үнемдеу')) {
+        return currentLanguage === 'ru' ? "Для экономии денег попробуйте анализировать свои траты, находить ненужные расходы, устанавливать финансовые цели и автоматизировать накопления." :
+               currentLanguage === 'en' ? "To save money, try analyzing your spending, finding unnecessary expenses, setting financial goals, and automating savings." :
+               "Ақшаны үнемдеу үшін шығындарыңызды талдау, қажетсіз шығындарды табу, қаржылық мақсаттарды белгілеу және жинақтарды автоматтандыруға тырысыңыз.";
+    }
+    
+    if (translatedMessage.includes('инвестиц') || translatedMessage.includes('invest') || translatedMessage.includes('инвестиция')) {
+        return currentLanguage === 'ru' ? "Перед инвестированием важно создать финансовую подушку безопасности, изучить основы и начинать с небольших сумм. Консультируйтесь с финансовыми советниками." :
+               currentLanguage === 'en' ? "Before investing, it's important to create a financial safety net, learn the basics, and start with small amounts. Consult with financial advisors." :
+               "Инвестициялау алдында қаржылық қорғаныс желісін құру, негіздерін үйрену және кішкентай сомалардан бастау маңызды. Қаржылық кеңесшілермен кеңесіңіз.";
+    }
+    
+    if (translatedMessage.includes('кредит') || translatedMessage.includes('loan') || translatedMessage.includes('несие')) {
+        return currentLanguage === 'ru' ? "При взятии кредита внимательно изучайте условия, рассчитывайте свою платежеспособность и учитывайте все дополнительные расходы. Старайтесь избегать долгов." :
+               currentLanguage === 'en' ? "When taking a loan, carefully study the terms, calculate your solvency, and consider all additional expenses. Try to avoid debts." :
+               "Несие алу кезінде шарттарды мұқият оқып шығыңыз, төлем қабілеттілігіңізді есептеңіз және барлық қосымша шығындарды ескеріңіз. Қарыздардан аулақ болуға тырысыңыз.";
+    }
+    
+    if (translatedMessage.includes('накоп') || translatedMessage.includes('saving') || translatedMessage.includes('жинақ')) {
+        return currentLanguage === 'ru' ? "Для эффективных накоплений установите конкретные цели, автоматизируйте переводы и регулярно отслеживайте прогресс. Начните с создания финансовой подушки безопасности." :
+               currentLanguage === 'en' ? "For effective savings, set specific goals, automate transfers, and regularly track progress. Start by creating a financial safety net." :
+               "Тиімді жинақтар үшін нақты мақсаттарды белгілеңіз, аударымдарды автоматтандырыңыз және прогресті үнемі бақылаңыз. Қаржылық қорғаныс желісін құрудан бастаңыз.";
+    }
+    
     const defaultResponses = {
         ru: [
             "Интересный вопрос! Я специализируюсь на финансовых темах. Могу помочь с анализом расходов, планированием бюджета или дать советы по экономии.",
@@ -2161,19 +2194,34 @@ function translateUserMessage(message) {
             'привет': 'привет', 'здравствуй': 'привет', 'салем': 'привет',
             'расход': 'расход', 'трат': 'расход', 'шығын': 'расход',
             'цел': 'цель', 'накоп': 'цель', 'мақсат': 'цель',
-            'совет': 'совет', 'рекомендац': 'совет', 'кеңес': 'совет'
+            'совет': 'совет', 'рекомендац': 'совет', 'кеңес': 'совет',
+            'бюджет': 'бюджет', 'budget': 'бюджет',
+            'экономи': 'экономия', 'save': 'экономия', 'үнемдеу': 'экономия',
+            'инвестиц': 'инвестиции', 'invest': 'инвестиции', 'инвестиция': 'инвестиции',
+            'кредит': 'кредит', 'loan': 'кредит', 'несие': 'кредит',
+            'накоп': 'накопления', 'saving': 'накопления', 'жинақ': 'накопления'
         },
         'en': {
             'привет': 'hello', 'здравствуй': 'hello', 'салем': 'hello',
             'расход': 'expense', 'трат': 'expense', 'шығын': 'expense',
             'цел': 'goal', 'накоп': 'goal', 'мақсат': 'goal',
-            'совет': 'advice', 'рекомендац': 'advice', 'кеңес': 'advice'
+            'совет': 'advice', 'рекомендац': 'advice', 'кеңес': 'advice',
+            'бюджет': 'budget', 'budget': 'budget',
+            'экономи': 'saving', 'save': 'saving', 'үнемдеу': 'saving',
+            'инвестиц': 'investment', 'invest': 'investment', 'инвестиция': 'investment',
+            'кредит': 'loan', 'loan': 'loan', 'несие': 'loan',
+            'накоп': 'savings', 'saving': 'savings', 'жинақ': 'savings'
         },
         'kz': {
             'привет': 'салем', 'здравствуй': 'салем', 'салем': 'салем',
             'расход': 'шығын', 'трат': 'шығын', 'шығын': 'шығын',
             'цел': 'мақсат', 'накоп': 'мақсат', 'мақсат': 'мақсат',
-            'совет': 'кеңес', 'рекомендац': 'кеңес', 'кеңес': 'кеңес'
+            'совет': 'кеңес', 'рекомендац': 'кеңес', 'кеңес': 'кеңес',
+            'бюджет': 'бюджет', 'budget': 'бюджет',
+            'экономи': 'үнемдеу', 'save': 'үнемдеу', 'үнемдеу': 'үнемдеу',
+            'инвестиц': 'инвестиция', 'invest': 'инвестиция', 'инвестиция': 'инвестиция',
+            'кредит': 'несие', 'loan': 'несие', 'несие': 'несие',
+            'накоп': 'жинақ', 'saving': 'жинақ', 'жинақ': 'жинақ'
         }
     };
     
@@ -3110,6 +3158,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initLanguage();
     console.log('FinanceMind инициализирован');
-});
-
-
+}
