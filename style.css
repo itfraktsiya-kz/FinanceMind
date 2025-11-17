@@ -366,6 +366,92 @@ body {
     font-size: 14px;
 }
 
+/* Instruction Card */
+.instruction-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-light);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.instruction-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+
+.instruction-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.instruction-card .card-header i {
+    font-size: 24px;
+    color: var(--primary);
+}
+
+.instruction-card .card-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.instruction-card p {
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Instruction Modal Content */
+.instruction-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.instruction-content p {
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+.instruction-section {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--light-bg);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--primary);
+}
+
+.instruction-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.instruction-section h4 i {
+    color: var(--primary);
+    width: 20px;
+}
+
+.instruction-section ul {
+    padding-left: 20px;
+    color: var(--text-light);
+}
+
+.instruction-section li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
 /* СТАТИСТИКА РАСХОДОВ */
 .expense-stats {
     display: grid;
@@ -460,6 +546,12 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background: var(--light-bg);
+    transition: var(--transition);
+}
+
+.goal-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .goal-header {
@@ -490,6 +582,7 @@ body {
     height: 100%;
     border-radius: 4px;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    transition: width 0.5s ease;
 }
 
 .goal-info {
@@ -497,6 +590,31 @@ body {
     justify-content: space-between;
     font-size: 13px;
     color: var(--text-light);
+}
+
+.goal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.goal-delete-btn {
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.goal-delete-btn:hover {
+    background: #d32f2f;
+    transform: translateY(-1px);
 }
 
 /* Bottom Navigation */
