@@ -17,9 +17,12 @@ let appVisits = 0;
 const translations = {
     ru: {
         appTitle: "FinanceMind",
+        appSubtitle: "Умный финансовый помощник",
         welcome: "Добро пожаловать!",
         nameLabel: "Имя",
         namePlaceholder: "Ваше имя",
+        lastNameLabel: "Фамилия",
+        lastNamePlaceholder: "Ваша фамилия",
         emailLabel: "Электронная почта",
         emailPlaceholder: "user@example.com",
         passwordLabel: "Пароль",
@@ -42,6 +45,8 @@ const translations = {
         addButton: "Добавить",
         noGoals: "У вас пока нет финансовых целей",
         instructionsTitle: "Инструкция по использованию",
+        instructionsDescription: "Нажмите, чтобы ознакомиться с руководством по использованию приложения",
+        yourStatistics: "Ваша статистика",
         expenseTrend: "Динамика расходов",
         totalExpenses: "Общие расходы",
         byCategories: "По категориям",
@@ -68,6 +73,7 @@ const translations = {
         earnButton: "Заработать",
         premiumSubscription: "Премиум подписка",
         premiumTitle: "FinanceMind Premium",
+        premiumBadge: "PREMIUM",
         premiumDescription: "Получите доступ ко всем премиум-функциям",
         premiumFeatures: "Премиум функции",
         extendedAnalytics: "Расширенная аналитика",
@@ -89,7 +95,6 @@ const translations = {
         language: "Язык",
         theme: "Тема",
         saveChanges: "Сохранить изменения",
-        lastNameLabel: "Фамилия",
         password: "Пароль",
         lastChanged: "Последнее изменение: сегодня",
         changePassword: "Изменить пароль",
@@ -113,6 +118,7 @@ const translations = {
         addGoalButton: "Добавить цель",
         deleteGoalText: "Удалить",
         chatPlaceholder: "Напишите ваш вопрос...",
+        welcomeMessage: "Привет! Я ваш AI-помощник по финансам. 🤖<br>Могу помочь с анализом расходов, советами по экономии и финансовым планированием.",
         adminPanel: "Админ панель",
         totalUsers: "Всего пользователей",
         totalMissions: "Всего миссий",
@@ -120,13 +126,43 @@ const translations = {
         totalFincoins: "Выдано FinCoins",
         missionManagement: "Управление миссиями",
         userProgress: "Прогресс пользователей",
-        exportAllData: "Экспорт всех данных"
+        exportAllData: "Экспорт всех данных",
+        reportsSection: "Отчеты",
+        monthlyReport: "Отчет за месяц",
+        detailedReport: "Обширный отчет",
+        userRole: "Пользователь",
+        instructionsModalTitle: "Инструкция по использованию FinanceMind",
+        instructionsWelcome: "Добро пожаловать в FinanceMind!",
+        instructionsIntro: "Эта инструкция поможет вам быстро освоиться в приложении.",
+        instructionsSection1: "1. Главный экран",
+        instructionsSection1Item1: "Просматривайте статистику расходов",
+        instructionsSection1Item2: "Получайте AI-советы",
+        instructionsSection1Item3: "Управляйте финансовыми целями",
+        instructionsSection2: "2. Аналитика",
+        instructionsSection2Item1: "Анализируйте графики расходов",
+        instructionsSection2Item2: "Добавляйте новые расходы",
+        instructionsSection2Item3: "Просматривайте историю трат",
+        instructionsSection3: "3. Миссии",
+        instructionsSection3Item1: "Выполняйте задания",
+        instructionsSection3Item2: "Зарабатывайте FinCoins",
+        instructionsSection3Item3: "Отслеживайте прогресс",
+        instructionsSection4: "4. Магазин",
+        instructionsSection4Item1: "Покупайте премиум функции",
+        instructionsSection4Item2: "Тратьте заработанные FinCoins",
+        instructionsSection5: "5. AI-помощник",
+        instructionsSection5Item1: "Получайте финансовые советы",
+        instructionsSection5Item2: "Задавайте вопросы",
+        instructionsGotIt: "Понятно, начать использовать",
+        popular: "Популярное"
     },
     en: {
         appTitle: "FinanceMind",
+        appSubtitle: "Smart Financial Assistant",
         welcome: "Welcome!",
         nameLabel: "Name",
         namePlaceholder: "Your name",
+        lastNameLabel: "Last Name",
+        lastNamePlaceholder: "Your last name",
         emailLabel: "Email",
         emailPlaceholder: "user@example.com",
         passwordLabel: "Password",
@@ -149,6 +185,8 @@ const translations = {
         addButton: "Add",
         noGoals: "You don't have financial goals yet",
         instructionsTitle: "User Guide",
+        instructionsDescription: "Click to read the application usage guide",
+        yourStatistics: "Your Statistics",
         expenseTrend: "Expense Trends",
         totalExpenses: "Total Expenses",
         byCategories: "By Categories",
@@ -175,6 +213,7 @@ const translations = {
         earnButton: "Earn",
         premiumSubscription: "Premium Subscription",
         premiumTitle: "FinanceMind Premium",
+        premiumBadge: "PREMIUM",
         premiumDescription: "Get access to all premium features",
         premiumFeatures: "Premium Features",
         extendedAnalytics: "Extended Analytics",
@@ -196,7 +235,6 @@ const translations = {
         language: "Language",
         theme: "Theme",
         saveChanges: "Save Changes",
-        lastNameLabel: "Last Name",
         password: "Password",
         lastChanged: "Last changed: today",
         changePassword: "Change Password",
@@ -220,6 +258,7 @@ const translations = {
         addGoalButton: "Add Goal",
         deleteGoalText: "Delete",
         chatPlaceholder: "Write your question...",
+        welcomeMessage: "Hello! I'm your AI financial assistant. 🤖<br>I can help with expense analysis, saving tips, and financial planning.",
         adminPanel: "Admin Panel",
         totalUsers: "Total Users",
         totalMissions: "Total Missions",
@@ -227,13 +266,43 @@ const translations = {
         totalFincoins: "Total FinCoins Issued",
         missionManagement: "Mission Management",
         userProgress: "User Progress",
-        exportAllData: "Export All Data"
+        exportAllData: "Export All Data",
+        reportsSection: "Reports",
+        monthlyReport: "Monthly Report",
+        detailedReport: "Detailed Report",
+        userRole: "User",
+        instructionsModalTitle: "FinanceMind User Guide",
+        instructionsWelcome: "Welcome to FinanceMind!",
+        instructionsIntro: "This guide will help you quickly get familiar with the application.",
+        instructionsSection1: "1. Main Screen",
+        instructionsSection1Item1: "View expense statistics",
+        instructionsSection1Item2: "Receive AI advice",
+        instructionsSection1Item3: "Manage financial goals",
+        instructionsSection2: "2. Analytics",
+        instructionsSection2Item1: "Analyze expense charts",
+        instructionsSection2Item2: "Add new expenses",
+        instructionsSection2Item3: "View spending history",
+        instructionsSection3: "3. Missions",
+        instructionsSection3Item1: "Complete tasks",
+        instructionsSection3Item2: "Earn FinCoins",
+        instructionsSection3Item3: "Track progress",
+        instructionsSection4: "4. Store",
+        instructionsSection4Item1: "Buy premium features",
+        instructionsSection4Item2: "Spend earned FinCoins",
+        instructionsSection5: "5. AI Assistant",
+        instructionsSection5Item1: "Get financial advice",
+        instructionsSection5Item2: "Ask questions",
+        instructionsGotIt: "Got it, start using",
+        popular: "Popular"
     },
     kz: {
         appTitle: "FinanceMind",
+        appSubtitle: "Ақылды қаржы көмекшісі",
         welcome: "Қош келдіңіз!",
         nameLabel: "Аты",
         namePlaceholder: "Сіздің атыңыз",
+        lastNameLabel: "Тегі",
+        lastNamePlaceholder: "Сіздің тегіңіз",
         emailLabel: "Электрондық пошта",
         emailPlaceholder: "user@example.com",
         passwordLabel: "Құпия сөз",
@@ -256,6 +325,8 @@ const translations = {
         addButton: "Қосу",
         noGoals: "Сізде әлі қаржылық мақсаттар жоқ",
         instructionsTitle: "Пайдалану нұсқаулығы",
+        instructionsDescription: "Қолдану нұсқаулығын оқу үшін басыңыз",
+        yourStatistics: "Сіздің статистикаңыз",
         expenseTrend: "Шығындар динамикасы",
         totalExpenses: "Жалпы шығындар",
         byCategories: "Санаттар бойынша",
@@ -282,6 +353,7 @@ const translations = {
         earnButton: "Табу",
         premiumSubscription: "Премиум жазылым",
         premiumTitle: "FinanceMind Premium",
+        premiumBadge: "PREMIUM",
         premiumDescription: "Барлық премиум функцияларға қол жеткізіңіз",
         premiumFeatures: "Премиум функциялар",
         extendedAnalytics: "Кеңейтілген аналитика",
@@ -303,7 +375,6 @@ const translations = {
         language: "Тіл",
         theme: "Тақырып",
         saveChanges: "Өзгерістерді сақтау",
-        lastNameLabel: "Тегі",
         password: "Құпия сөз",
         lastChanged: "Соңғы өзгеріс: бүгін",
         changePassword: "Құпия сөзді өзгерту",
@@ -327,6 +398,7 @@ const translations = {
         addGoalButton: "Мақсат қосу",
         deleteGoalText: "Жою",
         chatPlaceholder: "Сұрағыңызды жазыңыз...",
+        welcomeMessage: "Сәлем! Мен сіздің қаржылық ЖС көмекшісінбін. 🤖<br>Шығындарды талдау, үнемдеу кеңестері және қаржылық жоспарлау бойынша көмектесе аламын.",
         adminPanel: "Әкімші панелі",
         totalUsers: "Барлық пайдаланушылар",
         totalMissions: "Барлық миссиялар",
@@ -334,7 +406,34 @@ const translations = {
         totalFincoins: "Берілген FinCoins",
         missionManagement: "Миссияларды басқару",
         userProgress: "Пайдаланушылар прогрессі",
-        exportAllData: "Барлық деректерді экспорттау"
+        exportAllData: "Барлық деректерді экспорттау",
+        reportsSection: "Есептер",
+        monthlyReport: "Айлық есеп",
+        detailedReport: "Толық есеп",
+        userRole: "Пайдаланушы",
+        instructionsModalTitle: "FinanceMind пайдалану нұсқаулығы",
+        instructionsWelcome: "FinanceMind-қа қош келдіңіз!",
+        instructionsIntro: "Бұл нұсқаулық қолданбамен тез танысуға көмектеседі.",
+        instructionsSection1: "1. Негізгі экран",
+        instructionsSection1Item1: "Шығындар статистикасын қарау",
+        instructionsSection1Item2: "ЖС кеңестерін алу",
+        instructionsSection1Item3: "Қаржылық мақсаттарды басқару",
+        instructionsSection2: "2. Аналитика",
+        instructionsSection2Item1: "Шығындар графиктерін талдау",
+        instructionsSection2Item2: "Жаңа шығындарды қосу",
+        instructionsSection2Item3: "Шығындар тарихын қарау",
+        instructionsSection3: "3. Миссиялар",
+        instructionsSection3Item1: "Тапсырмаларды орындау",
+        instructionsSection3Item2: "FinCoins табу",
+        instructionsSection3Item3: "Прогресті бақылау",
+        instructionsSection4: "4. Дүкен",
+        instructionsSection4Item1: "Премиум функцияларды сатып алу",
+        instructionsSection4Item2: "Жиналған FinCoins жұмсау",
+        instructionsSection5: "5. ЖС көмекшісі",
+        instructionsSection5Item1: "Қаржылық кеңес алу",
+        instructionsSection5Item2: "Сұрақтар қою",
+        instructionsGotIt: "Түсіндім, пайдалануды бастау",
+        popular: "Танымал"
     }
 };
 
@@ -476,8 +575,25 @@ function formatDate(dateString) {
 
 // ========== ФУНКЦИИ ДЛЯ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ ==========
 
+function togglePasswordVisibility(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleButton = passwordField.nextElementSibling;
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        passwordField.type = 'password';
+        toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
 function resetAllData() {
-    if (confirm('Вы уверены, что хотите сбросить все данные? Это удалит все ваши настройки, расходы и цели.')) {
+    const confirmText = currentLanguage === 'ru' ? 'Вы уверены, что хотите сбросить все данные? Это удалит все ваши настройки, расходы и цели.' :
+                      currentLanguage === 'en' ? 'Are you sure you want to reset all data? This will delete all your settings, expenses and goals.' :
+                      'Барлық деректерді қалпына келтіруді сенімдісіз бе? Бұл сіздің барлық баптауларыңызды, шығындарыңызды және мақсаттарыңызды жояды.';
+    
+    if (confirm(confirmText)) {
         localStorage.clear();
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
@@ -493,7 +609,11 @@ function resetAllData() {
         purchasedItems = [];
         selectedCategory = null;
         
-        showNotification('Все данные сброшены! Теперь вы можете зарегистрироваться заново.', 'success');
+        const successText = currentLanguage === 'ru' ? 'Все данные сброшены! Теперь вы можете зарегистрироваться заново.' :
+                          currentLanguage === 'en' ? 'All data has been reset! You can now register again.' :
+                          'Барлық деректер қалпына келтірілді! Енді қайта тіркеле аласыз.';
+        
+        showNotification(successText, 'success');
         showLoginForm();
         
         setTimeout(() => {
@@ -526,7 +646,12 @@ function logoutAndReset() {
     if (authPage) authPage.style.display = 'block';
     
     showLoginForm();
-    showNotification('Вы вышли из системы', 'info');
+    
+    const logoutText = currentLanguage === 'ru' ? 'Вы вышли из системы' :
+                     currentLanguage === 'en' ? 'You have logged out' :
+                     'Сіз жүйеден шықтыңыз';
+    
+    showNotification(logoutText, 'info');
 }
 
 function register() {
@@ -535,19 +660,28 @@ function register() {
     const password = document.getElementById('regPassword').value;
     
     if (!name || !email || !password) {
-        showNotification('Пожалуйста, заполните все поля', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
+                        currentLanguage === 'en' ? 'Please fill in all fields' :
+                        'Барлық өрістерді толтырыңыз';
+        showNotification(errorText, 'error');
         return;
     }
     
     if (password.length < 6) {
-        showNotification('Пароль должен содержать минимум 6 символов', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пароль должен содержать минимум 6 символов' :
+                        currentLanguage === 'en' ? 'Password must be at least 6 characters long' :
+                        'Құпия сөз кемінде 6 таңбадан тұруы керек';
+        showNotification(errorText, 'error');
         return;
     }
     
     const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
     
     if (users.find(u => u.email === email)) {
-        showNotification('Пользователь с таким email уже существует. Используйте другой email или войдите в систему.', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пользователь с таким email уже существует. Используйте другой email или войдите в систему.' :
+                        currentLanguage === 'en' ? 'User with this email already exists. Use another email or login.' :
+                        'Бұл email-мен пайдаланушы бар. Басқа email пайдаланыңыз немесе кіріңіз.';
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -570,7 +704,12 @@ function register() {
     currentUser = newUser;
     initializeUserData(newUser.id);
     showAppInterface();
-    showNotification('Регистрация выполнена успешно! Добро пожаловать в FinanceMind!', 'success');
+    
+    const successText = currentLanguage === 'ru' ? 'Регистрация выполнена успешно! Добро пожаловать в FinanceMind!' :
+                      currentLanguage === 'en' ? 'Registration successful! Welcome to FinanceMind!' :
+                      'Тіркелу сәтті аяқталды! FinanceMind-қа қош келдіңіз!';
+    
+    showNotification(successText, 'success');
 }
 
 function login() {
@@ -578,7 +717,10 @@ function login() {
     const password = document.getElementById('password').value;
     
     if (!email || !password) {
-        showNotification('Пожалуйста, заполните все поля', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
+                        currentLanguage === 'en' ? 'Please fill in all fields' :
+                        'Барлық өрістерді толтырыңыз';
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -599,7 +741,12 @@ function login() {
         currentUser = adminUser;
         loadUserData();
         showAppInterface();
-        showNotification('Вход выполнен успешно! Админ панель активирована.', 'success');
+        
+        const successText = currentLanguage === 'ru' ? 'Вход выполнен успешно! Админ панель активирована.' :
+                          currentLanguage === 'en' ? 'Login successful! Admin panel activated.' :
+                          'Кіру сәтті аяқталды! Әкімші панелі белсендірілді.';
+        
+        showNotification(successText, 'success');
         return;
     }
     
@@ -612,9 +759,17 @@ function login() {
         currentUser = user;
         loadUserData();
         showAppInterface();
-        showNotification('Вход выполнен успешно! Рады снова видеть вас!', 'success');
+        
+        const successText = currentLanguage === 'ru' ? 'Вход выполнен успешно! Рады снова видеть вас!' :
+                          currentLanguage === 'en' ? 'Login successful! Glad to see you again!' :
+                          'Кіру сәтті аяқталды! Сізді қайта көргенімізге қуаныштымыз!';
+        
+        showNotification(successText, 'success');
     } else {
-        showNotification('Неверный email или пароль. Проверьте данные или сбросьте настройки.', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Неверный email или пароль. Проверьте данные или сбросьте настройки.' :
+                        currentLanguage === 'en' ? 'Invalid email or password. Check your data or reset settings.' :
+                        'Қате email немесе құпия сөз. Деректеріңізді тексеріңіз немесе баптауларды қалпына келтіріңіз.';
+        showNotification(errorText, 'error');
     }
 }
 
@@ -740,13 +895,13 @@ function updateHeaderTitle(page) {
     if (!headerTitle) return;
     
     const titles = {
-        'dashboard': 'Главная',
-        'analytics': 'Аналитика',
-        'missions': 'Миссии',
-        'store': 'Магазин',
-        'settings': 'Настройки',
-        'chat': 'Помощник',
-        'adminPanel': 'Админ панель'
+        'dashboard': translations[currentLanguage].homeNav,
+        'analytics': translations[currentLanguage].analyticsNav,
+        'missions': translations[currentLanguage].missionsNav,
+        'store': translations[currentLanguage].storeButton,
+        'settings': translations[currentLanguage].systemSettings,
+        'chat': translations[currentLanguage].chatNav,
+        'adminPanel': translations[currentLanguage].adminPanel
     };
     
     headerTitle.textContent = titles[page] || 'FinanceMind';
@@ -803,7 +958,9 @@ function updateAdminPanel() {
     if (currentUser && currentUser.role === 'admin') {
         loadAdminData();
     } else {
-        showNotification('Доступ запрещен. Только для администраторов.', 'error');
+        showNotification(translations[currentLanguage].adminPanel + ' - ' + 
+                        (currentLanguage === 'ru' ? 'Доступ запрещен' : 
+                         currentLanguage === 'en' ? 'Access denied' : 'Қол жетімсіз'), 'error');
         showPage('dashboard');
     }
 }
@@ -863,7 +1020,12 @@ function updateUserInterface() {
         if (userGreetingElement) userGreetingElement.textContent = getGreeting();
         if (profileNameElement) profileNameElement.textContent = currentUser.name;
         if (profileEmailElement) profileEmailElement.textContent = currentUser.email;
-        if (profileRoleElement) profileRoleElement.textContent = currentUser.role === 'admin' ? 'Администратор' : 'Пользователь';
+        if (profileRoleElement) {
+            profileRoleElement.textContent = currentUser.role === 'admin' ? 
+                (currentLanguage === 'ru' ? 'Администратор' : 
+                 currentLanguage === 'en' ? 'Administrator' : 'Әкімші') : 
+                translations[currentLanguage].userRole;
+        }
         
         const userAvatar = document.getElementById('userAvatar');
         const profileAvatar = document.getElementById('profileAvatar');
@@ -879,9 +1041,19 @@ function updateUserInterface() {
 
 function getGreeting() {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Доброе утро!';
-    if (hour < 18) return 'Добрый день!';
-    return 'Добрый вечер!';
+    if (hour < 12) {
+        return currentLanguage === 'ru' ? 'Доброе утро!' :
+               currentLanguage === 'en' ? 'Good morning!' :
+               'Қайырлы таң!';
+    }
+    if (hour < 18) {
+        return currentLanguage === 'ru' ? 'Добрый день!' :
+               currentLanguage === 'en' ? 'Good afternoon!' :
+               'Қайырлы күн!';
+    }
+    return currentLanguage === 'ru' ? 'Добрый вечер!' :
+           currentLanguage === 'en' ? 'Good evening!' :
+           'Қайырлы кеш!';
 }
 
 function updateAIAdvice() {
@@ -904,15 +1076,19 @@ function generateAIAdvice() {
         .reduce((sum, expense) => sum + expense.amount, 0);
     
     if (expenses.length === 0) {
-        return "Начните добавлять расходы, чтобы получить персонализированные советы по управлению финансами!";
+        return translations[currentLanguage].aiAdviceDefault;
     }
     
     if (currentMonthExpenses > 50000) {
-        return "Ваши расходы в этом месяце довольно высокие. Рекомендую проанализировать категории трат и найти возможности для экономии.";
+        return currentLanguage === 'ru' ? "Ваши расходы в этом месяце довольно высокие. Рекомендую проанализировать категории трат и найти возможности для экономии." :
+               currentLanguage === 'en' ? "Your expenses this month are quite high. I recommend analyzing spending categories and finding opportunities to save." :
+               "Бұл айдағы шығыстарыңыз айтарлықтай жоғары. Шығындар санаттарын талдап, үнемдеу мүмкіндіктерін тапқан жөн.";
     }
     
     if (goals.length === 0) {
-        return "Создайте финансовую цель, чтобы мотивировать себя на регулярные накопления. Это поможет достичь ваших мечтаний быстрее!";
+        return currentLanguage === 'ru' ? "Создайте финансовую цель, чтобы мотивировать себя на регулярные накопления. Это поможет достичь ваших мечтаний быстрее!" :
+               currentLanguage === 'en' ? "Create a financial goal to motivate yourself for regular savings. This will help you achieve your dreams faster!" :
+               "Үнемі жинақтауға ынталандыру үшін қаржылық мақсат құрыңыз. Бұл армандарыңызға тезірек жетуге көмектеседі!";
     }
     
     const foodExpenses = expenses
@@ -920,18 +1096,36 @@ function generateAIAdvice() {
         .reduce((sum, expense) => sum + expense.amount, 0);
     
     if (foodExpenses > totalExpenses * 0.4) {
-        return "Заметил, что значительная часть расходов уходит на еду. Попробуйте планировать покупки заранее и готовить дома - это поможет сэкономить.";
+        return currentLanguage === 'ru' ? "Заметил, что значительная часть расходов уходит на еду. Попробуйте планировать покупки заранее и готовить дома - это поможет сэкономить." :
+               currentLanguage === 'en' ? "I noticed that a significant portion of expenses goes to food. Try planning purchases in advance and cooking at home - this will help save money." :
+               "Шығындардың айтарлықтай бөлігі тамаққа жұмсалатынын байқадым. Алдын ала сатып алуды жоспарлап, үйде пісіруге тырысыңыз - бұл үнемдеуге көмектеседі.";
     }
     
-    const adviceList = [
-        "Регулярное отслеживание расходов - первый шаг к финансовой стабильности. Продолжайте в том же духе!",
-        "Попробуйте правило 50/30/20: 50% на necessities, 30% на wants, 20% на savings.",
-        "Маленькие ежедневные расходы часто складываются в крупные суммы. Ведите учет всех трат.",
-        "Установите автоматические переводы на сбережения - это самый простой способ накопить.",
-        "Перед крупной покупкой дайте себе 24 часа на размышление - это поможет избежать импульсных трат."
-    ];
+    const adviceList = {
+        ru: [
+            "Регулярное отслеживание расходов - первый шаг к финансовой стабильности. Продолжайте в том же духе!",
+            "Попробуйте правило 50/30/20: 50% на necessities, 30% на wants, 20% на savings.",
+            "Маленькие ежедневные расходы часто складываются в крупные суммы. Ведите учет всех трат.",
+            "Установите автоматические переводы на сбережения - это самый простой способ накопить.",
+            "Перед крупной покупкой дайте себе 24 часа на размышление - это поможет избежать импульсных трат."
+        ],
+        en: [
+            "Regular expense tracking is the first step to financial stability. Keep it up!",
+            "Try the 50/30/20 rule: 50% for necessities, 30% for wants, 20% for savings.",
+            "Small daily expenses often add up to large amounts. Keep track of all spending.",
+            "Set up automatic transfers to savings - this is the easiest way to save.",
+            "Before a major purchase, give yourself 24 hours to think - this will help avoid impulse spending."
+        ],
+        kz: [
+            "Шығындарды үнемі бақылау - қаржылық тұрақтылыққа бірінші қадам. Осылай жалғастырыңыз!",
+            "50/30/20 ережесін пайдаланып көріңіз: 50% қажеттіліктерге, 30% тілектерге, 20% жинақтарға.",
+            "Кішкене күнделікті шығындар жиі үлкен сомаларға жиналады. Барлық шығындарды есептеңіз.",
+            "Жинақтарға автоматты аударымдарды орнатыңыз - бұл жинақтаудың ең оңай тәсілі.",
+            "Ірі сатып алу алдында ойлану үшін 24 сағат уақыт беріңіз - бұл импульстік шығындарды болдырмауға көмектеседі."
+        ]
+    };
     
-    return adviceList[Math.floor(Math.random() * adviceList.length)];
+    return adviceList[currentLanguage][Math.floor(Math.random() * adviceList[currentLanguage].length)];
 }
 
 // ========== ФУНКЦИИ ДЛЯ ИНСТРУКЦИИ ==========
@@ -978,23 +1172,35 @@ function addNewGoal() {
     const deadline = document.getElementById('goalDeadline').value;
     
     if (!name || !amount || !deadline) {
-        showNotification('Пожалуйста, заполните все обязательные поля', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все обязательные поля' :
+                        currentLanguage === 'en' ? 'Please fill in all required fields' :
+                        'Барлық міндетті өрістерді толтырыңыз';
+        showNotification(errorText, 'error');
         return;
     }
     
     if (amount <= 0) {
-        showNotification('Сумма цели должна быть больше 0', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Сумма цели должна быть больше 0' :
+                        currentLanguage === 'en' ? 'Goal amount must be greater than 0' :
+                        'Мақсат сомасы 0-ден үлкен болуы керек';
+        showNotification(errorText, 'error');
         return;
     }
     
     if (current > amount) {
-        showNotification('Текущая сумма не может превышать целевую сумму', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Текущая сумма не может превышать целевую сумму' :
+                        currentLanguage === 'en' ? 'Current amount cannot exceed target amount' :
+                        'Ағымдағы сома мақсаттық сомадан аспауы керек';
+        showNotification(errorText, 'error');
         return;
     }
     
     const deadlineDate = new Date(deadline);
     if (deadlineDate < new Date()) {
-        showNotification('Срок цели не может быть в прошлом', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Срок цели не может быть в прошлом' :
+                        currentLanguage === 'en' ? 'Goal deadline cannot be in the past' :
+                        'Мақсат мерзімі өткенде болмауы керек';
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -1014,16 +1220,30 @@ function addNewGoal() {
     saveUserData();
     renderGoals();
     closeGoalModal();
-    showNotification('Цель успешно добавлена!', 'success');
+    
+    const successText = currentLanguage === 'ru' ? 'Цель успешно добавлена!' :
+                      currentLanguage === 'en' ? 'Goal successfully added!' :
+                      'Мақсат сәтті қосылды!';
+    
+    showNotification(successText, 'success');
     updateMissionsProgress();
 }
 
 function deleteGoal(goalId) {
-    if (confirm('Вы уверены, что хотите удалить эту цель?')) {
+    const confirmText = currentLanguage === 'ru' ? 'Вы уверены, что хотите удалить эту цель?' :
+                      currentLanguage === 'en' ? 'Are you sure you want to delete this goal?' :
+                      'Бұл мақсатты жоюға сенімдісіз бе?';
+    
+    if (confirm(confirmText)) {
         goals = goals.filter(goal => goal.id !== goalId);
         saveUserData();
         renderGoals();
-        showNotification('Цель успешно удалена!', 'success');
+        
+        const successText = currentLanguage === 'ru' ? 'Цель успешно удалена!' :
+                          currentLanguage === 'en' ? 'Goal successfully deleted!' :
+                          'Мақсат сәтті жойылды!';
+        
+        showNotification(successText, 'success');
     }
 }
 
@@ -1050,8 +1270,21 @@ function renderGoals() {
             const progress = Math.min(100, (goal.currentAmount / goal.targetAmount) * 100);
             const isCompleted = goal.completed || progress >= 100;
             const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-            const deleteText = currentLanguage === 'ru' ? 'Удалить' : 
-                              currentLanguage === 'en' ? 'Delete' : 'Жою';
+            
+            let statusText = '';
+            if (isCompleted) {
+                statusText = currentLanguage === 'ru' ? '🎉 Цель достигнута!' :
+                           currentLanguage === 'en' ? '🎉 Goal achieved!' :
+                           '🎉 Мақсатқа жетті!';
+            } else if (daysLeft > 0) {
+                statusText = currentLanguage === 'ru' ? `Осталось ${daysLeft} дней` :
+                           currentLanguage === 'en' ? `${daysLeft} days left` :
+                           `${daysLeft} күн қалды`;
+            } else {
+                statusText = currentLanguage === 'ru' ? 'Срок истек' :
+                           currentLanguage === 'en' ? 'Deadline expired' :
+                           'Мерзімі аяқталды';
+            }
             
             return `
                 <div class="goal-item ${isCompleted ? 'completed' : ''}">
@@ -1063,15 +1296,13 @@ function renderGoals() {
                         <div class="goal-progress-fill" style="width: ${progress}%"></div>
                     </div>
                     <div class="goal-info">
-                        <div class="goal-deadline">
-                            ${isCompleted ? '🎉 Цель достигнута!' : (daysLeft > 0 ? `Осталось ${daysLeft} дней` : 'Срок истек')}
-                        </div>
+                        <div class="goal-deadline">${statusText}</div>
                         <div class="goal-percentage">${Math.round(progress)}%</div>
                     </div>
                     <div class="goal-actions">
                         <button class="goal-delete-btn" onclick="deleteGoal('${goal.id}')">
                             <i class="fas fa-trash"></i>
-                            ${deleteText}
+                            ${translations[currentLanguage].deleteGoalText}
                         </button>
                     </div>
                 </div>
@@ -1098,12 +1329,18 @@ function addExpense() {
     const description = document.getElementById('expenseDescription').value;
     
     if (!amount || !date || !selectedCategory) {
-        showNotification('Пожалуйста, заполните все поля и выберите категорию', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля и выберите категорию' :
+                        currentLanguage === 'en' ? 'Please fill in all fields and select a category' :
+                        'Барлық өрістерді толтырыңыз және санатты таңдаңыз';
+        showNotification(errorText, 'error');
         return;
     }
     
     if (amount <= 0) {
-        showNotification('Сумма расхода должна быть больше 0', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Сумма расхода должна быть больше 0' :
+                        currentLanguage === 'en' ? 'Expense amount must be greater than 0' :
+                        'Шығын сомасы 0-ден үлкен болуы керек';
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -1112,7 +1349,8 @@ function addExpense() {
         amount: amount,
         date: date,
         category: selectedCategory,
-        description: description || 'Без описания',
+        description: description || (currentLanguage === 'ru' ? 'Без описания' : 
+                                  currentLanguage === 'en' ? 'No description' : 'Сипаттамасыз'),
         createdAt: new Date().toISOString(),
         currency: '₸'
     };
@@ -1132,7 +1370,11 @@ function addExpense() {
     });
     selectedCategory = null;
     
-    showNotification('Расход успешно добавлен!', 'success');
+    const successText = currentLanguage === 'ru' ? 'Расход успешно добавлен!' :
+                      currentLanguage === 'en' ? 'Expense successfully added!' :
+                      'Шығын сәтті қосылды!';
+    
+    showNotification(successText, 'success');
     addFincoins(5);
 }
 
@@ -1179,22 +1421,38 @@ function updateExpenseStats() {
     const statsContainer = document.getElementById('expenseStats');
     const analyticsStatsContainer = document.getElementById('analyticsStats');
     
+    const totalExpensesText = currentLanguage === 'ru' ? 'Общая сумма расходов' :
+                            currentLanguage === 'en' ? 'Total expenses' :
+                            'Жалпы шығындар сомасы';
+    
+    const averageExpenseText = currentLanguage === 'ru' ? 'Средний расход' :
+                             currentLanguage === 'en' ? 'Average expense' :
+                             'Орташа шығын';
+    
+    const currentMonthText = currentLanguage === 'ru' ? 'Расходы за текущий месяц' :
+                           currentLanguage === 'en' ? 'Current month expenses' :
+                           'Ағымдағы айдағы шығындар';
+    
+    const categoriesCountText = currentLanguage === 'ru' ? 'Количество категорий' :
+                              currentLanguage === 'en' ? 'Number of categories' :
+                              'Санаттар саны';
+    
     const statsHTML = `
         <div class="stat-card">
             <div class="stat-value">${formatAmount(stats.totalExpenses)}</div>
-            <div class="stat-label">Общая сумма расходов</div>
+            <div class="stat-label">${totalExpensesText}</div>
         </div>
         <div class="stat-card">
             <div class="stat-value">${formatAmount(stats.averageExpense)}</div>
-            <div class="stat-label">Средний расход</div>
+            <div class="stat-label">${averageExpenseText}</div>
         </div>
         <div class="stat-card">
             <div class="stat-value">${formatAmount(stats.currentMonthExpenses)}</div>
-            <div class="stat-label">Расходы за текущий месяц</div>
+            <div class="stat-label">${currentMonthText}</div>
         </div>
         <div class="stat-card">
             <div class="stat-value">${stats.categoriesCount}</div>
-            <div class="stat-label">Количество категорий</div>
+            <div class="stat-label">${categoriesCountText}</div>
         </div>
     `;
     
@@ -1289,7 +1547,8 @@ function updateLineChart() {
                 return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
             }),
             datasets: [{
-                label: 'Общие расходы',
+                label: currentLanguage === 'ru' ? 'Общие расходы' : 
+                      currentLanguage === 'en' ? 'Total Expenses' : 'Жалпы шығындар',
                 data: last30Days.map(date => expensesByDate[date]),
                 borderColor: '#4F6DFF',
                 backgroundColor: 'rgba(79, 109, 255, 0.1)',
@@ -1424,7 +1683,12 @@ function addFincoins(amount) {
     fincoins += amount;
     saveUserData();
     updateFincoinsBalance();
-    showNotification(`+${amount} FinCoins!`, 'success');
+    
+    const successText = currentLanguage === 'ru' ? `+${amount} FinCoins!` :
+                      currentLanguage === 'en' ? `+${amount} FinCoins!` :
+                      `+${amount} FinCoins!`;
+    
+    showNotification(successText, 'success');
 }
 
 function renderMissions() {
@@ -1435,7 +1699,9 @@ function renderMissions() {
         missionsList.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-trophy"></i>
-                <p>Миссии скоро появятся!</p>
+                <p>${currentLanguage === 'ru' ? 'Миссии скоро появятся!' : 
+                    currentLanguage === 'en' ? 'Missions coming soon!' : 
+                    'Миссиялар жақында пайда болады!'}</p>
             </div>
         `;
         return;
@@ -1455,6 +1721,12 @@ function renderMissions() {
         const isCompleted = mission.condition(userData);
         const difficultyColors = { 'easy': '#48BB78', 'medium': '#ED8936', 'hard': '#E53E3E' };
         const icon = missionIcons[mission.category] || 'fas fa-star';
+        
+        const completeButtonText = isCompleted ? 
+            (currentLanguage === 'ru' ? '✓ Выполнено' : 
+             currentLanguage === 'en' ? '✓ Completed' : '✓ Орындалды') :
+            (currentLanguage === 'ru' ? 'Получить' : 
+             currentLanguage === 'en' ? 'Get' : 'Алу');
         
         return `
             <div class="mission-card ${isCompleted ? 'completed' : ''}" onclick="showMissionDetail(${mission.id})">
@@ -1482,7 +1754,7 @@ function renderMissions() {
                         ${getDifficultyText(mission.difficulty)}
                     </div>
                     <button class="mission-complete-btn" onclick="event.stopPropagation(); completeMission(${mission.id})" ${isCompleted ? 'disabled' : ''}>
-                        ${isCompleted ? '✓ Выполнено' : 'Получить'}
+                        ${completeButtonText}
                     </button>
                 </div>
             </div>
@@ -1524,6 +1796,24 @@ function showMissionDetail(missionId) {
         align-items: center; z-index: 1000;
     `;
     
+    const progressText = currentLanguage === 'ru' ? 'Прогресс выполнения:' :
+                       currentLanguage === 'en' ? 'Completion progress:' :
+                       'Орындау прогрессі:';
+    
+    const requirementsText = currentLanguage === 'ru' ? 'Требования:' :
+                           currentLanguage === 'en' ? 'Requirements:' :
+                           'Талаптар:';
+    
+    const closeText = currentLanguage === 'ru' ? 'Закрыть' :
+                    currentLanguage === 'en' ? 'Close' :
+                    'Жабу';
+    
+    const getRewardText = isCompleted ? 
+        (currentLanguage === 'ru' ? 'Выполнено' : 
+         currentLanguage === 'en' ? 'Completed' : 'Орындалды') :
+        (currentLanguage === 'ru' ? 'Получить награду' : 
+         currentLanguage === 'en' ? 'Get reward' : 'Сыйлық алу');
+    
     modal.innerHTML = `
         <div class="modal-content" style="max-width: 500px; width: 90%;">
             <div class="modal-header">
@@ -1556,7 +1846,7 @@ function showMissionDetail(missionId) {
                 
                 <div style="margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="font-weight: 600; color: var(--text);">Прогресс выполнения:</span>
+                        <span style="font-weight: 600; color: var(--text);">${progressText}</span>
                         <span style="color: var(--primary); font-weight: 600;">${Math.round(progress)}%</span>
                     </div>
                     <div style="background: var(--border); height: 8px; border-radius: 4px; overflow: hidden;">
@@ -1565,7 +1855,7 @@ function showMissionDetail(missionId) {
                 </div>
                 
                 <div style="background: var(--light-bg); padding: 16px; border-radius: var(--radius-sm);">
-                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--text);">Требования:</div>
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--text);">${requirementsText}</div>
                     <ul style="color: var(--text-light); padding-left: 20px;">
                         ${mission.requirements.map(req => `<li style="margin-bottom: 8px;">${req}</li>`).join('')}
                     </ul>
@@ -1574,11 +1864,11 @@ function showMissionDetail(missionId) {
             
             <div style="display: flex; gap: 12px;">
                 <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()" style="flex: 1;">
-                    Закрыть
+                    ${closeText}
                 </button>
                 <button class="btn btn-primary" onclick="completeMission(${mission.id}); this.closest('.modal-overlay').remove()" 
                         style="flex: 1;" ${isCompleted ? 'disabled' : ''}>
-                    ${isCompleted ? 'Выполнено' : 'Получить награду'}
+                    ${getRewardText}
                 </button>
             </div>
         </div>
@@ -1608,10 +1898,18 @@ function completeMission(missionId) {
         }
         
         saveUserData();
-        showNotification(`Миссия "${mission.title}" выполнена! Получено ${mission.reward} FinCoins`, 'success');
+        
+        const successText = currentLanguage === 'ru' ? `Миссия "${mission.title}" выполнена! Получено ${mission.reward} FinCoins` :
+                          currentLanguage === 'en' ? `Mission "${mission.title}" completed! Received ${mission.reward} FinCoins` :
+                          `"${mission.title}" миссиясы орындалды! ${mission.reward} FinCoins алынды`;
+        
+        showNotification(successText, 'success');
         updateMissionsProgress();
     } else {
-        showNotification('Миссия еще не выполнена. Продолжайте в том же духе!', 'warning');
+        const warningText = currentLanguage === 'ru' ? 'Миссия еще не выполнена. Продолжайте в том же духе!' :
+                          currentLanguage === 'en' ? 'Mission not completed yet. Keep it up!' :
+                          'Миссия әлі орындалмады. Осылай жалғастырыңыз!';
+        showNotification(warningText, 'warning');
     }
 }
 
@@ -1625,9 +1923,17 @@ function buyItem(itemId, price) {
         purchasedItems.push(itemId);
         saveUserData();
         updateFincoinsBalance();
-        showNotification(`Покупка совершена успешно!`, 'success');
+        
+        const successText = currentLanguage === 'ru' ? 'Покупка совершена успешно!' :
+                          currentLanguage === 'en' ? 'Purchase completed successfully!' :
+                          'Сатып алу сәтті аяқталды!';
+        
+        showNotification(successText, 'success');
     } else {
-        showNotification('Недостаточно FinCoins для покупки', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Недостаточно FinCoins для покупки' :
+                        currentLanguage === 'en' ? 'Not enough FinCoins for purchase' :
+                        'Сатып алу үшін FinCoins жеткіліксіз';
+        showNotification(errorText, 'error');
     }
 }
 
@@ -1648,7 +1954,7 @@ function scrollChatToBottom() {
 function sendMessage() {
     const chatInput = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
-    const welcomeMessage = document.getElementById('welcomeMessage');
+    const welcomeMessage = document.querySelector('.welcome-message');
     
     if (!chatInput || !chatMessages) return;
     
@@ -1687,41 +1993,111 @@ function sendMessage() {
 function getAIResponse(message) {
     const lowerMessage = message.toLowerCase();
     
-    if (lowerMessage.includes('привет') || lowerMessage.includes('здравствуй') || lowerMessage.includes('салем') || lowerMessage.includes('hello')) {
-        return "Привет! Я ваш AI-помощник по финансам. Чем могу помочь?";
+    // Переводим сообщение пользователя для анализа
+    const translatedMessage = translateUserMessage(lowerMessage);
+    
+    if (translatedMessage.includes('привет') || translatedMessage.includes('hello') || translatedMessage.includes('салем')) {
+        return currentLanguage === 'ru' ? "Привет! Я ваш AI-помощник по финансам. Чем могу помочь?" :
+               currentLanguage === 'en' ? "Hello! I'm your AI financial assistant. How can I help you?" :
+               "Сәлем! Мен сіздің қаржылық ЖС көмекшісінбін. Қандай көмек көрсете аламын?";
     }
     
-    if (lowerMessage.includes('расход') || lowerMessage.includes('трат') || lowerMessage.includes('шығын')) {
-        return "Чтобы добавить расход, перейдите в раздел 'Аналитика' и заполните форму внизу страницы. Не забудьте выбрать категорию расхода!";
+    if (translatedMessage.includes('расход') || translatedMessage.includes('expense') || translatedMessage.includes('шығын')) {
+        return currentLanguage === 'ru' ? "Чтобы добавить расход, перейдите в раздел 'Аналитика' и заполните форму внизу страницы. Не забудьте выбрать категорию расхода!" :
+               currentLanguage === 'en' ? "To add an expense, go to the 'Analytics' section and fill out the form at the bottom of the page. Don't forget to select an expense category!" :
+               "Шығын қосу үшін 'Аналитика' бөліміне өтіп, беттің төменгі жағындағы форманы толтырыңыз. Шығын санатын таңдауды ұмытпаңыз!";
     }
     
-    if (lowerMessage.includes('цел') || lowerMessage.includes('накоп') || lowerMessage.includes('мақсат')) {
-        return "Финансовые цели помогают планировать будущее. Вы можете добавить цель на главной странице, нажав кнопку 'Добавить' в разделе 'Мои цели'.";
+    if (translatedMessage.includes('цел') || translatedMessage.includes('goal') || translatedMessage.includes('мақсат')) {
+        return currentLanguage === 'ru' ? "Финансовые цели помогают планировать будущее. Вы можете добавить цель на главной странице, нажав кнопку 'Добавить' в разделе 'Мои цели'." :
+               currentLanguage === 'en' ? "Financial goals help plan the future. You can add a goal on the main page by clicking the 'Add' button in the 'My Goals' section." :
+               "Қаржылық мақсаттар болашақты жоспарлауға көмектеседі. Негізгі бетте 'Менің мақсаттарым' бөліміндегі 'Қосу' түймесін басу арқылы мақсат қоса аласыз.";
     }
     
-    if (lowerMessage.includes('совет') || lowerMessage.includes('рекомендац') || lowerMessage.includes('кеңес')) {
+    if (translatedMessage.includes('совет') || translatedMessage.includes('advice') || translatedMessage.includes('кеңес')) {
         return getFinancialAdvice();
     }
     
-    const defaultResponses = [
-        "Интересный вопрос! Я специализируюсь на финансовых темах. Могу помочь с анализом расходов, планированием бюджета или дать советы по экономии.",
-        "Как AI-помощник по финансам, я могу помочь вам с управлением расходами, установкой целей и финансовым планированием. Что конкретно вас интересует?",
-        "Для более точного ответа уточните ваш вопрос. Я могу помочь с финансовым планированием, анализом расходов или дать советы по экономии денег."
-    ];
+    const defaultResponses = {
+        ru: [
+            "Интересный вопрос! Я специализируюсь на финансовых темах. Могу помочь с анализом расходов, планированием бюджета или дать советы по экономии.",
+            "Как AI-помощник по финансам, я могу помочь вам с управлением расходами, установкой целей и финансовым планированием. Что конкретно вас интересует?",
+            "Для более точного ответа уточните ваш вопрос. Я могу помочь с финансовым планированием, анализом расходов или дать советы по экономии денег."
+        ],
+        en: [
+            "Interesting question! I specialize in financial topics. I can help with expense analysis, budget planning, or give saving tips.",
+            "As an AI financial assistant, I can help you with expense management, goal setting, and financial planning. What specifically interests you?",
+            "For a more accurate answer, clarify your question. I can help with financial planning, expense analysis, or money saving tips."
+        ],
+        kz: [
+            "Қызықты сұрақ! Мен қаржылық тақырыптар бойынша мамандандырылғанмын. Шығындарды талдау, бюджетті жоспарлау немесе үнемдеу бойынша кеңес беруге көмектесе аламын.",
+            "Қаржылық ЖС көмекшісі ретінде мен сізге шығындарды басқару, мақсаттарды белгілеу және қаржылық жоспарлау бойынша көмектесе аламын. Сізді нақты не қызықтырады?",
+            "Дәлірек жауап алу үшін сұрағыңызды нақтылаңыз. Мен қаржылық жоспарлау, шығындарды талдау немесе ақшаны үнемдеу бойынша кеңес беруге көмектесе аламын."
+        ]
+    };
     
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    return defaultResponses[currentLanguage][Math.floor(Math.random() * defaultResponses[currentLanguage].length)];
+}
+
+function translateUserMessage(message) {
+    // Простой перевод ключевых слов для анализа сообщений пользователя
+    const translationMap = {
+        'ru': {
+            'привет': 'привет', 'здравствуй': 'привет', 'салем': 'привет',
+            'расход': 'расход', 'трат': 'расход', 'шығын': 'расход',
+            'цел': 'цель', 'накоп': 'цель', 'мақсат': 'цель',
+            'совет': 'совет', 'рекомендац': 'совет', 'кеңес': 'совет'
+        },
+        'en': {
+            'привет': 'hello', 'здравствуй': 'hello', 'салем': 'hello',
+            'расход': 'expense', 'трат': 'expense', 'шығын': 'expense',
+            'цел': 'goal', 'накоп': 'goal', 'мақсат': 'goal',
+            'совет': 'advice', 'рекомендац': 'advice', 'кеңес': 'advice'
+        },
+        'kz': {
+            'привет': 'салем', 'здравствуй': 'салем', 'салем': 'салем',
+            'расход': 'шығын', 'трат': 'шығын', 'шығын': 'шығын',
+            'цел': 'мақсат', 'накоп': 'мақсат', 'мақсат': 'мақсат',
+            'совет': 'кеңес', 'рекомендац': 'кеңес', 'кеңес': 'кеңес'
+        }
+    };
+    
+    let translatedMessage = message;
+    Object.keys(translationMap[currentLanguage]).forEach(key => {
+        if (message.includes(key)) {
+            translatedMessage = translatedMessage.replace(key, translationMap[currentLanguage][key]);
+        }
+    });
+    
+    return translatedMessage;
 }
 
 function getFinancialAdvice() {
-    const adviceList = [
-        "Регулярно отслеживайте все расходы - даже мелкие. Это поможет увидеть полную картину ваших финансов.",
-        "Создайте финансовую подушку безопасности на 3-6 месяцев расходов.",
-        "Используйте правило 50/30/20: 50% на necessities, 30% на wants, 20% на savings и инвестиции.",
-        "Перед крупной покупкой дайте себе 24-48 часов на размышление.",
-        "Автоматизируйте накопления - настройте автоматические переводы на сберегательный счет."
-    ];
+    const adviceList = {
+        ru: [
+            "Регулярно отслеживайте все расходы - даже мелкие. Это поможет увидеть полную картину ваших финансов.",
+            "Создайте финансовую подушку безопасности на 3-6 месяцев расходов.",
+            "Используйте правило 50/30/20: 50% на necessities, 30% на wants, 20% на savings и инвестиции.",
+            "Перед крупной покупкой дайте себе 24-48 часов на размышление.",
+            "Автоматизируйте накопления - настройте автоматические переводы на сберегательный счет."
+        ],
+        en: [
+            "Regularly track all expenses - even small ones. This will help you see the full picture of your finances.",
+            "Create a financial safety net for 3-6 months of expenses.",
+            "Use the 50/30/20 rule: 50% for necessities, 30% for wants, 20% for savings and investments.",
+            "Before a major purchase, give yourself 24-48 hours to think.",
+            "Automate savings - set up automatic transfers to a savings account."
+        ],
+        kz: [
+            "Барлық шығындарды үнемі бақылаңыз - тіпті кішкентайларын да. Бұл сіздің қаржыларыңыздың толық көрінісін көруге көмектеседі.",
+            "3-6 айлық шығындар үшін қаржылық қорғаныс желісін құрыңыз.",
+            "50/30/20 ережесін пайдаланыңыз: 50% қажеттіліктерге, 30% тілектерге, 20% жинақтарға және инвестицияларға.",
+            "Ірі сатып алу алдында ойлану үшін 24-48 сағат уақыт беріңіз.",
+            "Жинақтарды автоматтандырыңыз - жинақ шотына автоматты аударымдарды орнатыңыз."
+        ]
+    };
     
-    return adviceList[Math.floor(Math.random() * adviceList.length)];
+    return adviceList[currentLanguage][Math.floor(Math.random() * adviceList[currentLanguage].length)];
 }
 
 // ========== ФУНКЦИИ ДЛЯ НАСТРОЕК ==========
@@ -1738,7 +2114,10 @@ function saveProfile() {
     const email = document.getElementById('profileEmailInput').value;
     
     if (!name || !email) {
-        showNotification('Пожалуйста, заполните все обязательные поля', 'error');
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все обязательные поля' :
+                        currentLanguage === 'en' ? 'Please fill in all required fields' :
+                        'Барлық міндетті өрістерді толтырыңыз';
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -1757,14 +2136,26 @@ function saveProfile() {
     
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     updateUserInterface();
-    showNotification('Профиль успешно сохранен!', 'success');
+    
+    const successText = currentLanguage === 'ru' ? 'Профиль успешно сохранен!' :
+                      currentLanguage === 'en' ? 'Profile successfully saved!' :
+                      'Профиль сәтті сақталды!';
+    
+    showNotification(successText, 'success');
 }
 
 function changePassword() {
-    const newPassword = prompt('Введите новый пароль (минимум 6 символов):');
+    const promptText = currentLanguage === 'ru' ? 'Введите новый пароль (минимум 6 символов):' :
+                     currentLanguage === 'en' ? 'Enter new password (minimum 6 characters):' :
+                     'Жаңа құпия сөзді енгізіңіз (кемінде 6 таңба):';
+    
+    const newPassword = prompt(promptText);
     if (newPassword) {
         if (newPassword.length < 6) {
-            showNotification('Пароль должен содержать минимум 6 символов', 'error');
+            const errorText = currentLanguage === 'ru' ? 'Пароль должен содержать минимум 6 символов' :
+                            currentLanguage === 'en' ? 'Password must be at least 6 characters long' :
+                            'Құпия сөз кемінде 6 таңбадан тұруы керек';
+            showNotification(errorText, 'error');
             return;
         }
         
@@ -1780,7 +2171,12 @@ function changePassword() {
         }
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        showNotification('Пароль успешно изменен!', 'success');
+        
+        const successText = currentLanguage === 'ru' ? 'Пароль успешно изменен!' :
+                          currentLanguage === 'en' ? 'Password successfully changed!' :
+                          'Құпия сөз сәтті өзгертілді!';
+        
+        showNotification(successText, 'success');
     }
 }
 
@@ -1796,14 +2192,24 @@ function changeLanguage(lang) {
     localStorage.setItem('language', lang);
     applyTranslations(lang);
     
-    const langNames = { 'ru': 'русский', 'en': 'английский', 'kz': 'казахский' };
-    showNotification(`Язык изменен на ${langNames[lang]}`, 'success');
+    const langNames = { 
+        'ru': currentLanguage === 'ru' ? 'русский' : currentLanguage === 'en' ? 'Russian' : 'орысша',
+        'en': currentLanguage === 'ru' ? 'английский' : currentLanguage === 'en' ? 'English' : 'ағылшынша',
+        'kz': currentLanguage === 'ru' ? 'казахский' : currentLanguage === 'en' ? 'Kazakh' : 'қазақша'
+    };
+    
+    const successText = currentLanguage === 'ru' ? `Язык изменен на ${langNames[lang]}` :
+                      currentLanguage === 'en' ? `Language changed to ${langNames[lang]}` :
+                      `Тіл ${langNames[lang]} тіліне өзгертілді`;
+    
+    showNotification(successText, 'success');
 }
 
 function applyTranslations(lang) {
     const translation = translations[lang];
     if (!translation) return;
     
+    // Обновляем все элементы с data-translate атрибутом
     Object.keys(translation).forEach(key => {
         const elements = document.querySelectorAll(`[data-translate="${key}"]`);
         elements.forEach(element => {
@@ -1813,16 +2219,35 @@ function applyTranslations(lang) {
                 element.textContent = translation[key];
             }
         });
+        
+        // Также обновляем элементы с data-translate-placeholder
+        const placeholderElements = document.querySelectorAll(`[data-translate-placeholder="${key}"]`);
+        placeholderElements.forEach(element => {
+            if (element.placeholder !== undefined) {
+                element.placeholder = translation[key];
+            }
+        });
     });
     
-    const titles = {
-        'ru': 'FinanceMind',
-        'en': 'FinanceMind',
-        'kz': 'FinanceMind'
-    };
-    document.title = titles[lang] || titles['ru'];
+    // Обновляем заголовок страницы
+    document.title = translation.appTitle || 'FinanceMind';
     
+    // Обновляем навигацию
     updateNavigationText(lang);
+    
+    // Обновляем текущий язык в настройках
+    const currentLanguageElement = document.getElementById('currentLanguage');
+    if (currentLanguageElement) {
+        currentLanguageElement.textContent = lang === 'ru' ? 'Русский' : 
+                                           lang === 'en' ? 'English' : 'Қазақша';
+    }
+    
+    // Обновляем интерфейс
+    updateUserInterface();
+    updateExpenseStats();
+    renderGoals();
+    updateMissions();
+    updateFincoinsBalance();
 }
 
 function updateNavigationText(lang) {
@@ -1845,6 +2270,7 @@ function updateNavigationText(lang) {
 
 function initLanguage() {
     const savedLang = localStorage.getItem('language') || 'ru';
+    currentLanguage = savedLang;
     
     document.querySelectorAll('.language-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1871,11 +2297,25 @@ function changeTheme(theme) {
         saveUserData();
     }
     
-    showNotification(`Тема изменена на ${theme === 'light' ? 'светлую' : 'тёмную'}`, 'success');
+    const themeText = theme === 'light' ? 
+        (currentLanguage === 'ru' ? 'светлую' : 
+         currentLanguage === 'en' ? 'light' : 'ашық') :
+        (currentLanguage === 'ru' ? 'тёмную' : 
+         currentLanguage === 'en' ? 'dark' : 'қараңғы');
+    
+    const successText = currentLanguage === 'ru' ? `Тема изменена на ${themeText}` :
+                      currentLanguage === 'en' ? `Theme changed to ${themeText}` :
+                      `Тақырып ${themeText} тақырыбына өзгертілді`;
+    
+    showNotification(successText, 'success');
 }
 
 function logout() {
-    if (confirm('Вы уверены, что хотите выйти?')) {
+    const confirmText = currentLanguage === 'ru' ? 'Вы уверены, что хотите выйти?' :
+                      currentLanguage === 'en' ? 'Are you sure you want to log out?' :
+                      'Шығуға сенімдісіз бе?';
+    
+    if (confirm(confirmText)) {
         logoutAndReset();
     }
 }
@@ -1886,7 +2326,9 @@ function showAdminPanel() {
     if (currentUser && currentUser.role === 'admin') {
         showPage('adminPanel');
     } else {
-        showNotification('Доступ запрещен. Только для администраторов.', 'error');
+        showNotification(translations[currentLanguage].adminPanel + ' - ' + 
+                        (currentLanguage === 'ru' ? 'Доступ запрещен' : 
+                         currentLanguage === 'en' ? 'Access denied' : 'Қол жетімсіз'), 'error');
     }
 }
 
@@ -1924,6 +2366,10 @@ function renderMissionManagement() {
     missionManagement.innerHTML = appMissions.map(mission => {
         const completionRate = calculateMissionCompletionRate(mission.id);
         
+        const completionText = currentLanguage === 'ru' ? 'Выполнение:' :
+                             currentLanguage === 'en' ? 'Completion:' :
+                             'Орындалу:';
+        
         return `
             <div class="admin-mission-item">
                 <div class="admin-mission-header">
@@ -1934,11 +2380,13 @@ function renderMissionManagement() {
                     <div class="admin-progress-bar">
                         <div class="admin-progress-fill" style="width: ${completionRate}%"></div>
                     </div>
-                    <div class="admin-progress-text">Выполнение: ${completionRate}%</div>
+                    <div class="admin-progress-text">${completionText} ${completionRate}%</div>
                 </div>
                 <div class="mission-description">${mission.description}</div>
                 <div class="mission-requirements">
-                    <strong>Требования:</strong> ${mission.requirements.join(', ')}
+                    <strong>${currentLanguage === 'ru' ? 'Требования:' : 
+                             currentLanguage === 'en' ? 'Requirements:' : 
+                             'Талаптар:'}</strong> ${mission.requirements.join(', ')}
                 </div>
             </div>
         `;
@@ -1971,6 +2419,26 @@ function renderUserProgress(users) {
         const totalExpenses = userData.expenses ? userData.expenses.reduce((sum, e) => sum + e.amount, 0) : 0;
         const goalsCount = userData.goals ? userData.goals.length : 0;
         
+        const completedMissionsText = currentLanguage === 'ru' ? 'Выполнено миссий' :
+                                   currentLanguage === 'en' ? 'Completed missions' :
+                                   'Орындалған миссиялар';
+        
+        const goalsText = currentLanguage === 'ru' ? 'Целей' :
+                        currentLanguage === 'en' ? 'Goals' :
+                        'Мақсаттар';
+        
+        const expensesText = currentLanguage === 'ru' ? 'Расходов' :
+                           currentLanguage === 'en' ? 'Expenses' :
+                           'Шығындар';
+        
+        const totalExpensesText = currentLanguage === 'ru' ? 'Общие расходы' :
+                                currentLanguage === 'en' ? 'Total expenses' :
+                                'Жалпы шығындар';
+        
+        const registrationDateText = currentLanguage === 'ru' ? 'Дата регистрации' :
+                                  currentLanguage === 'en' ? 'Registration date' :
+                                  'Тіркелу күні';
+        
         return `
             <div class="admin-user-item">
                 <div class="admin-user-header">
@@ -1980,7 +2448,7 @@ function renderUserProgress(users) {
                 <div class="admin-user-stats">
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${completedMissions}</div>
-                        <div class="admin-user-stat-label">Выполнено миссий</div>
+                        <div class="admin-user-stat-label">${completedMissionsText}</div>
                     </div>
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${userData.fincoins || 0}</div>
@@ -1988,26 +2456,104 @@ function renderUserProgress(users) {
                     </div>
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${goalsCount}</div>
-                        <div class="admin-user-stat-label">Целей</div>
+                        <div class="admin-user-stat-label">${goalsText}</div>
                     </div>
                 </div>
                 <div class="admin-user-stats">
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${userData.expenses ? userData.expenses.length : 0}</div>
-                        <div class="admin-user-stat-label">Расходов</div>
+                        <div class="admin-user-stat-label">${expensesText}</div>
                     </div>
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${formatAmount(totalExpenses)}</div>
-                        <div class="admin-user-stat-label">Общие расходы</div>
+                        <div class="admin-user-stat-label">${totalExpensesText}</div>
                     </div>
                     <div class="admin-user-stat">
                         <div class="admin-user-stat-value">${new Date(user.createdAt).toLocaleDateString()}</div>
-                        <div class="admin-user-stat-label">Дата регистрации</div>
+                        <div class="admin-user-stat-label">${registrationDateText}</div>
                     </div>
                 </div>
             </div>
         `;
     }).join('');
+}
+
+function generateMonthlyReport() {
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    
+    const monthlyExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === month && expenseDate.getFullYear() === year;
+    });
+    
+    const totalMonthly = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    
+    const report = {
+        title: currentLanguage === 'ru' ? 'Отчет за месяц' : 
+               currentLanguage === 'en' ? 'Monthly Report' : 'Айлық есеп',
+        period: `${month + 1}/${year}`,
+        totalExpenses: totalMonthly,
+        expenseCount: monthlyExpenses.length,
+        categories: {},
+        generatedAt: new Date().toISOString()
+    };
+    
+    monthlyExpenses.forEach(expense => {
+        if (!report.categories[expense.category]) {
+            report.categories[expense.category] = 0;
+        }
+        report.categories[expense.category] += expense.amount;
+    });
+    
+    downloadReport(report, 'monthly-report');
+    
+    const successText = currentLanguage === 'ru' ? 'Месячный отчет сгенерирован и скачан!' :
+                      currentLanguage === 'en' ? 'Monthly report generated and downloaded!' :
+                      'Айлық есеп жасалып, жүктелді!';
+    
+    showNotification(successText, 'success');
+}
+
+function generateDetailedReport() {
+    const report = {
+        title: currentLanguage === 'ru' ? 'Обширный финансовый отчет' : 
+               currentLanguage === 'en' ? 'Detailed Financial Report' : 'Толық қаржылық есеп',
+        user: currentUser ? currentUser.name : 'Unknown',
+        generatedAt: new Date().toISOString(),
+        summary: {
+            totalExpenses: expenses.reduce((sum, expense) => sum + expense.amount, 0),
+            totalGoals: goals.length,
+            completedGoals: goals.filter(goal => goal.completed).length,
+            fincoins: fincoins,
+            completedMissions: missions.filter(m => m.completed).length
+        },
+        expenses: expenses,
+        goals: goals,
+        missions: missions
+    };
+    
+    downloadReport(report, 'detailed-report');
+    
+    const successText = currentLanguage === 'ru' ? 'Обширный отчет сгенерирован и скачан!' :
+                      currentLanguage === 'en' ? 'Detailed report generated and downloaded!' :
+                      'Толық есеп жасалып, жүктелді!';
+    
+    showNotification(successText, 'success');
+}
+
+function downloadReport(report, filename) {
+    const dataStr = JSON.stringify(report, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 function exportAllData() {
@@ -2054,7 +2600,11 @@ function exportAllData() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    showNotification('Все данные администратора успешно экспортированы!', 'success');
+    const successText = currentLanguage === 'ru' ? 'Все данные администратора успешно экспортированы!' :
+                      currentLanguage === 'en' ? 'All admin data successfully exported!' :
+                      'Барлық әкімші деректері сәтті экспортталды!';
+    
+    showNotification(successText, 'success');
 }
 
 // ========== УВЕДОМЛЕНИЯ ==========
@@ -2082,6 +2632,18 @@ function showNotification(message, type = 'info') {
             }, 300);
         }, 3000);
     }
+}
+
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+
+function forceSync() {
+    saveUserData();
+    
+    const syncText = currentLanguage === 'ru' ? 'Данные синхронизированы' :
+                   currentLanguage === 'en' ? 'Data synchronized' :
+                   'Деректер синхрондалды';
+    
+    showNotification(syncText, 'success');
 }
 
 // ========== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
@@ -2126,3 +2688,4 @@ document.addEventListener('DOMContentLoaded', function() {
     initLanguage();
     console.log('FinanceMind инициализирован');
 });
+
