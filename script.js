@@ -12,6 +12,7 @@ let lineChart = null;
 let pieChart = null;
 let currentLanguage = 'ru';
 let appVisits = 0;
+let currentReport = null;
 
 // === ЛОКАЛИЗАЦИЯ ===
 const translations = {
@@ -129,7 +130,13 @@ const translations = {
         exportAllData: "Экспорт всех данных",
         reportsSection: "Отчеты",
         monthlyReport: "Отчет за месяц",
+        monthlyReportDesc: "Сводка расходов за текущий месяц",
         detailedReport: "Обширный отчет",
+        detailedReportDesc: "Полная статистика и аналитика",
+        shareReport: "Поделиться",
+        downloadReport: "Скачать",
+        closeReport: "Закрыть",
+        reportGenerated: "Отчет сгенерирован",
         userRole: "Пользователь",
         instructionsModalTitle: "Инструкция по использованию FinanceMind",
         instructionsWelcome: "Добро пожаловать в FinanceMind!",
@@ -153,7 +160,15 @@ const translations = {
         instructionsSection5Item1: "Получайте финансовые советы",
         instructionsSection5Item2: "Задавайте вопросы",
         instructionsGotIt: "Понятно, начать использовать",
-        popular: "Популярное"
+        popular: "Популярное",
+        exportData: "Экспорт данных",
+        importData: "Импорт данных",
+        addCategory: "Добавить категорию",
+        food: "Еда",
+        transport: "Транспорт",
+        study: "Учеба",
+        entertainment: "Развлечения",
+        other: "Другое"
     },
     en: {
         appTitle: "FinanceMind",
@@ -269,7 +284,13 @@ const translations = {
         exportAllData: "Export All Data",
         reportsSection: "Reports",
         monthlyReport: "Monthly Report",
+        monthlyReportDesc: "Expense summary for current month",
         detailedReport: "Detailed Report",
+        detailedReportDesc: "Complete statistics and analytics",
+        shareReport: "Share",
+        downloadReport: "Download",
+        closeReport: "Close",
+        reportGenerated: "Report generated",
         userRole: "User",
         instructionsModalTitle: "FinanceMind User Guide",
         instructionsWelcome: "Welcome to FinanceMind!",
@@ -293,7 +314,15 @@ const translations = {
         instructionsSection5Item1: "Get financial advice",
         instructionsSection5Item2: "Ask questions",
         instructionsGotIt: "Got it, start using",
-        popular: "Popular"
+        popular: "Popular",
+        exportData: "Export Data",
+        importData: "Import Data",
+        addCategory: "Add Category",
+        food: "Food",
+        transport: "Transport",
+        study: "Study",
+        entertainment: "Entertainment",
+        other: "Other"
     },
     kz: {
         appTitle: "FinanceMind",
@@ -409,7 +438,13 @@ const translations = {
         exportAllData: "Барлық деректерді экспорттау",
         reportsSection: "Есептер",
         monthlyReport: "Айлық есеп",
+        monthlyReportDesc: "Ағымдағы айға арналған шығындар жинағы",
         detailedReport: "Толық есеп",
+        detailedReportDesc: "Толық статистика және аналитика",
+        shareReport: "Бөлісу",
+        downloadReport: "Жүктеу",
+        closeReport: "Жабу",
+        reportGenerated: "Есеп жасалды",
         userRole: "Пайдаланушы",
         instructionsModalTitle: "FinanceMind пайдалану нұсқаулығы",
         instructionsWelcome: "FinanceMind-қа қош келдіңіз!",
@@ -433,11 +468,19 @@ const translations = {
         instructionsSection5Item1: "Қаржылық кеңес алу",
         instructionsSection5Item2: "Сұрақтар қою",
         instructionsGotIt: "Түсіндім, пайдалануды бастау",
-        popular: "Танымал"
+        popular: "Танымал",
+        exportData: "Деректерді экспорттау",
+        importData: "Деректерді импорттау",
+        addCategory: "Санат қосу",
+        food: "Тамақ",
+        transport: "Көлік",
+        study: "Оқу",
+        entertainment: "Ойын-сауық",
+        other: "Басқа"
     }
 };
 
-// Миссии приложения
+// Миссии приложения (10 миссий)
 const appMissions = [
     {
         id: 1,
@@ -532,6 +575,73 @@ const appMissions = [
             return Math.max(0, Math.min(100, 100 - (total / 5000) * 100));
         },
         requirements: ["Контролируйте расходы на питание", "Не превышайте ₸5000 за неделю"]
+    },
+    {
+        id: 6,
+        title: "Финансовый аналитик",
+        description: "Просмотрите аналитику 5 раз",
+        reward: 80,
+        difficulty: "easy",
+        category: "analytics",
+        condition: (userData) => (userData.analyticsViews || 0) >= 5,
+        progress: (userData) => Math.min(100, ((userData.analyticsViews || 0) / 5) * 100),
+        requirements: ["Изучайте раздел аналитики", "Анализируйте свои расходы"]
+    },
+    {
+        id: 7,
+        title: "Накопитель",
+        description: "Накопите ₸10,000 на цели",
+        reward: 150,
+        difficulty: "medium",
+        category: "savings",
+        condition: (userData) => {
+            const totalSaved = userData.goals.reduce((sum, goal) => sum + (goal.currentAmount || 0), 0);
+            return totalSaved >= 10000;
+        },
+        progress: (userData) => {
+            const totalSaved = userData.goals.reduce((sum, goal) => sum + (goal.currentAmount || 0), 0);
+            return Math.min(100, (totalSaved / 10000) * 100);
+        },
+        requirements: ["Создайте цели накопления", "Накопите общую сумму ₸10,000"]
+    },
+    {
+        id: 8,
+        title: "Разнообразие трат",
+        description: "Используйте все 5 категорий расходов",
+        reward: 100,
+        difficulty: "medium",
+        category: "categories",
+        condition: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            return categories.length >= 5;
+        },
+        progress: (userData) => {
+            const categories = [...new Set(userData.expenses.map(e => e.category))];
+            return Math.min(100, (categories.length / 5) * 100);
+        },
+        requirements: ["Используйте разные категории", "Попробуйте все 5 категорий расходов"]
+    },
+    {
+        id: 9,
+        title: "Планировщик",
+        description: "Создайте 3 финансовые цели",
+        reward: 120,
+        difficulty: "medium",
+        category: "planning",
+        condition: (userData) => userData.goals.length >= 3,
+        progress: (userData) => Math.min(100, (userData.goals.length / 3) * 100),
+        requirements: ["Создайте несколько целей", "Планируйте разные финансовые задачи"]
+    },
+    {
+        id: 10,
+        title: "Ветеран миссий",
+        description: "Выполните 5 любых миссий",
+        reward: 200,
+        difficulty: "hard",
+        category: "achievements",
+        condition: (userData) => (userData.completedMissions || []).length >= 5,
+        progress: (userData) => Math.min(100, ((userData.completedMissions || []).length / 5) * 100),
+        requirements: ["Выполняйте разные миссии", "Достигните 5 выполненных миссий"]
     }
 ];
 
@@ -559,7 +669,12 @@ const missionIcons = {
     'goals': 'fas fa-bullseye',
     'expenses': 'fas fa-receipt',
     'consistency': 'fas fa-calendar-check',
-    'economy': 'fas fa-piggy-bank'
+    'economy': 'fas fa-piggy-bank',
+    'analytics': 'fas fa-chart-bar',
+    'savings': 'fas fa-piggy-bank',
+    'categories': 'fas fa-tags',
+    'planning': 'fas fa-tasks',
+    'achievements': 'fas fa-trophy'
 };
 
 // ========== ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
@@ -833,7 +948,7 @@ function showPage(page) {
     
     const modals = document.querySelectorAll('.modal-overlay');
     modals.forEach(modal => {
-        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal') {
+        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal' && modal.id !== 'reportModal') {
             modal.style.display = 'none';
         }
     });
@@ -2320,6 +2435,314 @@ function logout() {
     }
 }
 
+// ========== ФУНКЦИИ ДЛЯ ОТЧЕТОВ ==========
+
+function generateUserMonthlyReport() {
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    
+    const monthlyExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === month && expenseDate.getFullYear() === year;
+    });
+    
+    const totalMonthly = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    
+    // Анализ по категориям
+    const categories = {};
+    monthlyExpenses.forEach(expense => {
+        if (!categories[expense.category]) {
+            categories[expense.category] = { amount: 0, count: 0 };
+        }
+        categories[expense.category].amount += expense.amount;
+        categories[expense.category].count++;
+    });
+    
+    // Самые крупные расходы
+    const topExpenses = [...monthlyExpenses]
+        .sort((a, b) => b.amount - a.amount)
+        .slice(0, 5);
+    
+    const report = {
+        type: 'monthly',
+        title: translations[currentLanguage].monthlyReport,
+        period: `${now.toLocaleDateString(currentLanguage, { month: 'long', year: 'numeric' })}`,
+        totalExpenses: totalMonthly,
+        expenseCount: monthlyExpenses.length,
+        averageExpense: monthlyExpenses.length > 0 ? Math.round(totalMonthly / monthlyExpenses.length) : 0,
+        categories: categories,
+        topExpenses: topExpenses,
+        generatedAt: new Date().toLocaleString(currentLanguage),
+        currency: '₸'
+    };
+    
+    showReportModal(report);
+}
+
+function generateUserDetailedReport() {
+    const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const averageExpense = expenses.length > 0 ? Math.round(totalExpenses / expenses.length) : 0;
+    
+    // Анализ по категориям
+    const categories = {};
+    expenses.forEach(expense => {
+        if (!categories[expense.category]) {
+            categories[expense.category] = { amount: 0, count: 0 };
+        }
+        categories[expense.category].amount += expense.amount;
+        categories[expense.category].count++;
+    });
+    
+    // Анализ по месяцам
+    const monthlyData = {};
+    expenses.forEach(expense => {
+        const date = new Date(expense.date);
+        const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+        if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = { amount: 0, count: 0, month: date.toLocaleDateString(currentLanguage, { month: 'long', year: 'numeric' }) };
+        }
+        monthlyData[monthKey].amount += expense.amount;
+        monthlyData[monthKey].count++;
+    });
+    
+    const report = {
+        type: 'detailed',
+        title: translations[currentLanguage].detailedReport,
+        period: `${new Date(expenses[0]?.date || new Date()).toLocaleDateString()} - ${new Date().toLocaleDateString()}`,
+        totalExpenses: totalExpenses,
+        totalTransactions: expenses.length,
+        averageExpense: averageExpense,
+        categories: categories,
+        monthlyData: monthlyData,
+        goals: {
+            total: goals.length,
+            completed: goals.filter(g => g.completed).length,
+            inProgress: goals.filter(g => !g.completed).length
+        },
+        missions: {
+            completed: missions.filter(m => m.completed).length,
+            total: appMissions.length
+        },
+        generatedAt: new Date().toLocaleString(currentLanguage),
+        currency: '₸'
+    };
+    
+    showReportModal(report);
+}
+
+function showReportModal(report) {
+    currentReport = report;
+    const modal = document.getElementById('reportModal');
+    const title = document.getElementById('reportModalTitle');
+    const content = document.getElementById('reportContent');
+    
+    if (!modal || !title || !content) return;
+    
+    title.textContent = report.title;
+    content.innerHTML = generateReportHTML(report);
+    
+    modal.style.display = 'flex';
+}
+
+function generateReportHTML(report) {
+    if (report.type === 'monthly') {
+        return `
+            <div class="report-section">
+                <h4>${translations[currentLanguage].monthlyReport} - ${report.period}</h4>
+                <div class="report-stats">
+                    <div class="report-stat">
+                        <span>${translations[currentLanguage].totalExpenses}:</span>
+                        <strong>${formatAmount(report.totalExpenses)}</strong>
+                    </div>
+                    <div class="report-stat">
+                        <span>${translations[currentLanguage].expenseCount}:</span>
+                        <strong>${report.expenseCount}</strong>
+                    </div>
+                    <div class="report-stat">
+                        <span>${translations[currentLanguage].averageExpense}:</span>
+                        <strong>${formatAmount(report.averageExpense)}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h4>${translations[currentLanguage].categoryDistribution}</h4>
+                ${Object.entries(report.categories).map(([category, data]) => `
+                    <div class="category-stat">
+                        <span>${category}:</span>
+                        <div class="category-details">
+                            <span>${formatAmount(data.amount)}</span>
+                            <small>(${data.count} ${currentLanguage === 'ru' ? 'транзакций' : currentLanguage === 'en' ? 'transactions' : 'транзакция'})</small>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            ${report.topExpenses.length > 0 ? `
+            <div class="report-section">
+                <h4>${currentLanguage === 'ru' ? 'Самые крупные расходы' : currentLanguage === 'en' ? 'Top Expenses' : 'Ең үлкен шығындар'}</h4>
+                ${report.topExpenses.map(expense => `
+                    <div class="expense-item">
+                        <div class="expense-category">${expense.category}</div>
+                        <div class="expense-amount">${formatAmount(expense.amount)}</div>
+                        <div class="expense-date">${formatDate(expense.date)}</div>
+                        ${expense.description ? `<div class="expense-description">${expense.description}</div>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+            
+            <div class="report-footer">
+                <small>${currentLanguage === 'ru' ? 'Сгенерировано' : currentLanguage === 'en' ? 'Generated' : 'Жасалған'}: ${report.generatedAt}</small>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="report-section">
+                <h4>${translations[currentLanguage].detailedReport}</h4>
+                <div class="report-stats-grid">
+                    <div class="report-stat-card">
+                        <div class="stat-value">${formatAmount(report.totalExpenses)}</div>
+                        <div class="stat-label">${translations[currentLanguage].totalExpenses}</div>
+                    </div>
+                    <div class="report-stat-card">
+                        <div class="stat-value">${report.totalTransactions}</div>
+                        <div class="stat-label">${currentLanguage === 'ru' ? 'Транзакций' : currentLanguage === 'en' ? 'Transactions' : 'Транзакциялар'}</div>
+                    </div>
+                    <div class="report-stat-card">
+                        <div class="stat-value">${formatAmount(report.averageExpense)}</div>
+                        <div class="stat-label">${translations[currentLanguage].averageExpense}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h4>${translations[currentLanguage].categoryDistribution}</h4>
+                ${Object.entries(report.categories).map(([category, data]) => `
+                    <div class="category-stat">
+                        <span>${category}:</span>
+                        <div class="category-details">
+                            <span>${formatAmount(data.amount)}</span>
+                            <small>(${Math.round((data.amount / report.totalExpenses) * 100)}%)</small>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="report-section">
+                <h4>${currentLanguage === 'ru' ? 'Финансовые цели' : currentLanguage === 'en' ? 'Financial Goals' : 'Қаржылық мақсаттар'}</h4>
+                <div class="goals-summary">
+                    <div class="goal-stat">
+                        <span>${currentLanguage === 'ru' ? 'Всего целей' : currentLanguage === 'en' ? 'Total Goals' : 'Барлық мақсаттар'}:</span>
+                        <strong>${report.goals.total}</strong>
+                    </div>
+                    <div class="goal-stat">
+                        <span>${currentLanguage === 'ru' ? 'Выполнено' : currentLanguage === 'en' ? 'Completed' : 'Орындалды'}:</span>
+                        <strong>${report.goals.completed}</strong>
+                    </div>
+                    <div class="goal-stat">
+                        <span>${currentLanguage === 'ru' ? 'В процессе' : currentLanguage === 'en' ? 'In Progress' : 'Жүргізуде'}:</span>
+                        <strong>${report.goals.inProgress}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h4>${translations[currentLanguage].missionsNav}</h4>
+                <div class="missions-summary">
+                    <div class="mission-stat">
+                        <span>${currentLanguage === 'ru' ? 'Выполнено миссий' : currentLanguage === 'en' ? 'Completed Missions' : 'Орындалған миссиялар'}:</span>
+                        <strong>${report.missions.completed} / ${report.missions.total}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-footer">
+                <small>${currentLanguage === 'ru' ? 'Сгенерировано' : currentLanguage === 'en' ? 'Generated' : 'Жасалған'}: ${report.generatedAt}</small>
+            </div>
+        `;
+    }
+}
+
+function closeReportModal() {
+    document.getElementById('reportModal').style.display = 'none';
+    currentReport = null;
+}
+
+function shareReport() {
+    if (!currentReport) return;
+    
+    const reportText = generateShareableText(currentReport);
+    
+    if (navigator.share) {
+        navigator.share({
+            title: currentReport.title,
+            text: reportText,
+            url: window.location.href
+        }).catch(() => {
+            // Fallback to clipboard
+            copyToClipboard(reportText);
+        });
+    } else {
+        copyToClipboard(reportText);
+    }
+}
+
+function downloadReport() {
+    if (!currentReport) return;
+    
+    const reportData = JSON.stringify(currentReport, null, 2);
+    const blob = new Blob([reportData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    const filename = `financemind-${currentReport.type}-report-${new Date().toISOString().split('T')[0]}.json`;
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification(translations[currentLanguage].reportGenerated, 'success');
+}
+
+function generateShareableText(report) {
+    let text = `${report.title}\n`;
+    text += `Период: ${report.period}\n`;
+    text += `Общие расходы: ${formatAmount(report.totalExpenses)}\n`;
+    text += `Количество транзакций: ${report.expenseCount || report.totalTransactions}\n`;
+    
+    if (report.categories) {
+        text += '\nРасходы по категориям:\n';
+        Object.entries(report.categories).forEach(([category, data]) => {
+            text += `- ${category}: ${formatAmount(data.amount)}\n`;
+        });
+    }
+    
+    text += `\nСгенерировано: ${report.generatedAt}`;
+    return text;
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification(
+            currentLanguage === 'ru' ? 'Отчет скопирован в буфер обмена' :
+            currentLanguage === 'en' ? 'Report copied to clipboard' :
+            'Есеп алмасу буферіне көшірілді', 
+            'success'
+        );
+    }).catch(() => {
+        showNotification(
+            currentLanguage === 'ru' ? 'Не удалось скопировать отчет' :
+            currentLanguage === 'en' ? 'Failed to copy report' :
+            'Есепті көшіру сәтсіз аяқталды', 
+            'error'
+        );
+    });
+}
+
 // ========== АДМИН ПАНЕЛЬ ==========
 
 function showAdminPanel() {
@@ -2507,7 +2930,7 @@ function generateMonthlyReport() {
         report.categories[expense.category] += expense.amount;
     });
     
-    downloadReport(report, 'monthly-report');
+    downloadAdminReport(report, 'monthly-report');
     
     const successText = currentLanguage === 'ru' ? 'Месячный отчет сгенерирован и скачан!' :
                       currentLanguage === 'en' ? 'Monthly report generated and downloaded!' :
@@ -2534,7 +2957,7 @@ function generateDetailedReport() {
         missions: missions
     };
     
-    downloadReport(report, 'detailed-report');
+    downloadAdminReport(report, 'detailed-report');
     
     const successText = currentLanguage === 'ru' ? 'Обширный отчет сгенерирован и скачан!' :
                       currentLanguage === 'en' ? 'Detailed report generated and downloaded!' :
@@ -2543,7 +2966,7 @@ function generateDetailedReport() {
     showNotification(successText, 'success');
 }
 
-function downloadReport(report, filename) {
+function downloadAdminReport(report, filename) {
     const dataStr = JSON.stringify(report, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -2688,4 +3111,5 @@ document.addEventListener('DOMContentLoaded', function() {
     initLanguage();
     console.log('FinanceMind инициализирован');
 });
+
 
