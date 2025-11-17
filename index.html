@@ -179,6 +179,38 @@
 
             <!-- Analytics Page -->
             <div class="page analytics-page" id="analytics" style="display: none;">
+                <!-- Кнопки отчетов для пользователя -->
+                <div class="reports-section">
+                    <h3 class="section-title" data-translate="reportsSection">Отчеты</h3>
+                    <div class="reports-grid">
+                        <div class="report-card" onclick="generateUserMonthlyReport()">
+                            <div class="report-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="report-content">
+                                <div class="report-title" data-translate="monthlyReport">Отчет за месяц</div>
+                                <div class="report-description" data-translate="monthlyReportDesc">Сводка расходов за текущий месяц</div>
+                            </div>
+                            <div class="report-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card" onclick="generateUserDetailedReport()">
+                            <div class="report-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="report-content">
+                                <div class="report-title" data-translate="detailedReport">Обширный отчет</div>
+                                <div class="report-description" data-translate="detailedReportDesc">Полная статистика и аналитика</div>
+                            </div>
+                            <div class="report-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Статистика -->
                 <div class="expense-stats" id="analyticsStats">
                     <!-- Статистика будет обновляться динамически -->
@@ -813,12 +845,42 @@
         </div>
     </div>
 
+    <!-- Report Modal -->
+    <div class="modal-overlay" id="reportModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="reportModalTitle">Отчет</h3>
+                <button class="modal-close" onclick="closeReportModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="report-content" id="reportContent">
+                <!-- Содержание отчета будет здесь -->
+            </div>
+            <div class="report-actions">
+                <button class="btn btn-outline" onclick="shareReport()">
+                    <i class="fas fa-share"></i>
+                    <span data-translate="shareReport">Поделиться</span>
+                </button>
+                <button class="btn btn-primary" onclick="downloadReport()">
+                    <i class="fas fa-download"></i>
+                    <span data-translate="downloadReport">Скачать</span>
+                </button>
+                <button class="btn btn-secondary" onclick="closeReportModal()">
+                    <i class="fas fa-times"></i>
+                    <span data-translate="closeReport">Закрыть</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Container -->
     <div id="notificationContainer" class="notification-container"></div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
