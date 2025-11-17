@@ -49,9 +49,14 @@
                             <input type="email" id="email" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
                         </div>
                         
-                        <div class="form-group">
+                        <div class="form-group password-group">
                             <label for="password" data-translate="passwordLabel">Пароль</label>
-                            <input type="password" id="password" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+                            <div class="password-input-container">
+                                <input type="password" id="password" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         
                         <button class="btn btn-primary" onclick="login()">
@@ -62,10 +67,6 @@
                         <div class="auth-switch">
                             <span data-translate="noAccount">Нет аккаунта?</span>
                             <a href="#" onclick="showRegisterForm()" data-translate="registerLink">Зарегистрироваться</a>
-                        </div>
-
-                        <div class="admin-login-hint">
-                            <small>Для доступа к админ панели используйте: admin / admin123</small>
                         </div>
 
                         <div class="reset-section">
@@ -86,9 +87,14 @@
                             <input type="email" id="regEmail" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group password-group">
                             <label for="regPassword" data-translate="passwordLabel">Пароль</label>
-                            <input type="password" id="regPassword" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+                            <div class="password-input-container">
+                                <input type="password" id="regPassword" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <button class="btn btn-primary" onclick="register()">
@@ -138,12 +144,12 @@
                         </div>
                         <h3 data-translate="instructionsTitle">Инструкция по использованию</h3>
                     </div>
-                    <p>Нажмите, чтобы ознакомиться с руководством по использованию приложения</p>
+                    <p data-translate="instructionsDescription">Нажмите, чтобы ознакомиться с руководством по использованию приложения</p>
                 </div>
 
                 <!-- Статистика расходов -->
                 <div class="section-header">
-                    <div class="section-title">Ваша статистика</div>
+                    <div class="section-title" data-translate="yourStatistics">Ваша статистика</div>
                 </div>
                 <div class="expense-stats" id="expenseStats">
                     <!-- Статистика будет обновляться динамически -->
@@ -460,7 +466,7 @@
                     <div class="profile-info">
                         <div class="profile-name" id="profileName">Пользователь</div>
                         <div class="profile-email" id="profileEmail">user@example.com</div>
-                        <div class="profile-role">Пользователь</div>
+                        <div class="profile-role" data-translate="userRole">Пользователь</div>
                     </div>
                 </div>
 
@@ -500,15 +506,15 @@
                     <h3 class="section-title" data-translate="personalData">Персональные данные</h3>
                     <div class="form-group">
                         <label data-translate="nameLabel">Имя</label>
-                        <input type="text" id="profileNameInput" placeholder="Ваше имя">
+                        <input type="text" id="profileNameInput" placeholder="Ваше имя" data-translate-placeholder="namePlaceholder">
                     </div>
                     <div class="form-group">
                         <label data-translate="lastNameLabel">Фамилия</label>
-                        <input type="text" id="profileLastNameInput" placeholder="Ваша фамилия">
+                        <input type="text" id="profileLastNameInput" placeholder="Ваша фамилия" data-translate-placeholder="lastNamePlaceholder">
                     </div>
                     <div class="form-group">
                         <label data-translate="emailLabel">Email</label>
-                        <input type="email" id="profileEmailInput" placeholder="user@example.com">
+                        <input type="email" id="profileEmailInput" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
                     </div>
                     <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%;" data-translate="saveChanges">Сохранить изменения</button>
                 </div>
@@ -593,7 +599,7 @@
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages">
                         <div class="message message-ai welcome-message">
-                            <div class="message-content">
+                            <div class="message-content" data-translate="welcomeMessage">
                                 Привет! Я ваш AI-помощник по финансам. 🤖<br>
                                 Могу помочь с анализом расходов, советами по экономии и финансовым планированием.
                             </div>
@@ -658,6 +664,20 @@
                     <h3 class="admin-section-title" data-translate="userProgress">Прогресс пользователей</h3>
                     <div class="user-progress" id="userProgress">
                         <!-- Прогресс пользователей будет добавляться динамически -->
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3 class="admin-section-title" data-translate="reportsSection">Отчеты</h3>
+                    <div class="reports-actions">
+                        <button class="btn btn-primary" onclick="generateMonthlyReport()" style="width: 100%; margin-bottom: 10px;">
+                            <i class="fas fa-file-alt"></i>
+                            <span data-translate="monthlyReport">Отчет за месяц</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="generateDetailedReport()" style="width: 100%;">
+                            <i class="fas fa-chart-bar"></i>
+                            <span data-translate="detailedReport">Обширный отчет</span>
+                        </button>
                     </div>
                 </div>
 
@@ -733,61 +753,60 @@
     <div class="modal-overlay" id="instructionModal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Инструкция по использованию FinanceMind</h3>
+                <h3 class="modal-title" data-translate="instructionsModalTitle">Инструкция по использованию FinanceMind</h3>
                 <button class="modal-close" onclick="closeInstructionModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="instruction-content">
-                <!-- Содержимое инструкции -->
-                <p><strong>Добро пожаловать в FinanceMind!</strong></p>
-                <p>Эта инструкция поможет вам быстро освоиться в приложении.</p>
+                <p data-translate="instructionsWelcome"><strong>Добро пожаловать в FinanceMind!</strong></p>
+                <p data-translate="instructionsIntro">Эта инструкция поможет вам быстро освоиться в приложении.</p>
                 
                 <div class="instruction-section">
-                    <h4><i class="fas fa-home"></i> 1. Главный экран</h4>
+                    <h4><i class="fas fa-home"></i> <span data-translate="instructionsSection1">1. Главный экран</span></h4>
                     <ul>
-                        <li>Просматривайте статистику расходов</li>
-                        <li>Получайте AI-советы</li>
-                        <li>Управляйте финансовыми целями</li>
+                        <li data-translate="instructionsSection1Item1">Просматривайте статистику расходов</li>
+                        <li data-translate="instructionsSection1Item2">Получайте AI-советы</li>
+                        <li data-translate="instructionsSection1Item3">Управляйте финансовыми целями</li>
                     </ul>
                 </div>
 
                 <div class="instruction-section">
-                    <h4><i class="fas fa-chart-line"></i> 2. Аналитика</h4>
+                    <h4><i class="fas fa-chart-line"></i> <span data-translate="instructionsSection2">2. Аналитика</span></h4>
                     <ul>
-                        <li>Анализируйте графики расходов</li>
-                        <li>Добавляйте новые расходы</li>
-                        <li>Просматривайте историю трат</li>
+                        <li data-translate="instructionsSection2Item1">Анализируйте графики расходов</li>
+                        <li data-translate="instructionsSection2Item2">Добавляйте новые расходы</li>
+                        <li data-translate="instructionsSection2Item3">Просматривайте историю трат</li>
                     </ul>
                 </div>
 
                 <div class="instruction-section">
-                    <h4><i class="fas fa-trophy"></i> 3. Миссии</h4>
+                    <h4><i class="fas fa-trophy"></i> <span data-translate="instructionsSection3">3. Миссии</span></h4>
                     <ul>
-                        <li>Выполняйте задания</li>
-                        <li>Зарабатывайте FinCoins</li>
-                        <li>Отслеживайте прогресс</li>
+                        <li data-translate="instructionsSection3Item1">Выполняйте задания</li>
+                        <li data-translate="instructionsSection3Item2">Зарабатывайте FinCoins</li>
+                        <li data-translate="instructionsSection3Item3">Отслеживайте прогресс</li>
                     </ul>
                 </div>
 
                 <div class="instruction-section">
-                    <h4><i class="fas fa-shopping-bag"></i> 4. Магазин</h4>
+                    <h4><i class="fas fa-shopping-bag"></i> <span data-translate="instructionsSection4">4. Магазин</span></h4>
                     <ul>
-                        <li>Покупайте премиум функции</li>
-                        <li>Тратьте заработанные FinCoins</li>
+                        <li data-translate="instructionsSection4Item1">Покупайте премиум функции</li>
+                        <li data-translate="instructionsSection4Item2">Тратьте заработанные FinCoins</li>
                     </ul>
                 </div>
 
                 <div class="instruction-section">
-                    <h4><i class="fas fa-robot"></i> 5. AI-помощник</h4>
+                    <h4><i class="fas fa-robot"></i> <span data-translate="instructionsSection5">5. AI-помощник</span></h4>
                     <ul>
-                        <li>Получайте финансовые советы</li>
-                        <li>Задавайте вопросы</li>
+                        <li data-translate="instructionsSection5Item1">Получайте финансовые советы</li>
+                        <li data-translate="instructionsSection5Item2">Задавайте вопросы</li>
                     </ul>
                 </div>
             </div>
             <div style="display: flex; justify-content: center; margin-top: 20px;">
-                <button class="btn btn-primary" onclick="closeInstructionModal()">
+                <button class="btn btn-primary" onclick="closeInstructionModal()" data-translate="instructionsGotIt">
                     Понятно, начать использовать
                 </button>
             </div>
@@ -800,5 +819,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
