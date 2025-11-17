@@ -1058,6 +1058,7 @@ body {
 .mission-icon.savings { background: linear-gradient(135deg, #6BCF7F, #4ECDC4); }
 .mission-icon.categories { background: linear-gradient(135deg, #FF9A9E, #FAD0C4); }
 .mission-icon.planning { background: linear-gradient(135deg, #A3A1FF, #6C63FF); }
+.mission-icon.achievements { background: linear-gradient(135deg, #FFD93D, #6BCF7F); }
 
 .mission-content {
     flex: 1;
@@ -1352,6 +1353,87 @@ body {
 /* Analytics Page */
 .analytics-page {
     display: none;
+}
+
+/* Reports Section */
+.reports-section {
+    margin-bottom: 24px;
+    animation: slideInDown 0.5s ease;
+}
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.report-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.report-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.report-card:hover::before {
+    left: 100%;
+}
+
+.report-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.report-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.report-content {
+    flex: 1;
+}
+
+.report-title {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.report-description {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.report-arrow {
+    color: var(--text-light);
+    font-size: 16px;
 }
 
 /* Стили для графиков */
