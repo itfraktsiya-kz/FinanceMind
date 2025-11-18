@@ -480,7 +480,7 @@ const translations = {
     }
 };
 
-// Миссии приложения (10 миссий)
+// Миссии приложения (10 миссий) - ВСЕ ОТКРЫТЫ
 const appMissions = [
     {
         id: 1,
@@ -491,7 +491,8 @@ const appMissions = [
         category: "engagement",
         condition: (userData) => (userData.appVisits || 0) >= 3,
         progress: (userData) => Math.min(100, ((userData.appVisits || 0) / 3) * 100),
-        requirements: ["Откройте приложение 3 раза", "Изучите основные функции"]
+        requirements: ["Откройте приложение 3 раза", "Изучите основные функции"],
+        available: true
     },
     {
         id: 2,
@@ -502,7 +503,8 @@ const appMissions = [
         category: "goals",
         condition: (userData) => userData.goals.length >= 1,
         progress: (userData) => userData.goals.length >= 1 ? 100 : 0,
-        requirements: ["Создайте хотя бы одну цель", "Начните планировать финансы"]
+        requirements: ["Создайте хотя бы одну цель", "Начните планировать финансы"],
+        available: true
     },
     {
         id: 3,
@@ -513,7 +515,8 @@ const appMissions = [
         category: "expenses",
         condition: (userData) => userData.expenses.length >= 1,
         progress: (userData) => userData.expenses.length >= 1 ? 100 : 0,
-        requirements: ["Добавьте любой расход", "Начните отслеживать траты"]
+        requirements: ["Добавьте любой расход", "Начните отслеживать траты"],
+        available: true
     },
     {
         id: 4,
@@ -547,7 +550,8 @@ const appMissions = [
             }
             return Math.min(100, (consecutiveDays / 3) * 100);
         },
-        requirements: ["Добавляйте расходы каждый день", "Не пропускайте дни"]
+        requirements: ["Добавляйте расходы каждый день", "Не пропускайте дни"],
+        available: true
     },
     {
         id: 5,
@@ -574,7 +578,8 @@ const appMissions = [
             const total = foodExpenses.reduce((sum, e) => sum + e.amount, 0);
             return Math.max(0, Math.min(100, 100 - (total / 5000) * 100));
         },
-        requirements: ["Контролируйте расходы на питание", "Не превышайте ₸5000 за неделю"]
+        requirements: ["Контролируйте расходы на питание", "Не превышайте ₸5000 за неделю"],
+        available: true
     },
     {
         id: 6,
@@ -585,7 +590,8 @@ const appMissions = [
         category: "analytics",
         condition: (userData) => (userData.analyticsViews || 0) >= 5,
         progress: (userData) => Math.min(100, ((userData.analyticsViews || 0) / 5) * 100),
-        requirements: ["Изучайте раздел аналитики", "Анализируйте свои расходы"]
+        requirements: ["Изучайте раздел аналитики", "Анализируйте свои расходы"],
+        available: true
     },
     {
         id: 7,
@@ -602,7 +608,8 @@ const appMissions = [
             const totalSaved = userData.goals.reduce((sum, goal) => sum + (goal.currentAmount || 0), 0);
             return Math.min(100, (totalSaved / 10000) * 100);
         },
-        requirements: ["Создайте цели накопления", "Накопите общую сумму ₸10,000"]
+        requirements: ["Создайте цели накопления", "Накопите общую сумму ₸10,000"],
+        available: true
     },
     {
         id: 8,
@@ -619,7 +626,8 @@ const appMissions = [
             const categories = [...new Set(userData.expenses.map(e => e.category))];
             return Math.min(100, (categories.length / 5) * 100);
         },
-        requirements: ["Используйте разные категории", "Попробуйте все 5 категорий расходов"]
+        requirements: ["Используйте разные категории", "Попробуйте все 5 категорий расходов"],
+        available: true
     },
     {
         id: 9,
@@ -630,7 +638,8 @@ const appMissions = [
         category: "planning",
         condition: (userData) => userData.goals.length >= 3,
         progress: (userData) => Math.min(100, (userData.goals.length / 3) * 100),
-        requirements: ["Создайте несколько целей", "Планируйте разные финансовые задачи"]
+        requirements: ["Создайте несколько целей", "Планируйте разные финансовые задачи"],
+        available: true
     },
     {
         id: 10,
@@ -641,7 +650,8 @@ const appMissions = [
         category: "achievements",
         condition: (userData) => (userData.completedMissions || []).length >= 5,
         progress: (userData) => Math.min(100, ((userData.completedMissions || []).length / 5) * 100),
-        requirements: ["Выполняйте разные миссии", "Достигните 5 выполненных миссий"]
+        requirements: ["Выполняйте разные миссии", "Достигните 5 выполненных миссий"],
+        available: true
     }
 ];
 
@@ -719,6 +729,7 @@ function showRegisterForm() {
     }, 300);
     
     document.getElementById('regName').value = '';
+    document.getElementById('regLastName').value = '';
     document.getElementById('regEmail').value = '';
     document.getElementById('regPassword').value = '';
 }
@@ -747,6 +758,7 @@ function resetAllData() {
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
         document.getElementById('regName').value = '';
+        document.getElementById('regLastName').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         
@@ -805,6 +817,7 @@ function logoutAndReset() {
 
 function register() {
     const name = document.getElementById('regName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
     
@@ -845,11 +858,12 @@ function register() {
     const newUser = {
         id: Date.now().toString(),
         name: name,
+        lastName: lastName,
         email: email,
         password: password,
         role: 'user',
         createdAt: new Date().toISOString(),
-        profile: { lastName: '' },
+        profile: { lastName: lastName },
         settings: { language: 'ru', theme: 'light' }
     };
     
@@ -877,7 +891,7 @@ function login() {
         const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
                         currentLanguage === 'en' ? 'Please fill in all fields' :
                         'Барлық өрістерді толтырыңыз';
-        showNotification(errorText, 'error');
+        showNotification(errorError, 'error');
         return;
     }
     
@@ -1098,6 +1112,7 @@ function updateStore() {
 function updateSettings() {
     if (currentUser) {
         document.getElementById('profileNameInput').value = currentUser.name || '';
+        document.getElementById('profileLastNameInput').value = currentUser.lastName || '';
         document.getElementById('profileEmailInput').value = currentUser.email || '';
     }
 }
@@ -1170,7 +1185,7 @@ function updateUserInterface() {
         
         if (userNameElement) userNameElement.textContent = currentUser.name;
         if (userGreetingElement) userGreetingElement.textContent = getGreeting();
-        if (profileNameElement) profileNameElement.textContent = currentUser.name;
+        if (profileNameElement) profileNameElement.textContent = currentUser.name + (currentUser.lastName ? ' ' + currentUser.lastName : '');
         if (profileEmailElement) profileEmailElement.textContent = currentUser.email;
         if (profileRoleElement) {
             profileRoleElement.textContent = currentUser.role === 'admin' ? 
@@ -2311,6 +2326,7 @@ function showProfileSection(section) {
 
 function saveProfile() {
     const name = document.getElementById('profileNameInput').value;
+    const lastName = document.getElementById('profileLastNameInput').value;
     const email = document.getElementById('profileEmailInput').value;
     
     if (!name || !email) {
@@ -2324,6 +2340,7 @@ function saveProfile() {
     if (!currentUser) return;
     
     currentUser.name = name;
+    currentUser.lastName = lastName;
     currentUser.email = email;
     
     const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
@@ -3223,6 +3240,3 @@ document.addEventListener('DOMContentLoaded', function() {
     initLanguage();
     console.log('FinanceMind инициализирован с улучшенной навигацией и анимациями');
 });
-
-
-
