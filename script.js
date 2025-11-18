@@ -677,15 +677,56 @@ const missionIcons = {
     'achievements': 'fas fa-trophy'
 };
 
-// ========== ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
+// ========== ФУНКЦИИ ДЛЯ АНИМАЦИЙ И ПЕРЕКЛЮЧЕНИЯ ФОРМ ==========
 
-function formatAmount(amount) {
-    return Math.round(amount).toLocaleString('ru-RU') + ' ₸';
+function showLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    // Анимация скрытия формы регистрации
+    registerForm.style.opacity = '0';
+    registerForm.style.transform = 'translateX(100%)';
+    
+    setTimeout(() => {
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        
+        // Анимация показа формы входа
+        setTimeout(() => {
+            loginForm.style.opacity = '1';
+            loginForm.style.transform = 'translateX(0)';
+        }, 50);
+    }, 300);
+    
+    // Сброс полей формы
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
 }
 
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+function showRegisterForm() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    // Анимация скрытия формы входа
+    loginForm.style.opacity = '0';
+    loginForm.style.transform = 'translateX(-100%)';
+    
+    setTimeout(() => {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        
+        // Анимация показа формы регистрации
+        setTimeout(() => {
+            registerForm.style.opacity = '1';
+            registerForm.style.transform = 'translateX(0)';
+        }, 50);
+    }, 300);
+    
+    // Сброс полей формы
+    document.getElementById('regName').value = '';
+    document.getElementById('regLastName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
 }
 
 // ========== ФУНКЦИИ ДЛЯ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ ==========
@@ -713,6 +754,7 @@ function resetAllData() {
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
         document.getElementById('regName').value = '';
+        document.getElementById('regLastName').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         
@@ -769,34 +811,16 @@ function logoutAndReset() {
     showNotification(logoutText, 'info');
 }
 
-function showLoginForm() {
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'block';
-    
-    // Сброс полей формы
-    document.getElementById('email').value = '';
-    document.getElementById('password').value = '';
-}
-
-function showRegisterForm() {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'block';
-    
-    // Сброс полей формы
-    document.getElementById('regName').value = '';
-    document.getElementById('regEmail').value = '';
-    document.getElementById('regPassword').value = '';
-}
-
 function register() {
     const name = document.getElementById('regName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
     
     if (!name || !email || !password) {
-        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
-                        currentLanguage === 'en' ? 'Please fill in all fields' :
-                        'Барлық өрістерді толтырыңыз';
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все обязательные поля' :
+                        currentLanguage === 'en' ? 'Please fill in all required fields' :
+                        'Барлық міндетті өрістерді толтырыңыз';
         showNotification(errorText, 'error');
         return;
     }
@@ -830,11 +854,12 @@ function register() {
     const newUser = {
         id: Date.now().toString(),
         name: name,
+        lastName: lastName,
         email: email,
         password: password,
         role: 'user',
         createdAt: new Date().toISOString(),
-        profile: { lastName: '' },
+        profile: { lastName: lastName },
         settings: { language: 'ru', theme: 'light' }
     };
     
@@ -1456,7 +1481,7 @@ function selectCategory(category) {
         btn.classList.remove('selected');
     });
     
-    event.target.classList.add('selected');
+    event.currentTarget.classList.add('selected');
 }
 
 function addExpense() {
@@ -3138,6 +3163,17 @@ function forceSync() {
     showNotification(syncText, 'success');
 }
 
+// ========== ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
+
+function formatAmount(amount) {
+    return Math.round(amount).toLocaleString('ru-RU') + ' ₸';
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+}
+
 // ========== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -3213,3 +3249,4 @@ document.addEventListener('DOMContentLoaded', function() {
     initLanguage();
     console.log('FinanceMind инициализирован');
 });
+
