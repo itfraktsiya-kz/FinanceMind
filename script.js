@@ -891,7 +891,7 @@ function login() {
         const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
                         currentLanguage === 'en' ? 'Please fill in all fields' :
                         'Барлық өрістерді толтырыңыз';
-        showNotification(errorError, 'error');
+        showNotification(errorText, 'error');
         return;
     }
     
@@ -1895,8 +1895,8 @@ function renderMissions() {
         const completeButtonText = isCompleted ? 
             (currentLanguage === 'ru' ? '✓ Выполнено' : 
              currentLanguage === 'en' ? '✓ Completed' : '✓ Орындалды') :
-            (currentLanguage === 'ru' ? 'Получить' : 
-             currentLanguage === 'en' ? 'Get' : 'Алу');
+            (currentLanguage === 'ru' ? 'Начать' : 
+             currentLanguage === 'en' ? 'Start' : 'Бастау');
         
         return `
             <div class="mission-card ${isCompleted ? 'completed' : ''}" 
@@ -1982,8 +1982,8 @@ function showMissionDetail(missionId) {
     const getRewardText = isCompleted ? 
         (currentLanguage === 'ru' ? 'Выполнено' : 
          currentLanguage === 'en' ? 'Completed' : 'Орындалды') :
-        (currentLanguage === 'ru' ? 'Получить награду' : 
-         currentLanguage === 'en' ? 'Get reward' : 'Сыйлық алу');
+        (currentLanguage === 'ru' ? 'Начать миссию' : 
+         currentLanguage === 'en' ? 'Start mission' : 'Миссияны бастау');
     
     modal.innerHTML = `
         <div class="modal-content" style="max-width: 500px; width: 90%;">
@@ -2037,7 +2037,7 @@ function showMissionDetail(missionId) {
                 <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()" style="flex: 1;">
                     ${closeText}
                 </button>
-                <button class="btn btn-primary" onclick="completeMission(${mission.id}); this.closest('.modal-overlay').remove()" 
+                <button class="btn btn-primary" onclick="startMission(${mission.id}); this.closest('.modal-overlay').remove()" 
                         style="flex: 1;" ${isCompleted ? 'disabled' : ''}>
                     ${getRewardText}
                 </button>
@@ -2046,6 +2046,17 @@ function showMissionDetail(missionId) {
     `;
     
     document.body.appendChild(modal);
+}
+
+function startMission(missionId) {
+    const mission = appMissions.find(m => m.id === missionId);
+    if (!mission) return;
+    
+    const startText = currentLanguage === 'ru' ? `Миссия "${mission.title}" начата! Выполняйте требования для получения награды.` :
+                    currentLanguage === 'en' ? `Mission "${mission.title}" started! Complete requirements to get reward.` :
+                    `"${mission.title}" миссиясы басталды! Сыйлық алу үшін талаптарды орындаңыз.`;
+    
+    showNotification(startText, 'info');
 }
 
 function completeMission(missionId) {
