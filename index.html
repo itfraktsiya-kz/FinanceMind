@@ -42,39 +42,76 @@
                         <p class="auth-subtitle" data-translate="appSubtitle">Умный финансовый помощник</p>
                     </div>
 
-                    <!-- Форма входа -->
-                    <div class="auth-form" id="loginForm">
-                        <div class="form-group">
-                            <label for="email" data-translate="emailLabel">Электронная почта</label>
-                            <input type="email" id="email" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
-                        </div>
-                        
-                        <div class="form-group password-group">
-                            <label for="password" data-translate="passwordLabel">Пароль</label>
-                            <div class="password-input-container">
-                                <input type="password" id="password" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
-                                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="login()">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span data-translate="loginButton">Войти</span>
-                        </button>
+                   <!-- Форма входа -->
+<div class="auth-form" id="loginForm">
+    <div class="form-group">
+        <label for="email" data-translate="emailLabel">Электронная почта</label>
+        <input type="email" id="email" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
+    </div>
+    
+    <div class="form-group password-group">
+        <label for="password" data-translate="passwordLabel">Пароль</label>
+        <div class="password-input-container">
+            <input type="password" id="password" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="login()">
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-translate="loginButton">Войти</span>
+    </button>
 
-                        <div class="auth-switch">
-                            <span data-translate="noAccount">Нет аккаунта?</span>
-                            <a href="#" onclick="showRegisterForm()" data-translate="registerLink">Зарегистрироваться</a>
-                        </div>
+    <div class="auth-switch">
+        <span data-translate="noAccount">Нет аккаунта?</span>
+        <a href="#" onclick="showRegisterForm()" data-translate="registerLink">Зарегистрироваться</a>
+    </div>
 
-                        <div class="reset-section">
-                            <span data-translate="loginProblems">Проблемы с входом?</span>
-                            <a href="#" class="reset-btn" onclick="resetAllData()" data-translate="resetData">Сбросить все данные</a>
-                        </div>
-                    </div>
+    <div class="reset-section">
+        <span data-translate="loginProblems">Проблемы с входом?</span>
+        <a href="#" class="reset-btn" onclick="resetAllData()" data-translate="resetData">Сбросить все данные</a>
+    </div>
+</div>
 
+<!-- Форма регистрации -->
+<div class="auth-form" id="registerForm" style="display: none;">
+    <div class="form-group">
+        <label for="regName" data-translate="nameLabel">Имя</label>
+        <input type="text" id="regName" placeholder="Ваше имя" data-translate-placeholder="namePlaceholder">
+    </div>
+
+    <div class="form-group">
+        <label for="regEmail" data-translate="emailLabel">Электронная почта</label>
+        <input type="email" id="regEmail" placeholder="user@example.com" data-translate-placeholder="emailPlaceholder">
+    </div>
+
+    <div class="form-group password-group">
+        <label for="regPassword" data-translate="passwordLabel">Пароль</label>
+        <div class="password-input-container">
+            <input type="password" id="regPassword" placeholder="••••••••" data-translate-placeholder="passwordPlaceholder">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword')">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="register()">
+        <i class="fas fa-user-plus"></i>
+        <span data-translate="registerButton">Зарегистрироваться</span>
+    </button>
+
+    <div class="auth-switch">
+        <span data-translate="haveAccount">Уже есть аккаунт?</span>
+        <a href="#" onclick="showLoginForm()" data-translate="loginLink">Войти</a>
+    </div>
+
+    <div class="reset-section">
+        <span data-translate="loginProblems">Проблемы с входом?</span>
+        <a href="#" class="reset-btn" onclick="resetAllData()" data-translate="resetData">Сбросить все данные</a>
+    </div>
+</div>
                     <!-- Форма регистрации -->
                     <div class="auth-form" id="registerForm" style="display: none;">
                         <div class="form-group">
@@ -880,6 +917,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
