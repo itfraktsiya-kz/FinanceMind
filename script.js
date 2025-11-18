@@ -677,377 +677,13 @@ const missionIcons = {
     'achievements': 'fas fa-trophy'
 };
 
-// Современные иконки для навигации
-const modernIcons = {
-    'dashboard': 'fas fa-home',
-    'analytics': 'fas fa-chart-pie',
-    'missions': 'fas fa-trophy',
-    'chat': 'fas fa-robot',
-    'store': 'fas fa-shopping-bag',
-    'settings': 'fas fa-cog'
-};
-
-// ========== ОБНОВЛЕННЫЕ ФУНКЦИИ ДЛЯ НАВИГАЦИИ И АНИМАЦИЙ ==========
-
-// Обновляем навигационную панель - оставляем только иконки
-function updateNavigationIcons() {
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(item => {
-        // Удаляем текстовые элементы
-        const textSpan = item.querySelector('span');
-        if (textSpan) {
-            textSpan.style.display = 'none';
-        }
-        
-        // Обновляем иконки на современные
-        const navIcon = item.querySelector('.nav-icon');
-        if (navIcon) {
-            const iconClass = navIcon.querySelector('i').className;
-            
-            // Определяем тип страницы по onclick атрибуту
-            const onclick = item.getAttribute('onclick');
-            if (onclick) {
-                if (onclick.includes('dashboard')) {
-                    navIcon.innerHTML = '<i class="fas fa-home"></i>';
-                } else if (onclick.includes('analytics')) {
-                    navIcon.innerHTML = '<i class="fas fa-chart-pie"></i>';
-                } else if (onclick.includes('missions')) {
-                    navIcon.innerHTML = '<i class="fas fa-trophy"></i>';
-                } else if (onclick.includes('chat')) {
-                    navIcon.innerHTML = '<i class="fas fa-robot"></i>';
-                } else if (onclick.includes('store')) {
-                    navIcon.innerHTML = '<i class="fas fa-shopping-bag"></i>';
-                } else if (onclick.includes('settings')) {
-                    navIcon.innerHTML = '<i class="fas fa-cog"></i>';
-                }
-            }
-            
-            // Добавляем анимацию при наведении
-            navIcon.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        }
-        
-        // Увеличиваем область клика и добавляем подсказки
-        item.style.position = 'relative';
-        item.style.cursor = 'pointer';
-        
-        // Добавляем tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'nav-tooltip';
-        tooltip.style.cssText = `
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text);
-            color: var(--card-bg);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            pointer-events: none;
-        `;
-        
-        // Определяем текст подсказки
-        const onclick = item.getAttribute('onclick');
-        if (onclick) {
-            if (onclick.includes('dashboard')) {
-                tooltip.textContent = translations[currentLanguage].homeNav;
-            } else if (onclick.includes('analytics')) {
-                tooltip.textContent = translations[currentLanguage].analyticsNav;
-            } else if (onclick.includes('missions')) {
-                tooltip.textContent = translations[currentLanguage].missionsNav;
-            } else if (onclick.includes('chat')) {
-                tooltip.textContent = translations[currentLanguage].chatNav;
-            } else if (onclick.includes('store')) {
-                tooltip.textContent = translations[currentLanguage].storeButton;
-            } else if (onclick.includes('settings')) {
-                tooltip.textContent = translations[currentLanguage].systemSettings;
-            }
-        }
-        
-        item.appendChild(tooltip);
-        
-        // Показываем tooltip при наведении
-        item.addEventListener('mouseenter', function() {
-            tooltip.style.opacity = '1';
-            tooltip.style.visibility = 'visible';
-            tooltip.style.bottom = 'calc(100% + 10px)';
-        });
-        
-        item.addEventListener('mouseleave', function() {
-            tooltip.style.opacity = '0';
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.bottom = '100%';
-        });
-    });
-}
-
-// Добавляем CSS анимации для навигации
-function addNavigationAnimations() {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 0 0 rgba(79, 109, 255, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(79, 109, 255, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(79, 109, 255, 0);
-            }
-        }
-        
-        .nav-icon {
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .nav-item.active .nav-icon {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(79, 109, 255, 0.3);
-        }
-        
-        .nav-item:not(.active) .nav-icon:hover {
-            transform: translateY(-2px);
-            background: rgba(79, 109, 255, 0.1);
-        }
-        
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-item.active::before {
-            width: 30px;
-        }
-        
-        /* Анимация появления страниц */
-        .page {
-            transition: opacity 0.3s ease, transform 0.4s ease;
-        }
-        
-        /* Улучшенные анимации для карточек */
-        .card, .mission-card, .store-item, .report-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card:hover, .mission-card:hover, .store-item:hover, .report-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Анимация появления элементов */
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .animate-slide-in {
-            animation: slideInUp 0.5s ease forwards;
-        }
-        
-        /* Анимация загрузки */
-        @keyframes shimmer {
-            0% {
-                background-position: -200px 0;
-            }
-            100% {
-                background-position: 200px 0;
-            }
-        }
-        
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200px 100%;
-            animation: shimmer 1.5s infinite;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// Улучшенная функция смены страниц с анимациями
-function showPage(page) {
-    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
-    
-    // Получаем текущую активную страницу
-    const currentActivePage = mainPages.find(p => {
-        const pageElement = document.getElementById(p);
-        return pageElement && pageElement.style.display !== 'none';
-    });
-    
-    // Анимация перехода между страницами
-    if (currentActivePage && currentActivePage !== page) {
-        const currentPageElement = document.getElementById(currentActivePage);
-        const targetPageElement = document.getElementById(page);
-        
-        if (currentPageElement && targetPageElement) {
-            // Анимация исчезновения текущей страницы
-            currentPageElement.style.opacity = '1';
-            currentPageElement.style.transform = 'translateX(0)';
-            currentPageElement.style.transition = 'opacity 0.3s ease, transform 0.4s ease';
-            
-            setTimeout(() => {
-                currentPageElement.style.opacity = '0';
-                currentPageElement.style.transform = 'translateX(-20px)';
-                
-                setTimeout(() => {
-                    // Скрываем все страницы
-                    mainPages.forEach(p => {
-                        const pageElement = document.getElementById(p);
-                        if (pageElement) {
-                            pageElement.style.display = 'none';
-                            pageElement.style.opacity = '0';
-                            pageElement.style.transform = 'translateX(20px)';
-                        }
-                    });
-                    
-                    // Показываем целевую страницу
-                    targetPageElement.style.display = 'block';
-                    
-                    // Анимация появления целевой страницы
-                    setTimeout(() => {
-                        targetPageElement.style.opacity = '1';
-                        targetPageElement.style.transform = 'translateX(0)';
-                        targetPageElement.style.transition = 'opacity 0.3s ease 0.1s, transform 0.4s ease 0.1s';
-                    }, 50);
-                    
-                }, 300);
-            }, 50);
-        }
-    } else {
-        // Стандартное переключение для первой загрузки
-        mainPages.forEach(p => {
-            const pageElement = document.getElementById(p);
-            if (pageElement) {
-                pageElement.style.display = 'none';
-                pageElement.style.opacity = '0';
-                pageElement.style.transform = 'translateX(20px)';
-            }
-        });
-        
-        const targetPage = document.getElementById(page);
-        if (targetPage) {
-            targetPage.style.display = 'block';
-            
-            setTimeout(() => {
-                targetPage.style.opacity = '1';
-                targetPage.style.transform = 'translateX(0)';
-                targetPage.style.transition = 'opacity 0.3s ease, transform 0.4s ease';
-            }, 50);
-        }
-    }
-    
-    // Закрываем модальные окна (кроме специальных)
-    const modals = document.querySelectorAll('.modal-overlay');
-    modals.forEach(modal => {
-        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal' && modal.id !== 'reportModal') {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Обновляем заголовок
-    updateHeaderTitle(page);
-    
-    // Обновляем активную навигацию с анимацией
-    updateActiveNavigation(page);
-    
-    // Специальная обработка для чата
-    if (page === 'chat') {
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => scrollChatToBottom(), 200);
-    } else {
-        document.body.style.overflow = 'auto';
-    }
-    
-    // Увеличиваем счетчик просмотров аналитики
-    if (page === 'analytics' && currentUser) {
-        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
-        userData.analyticsViews = (userData.analyticsViews || 0) + 1;
-        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
-    }
-    
-    // Увеличиваем счетчик посещений приложения
-    if (currentUser && page === 'dashboard') {
-        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
-        userData.appVisits = (userData.appVisits || 0) + 1;
-        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
-        updateMissionsProgress();
-    }
-    
-    updatePageContent(page);
-}
-
-// Улучшенная функция обновления активной навигации
-function updateActiveNavigation(page) {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        const wasActive = item.classList.contains('active');
-        item.classList.remove('active');
-        
-        // Анимация смены активного элемента
-        const navIcon = item.querySelector('.nav-icon');
-        if (navIcon) {
-            if (wasActive) {
-                navIcon.style.transform = 'scale(1)';
-            }
-        }
-    });
-    
-    const activeNavItem = document.querySelector(`.nav-item[onclick*="${page}"]`);
-    if (activeNavItem) {
-        activeNavItem.classList.add('active');
-        
-        // Анимация активной иконки
-        const navIcon = activeNavItem.querySelector('.nav-icon');
-        if (navIcon) {
-            navIcon.style.transform = 'scale(1.1)';
-            
-            // Добавляем пульсирующий эффект
-            navIcon.style.animation = 'pulseGlow 2s infinite';
-        }
-    }
-}
-
-// Функция для добавления анимаций при загрузке контента
-function addContentAnimations() {
-    const elementsToAnimate = document.querySelectorAll('.card, .mission-card, .stat-card, .goal-item, .expense-item');
-    
-    elementsToAnimate.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.animation = `slideInUp 0.5s ease ${index * 0.1}s forwards`;
-    });
-}
-
-// ========== ОСТАЛЬНЫЕ ФУНКЦИИ (без изменений) ==========
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
 // Функции для анимаций и переключения форм
 function showLoginForm() {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     
-    // Анимация скрытия формы регистрации
     registerForm.style.opacity = '0';
     registerForm.style.transform = 'translateX(100%)';
     
@@ -1055,14 +691,12 @@ function showLoginForm() {
         registerForm.style.display = 'none';
         loginForm.style.display = 'block';
         
-        // Анимация показа формы входа
         setTimeout(() => {
             loginForm.style.opacity = '1';
             loginForm.style.transform = 'translateX(0)';
         }, 50);
     }, 300);
     
-    // Сброс полей формы
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
 }
@@ -1071,7 +705,6 @@ function showRegisterForm() {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     
-    // Анимация скрытия формы входа
     loginForm.style.opacity = '0';
     loginForm.style.transform = 'translateX(-100%)';
     
@@ -1079,16 +712,13 @@ function showRegisterForm() {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
         
-        // Анимация показа формы регистрации
         setTimeout(() => {
             registerForm.style.opacity = '1';
             registerForm.style.transform = 'translateX(0)';
         }, 50);
     }, 300);
     
-    // Сброс полей формы
     document.getElementById('regName').value = '';
-    document.getElementById('regLastName').value = '';
     document.getElementById('regEmail').value = '';
     document.getElementById('regPassword').value = '';
 }
@@ -1117,7 +747,6 @@ function resetAllData() {
         document.getElementById('email').value = '';
         document.getElementById('password').value = '';
         document.getElementById('regName').value = '';
-        document.getElementById('regLastName').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         
@@ -1176,7 +805,6 @@ function logoutAndReset() {
 
 function register() {
     const name = document.getElementById('regName').value.trim();
-    const lastName = document.getElementById('regLastName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
     
@@ -1217,12 +845,11 @@ function register() {
     const newUser = {
         id: Date.now().toString(),
         name: name,
-        lastName: lastName,
         email: email,
         password: password,
         role: 'user',
         createdAt: new Date().toISOString(),
-        profile: { lastName: lastName },
+        profile: { lastName: '' },
         settings: { language: 'ru', theme: 'light' }
     };
     
@@ -1331,15 +958,10 @@ function initializeUserData(userId) {
     purchasedItems = [];
 }
 
-// Обновляем функцию показа интерфейса приложения
 function showAppInterface() {
     document.getElementById('authPage').style.display = 'none';
     document.getElementById('appHeader').style.display = 'flex';
     document.getElementById('bottomNav').style.display = 'flex';
-    
-    // Добавляем анимации
-    addNavigationAnimations();
-    updateNavigationIcons();
     
     // Показываем кнопку админа если пользователь админ
     if (currentUser && currentUser.role === 'admin') {
@@ -1352,7 +974,6 @@ function showAppInterface() {
     // Плавный переход к главной странице
     setTimeout(() => {
         showPage('dashboard');
-        addContentAnimations();
     }, 300);
 }
 
@@ -1373,6 +994,72 @@ function updateHeaderTitle(page) {
     headerTitle.textContent = titles[page] || 'FinanceMind';
 }
 
+function showPage(page) {
+    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
+    
+    // Скрываем все страницы
+    mainPages.forEach(p => {
+        const pageElement = document.getElementById(p);
+        if (pageElement) pageElement.style.display = 'none';
+    });
+    
+    // Показываем выбранную страницу
+    const targetPage = document.getElementById(page);
+    if (targetPage) {
+        targetPage.style.display = 'block';
+    }
+    
+    // Закрываем модальные окна
+    const modals = document.querySelectorAll('.modal-overlay');
+    modals.forEach(modal => {
+        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal' && modal.id !== 'reportModal') {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // Обновляем заголовок
+    updateHeaderTitle(page);
+    
+    // Обновляем активную навигацию
+    updateActiveNavigation(page);
+    
+    // Специальная обработка для чата
+    if (page === 'chat') {
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => scrollChatToBottom(), 200);
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Увеличиваем счетчик просмотров аналитики
+    if (page === 'analytics' && currentUser) {
+        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
+        userData.analyticsViews = (userData.analyticsViews || 0) + 1;
+        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
+    }
+    
+    // Увеличиваем счетчик посещений приложения
+    if (currentUser && page === 'dashboard') {
+        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
+        userData.appVisits = (userData.appVisits || 0) + 1;
+        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
+        updateMissionsProgress();
+    }
+    
+    updatePageContent(page);
+}
+
+function updateActiveNavigation(page) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    const activeNavItem = document.querySelector(`.nav-item[onclick*="${page}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+    }
+}
+
 function updatePageContent(page) {
     switch(page) {
         case 'dashboard': updateDashboard(); break;
@@ -1385,35 +1072,18 @@ function updatePageContent(page) {
     }
 }
 
-// Обновляем функцию для dashboard с улучшенными анимациями
 function updateDashboard() {
     loadUserData();
     updateUserInterface();
     updateExpenseStats();
     renderGoals();
     updateAIAdvice();
-    
-    // Добавляем анимации для обновленного контента
-    setTimeout(() => {
-        addContentAnimations();
-    }, 100);
 }
 
-// Обновляем функцию для аналитики с улучшенными анимациями
 function updateAnalytics() {
     updateExpenseStats();
     updateCharts();
     updateExpenseList();
-    
-    // Анимация для графиков
-    setTimeout(() => {
-        const charts = document.querySelectorAll('.analytics-chart, .pie-chart-container');
-        charts.forEach((chart, index) => {
-            chart.style.opacity = '0';
-            chart.style.transform = 'translateY(20px)';
-            chart.style.animation = `slideInUp 0.5s ease ${index * 0.2}s forwards`;
-        });
-    }, 100);
 }
 
 function updateMissions() {
@@ -1428,7 +1098,6 @@ function updateStore() {
 function updateSettings() {
     if (currentUser) {
         document.getElementById('profileNameInput').value = currentUser.name || '';
-        document.getElementById('profileLastNameInput').value = currentUser.profile?.lastName || '';
         document.getElementById('profileEmailInput').value = currentUser.email || '';
     }
 }
@@ -2174,7 +1843,6 @@ function addFincoins(amount) {
     showNotification(successText, 'success');
 }
 
-// Обновляем функцию для миссий с улучшенными анимациями
 function renderMissions() {
     const missionsList = document.getElementById('missionsList');
     if (!missionsList) return;
@@ -2217,8 +1885,7 @@ function renderMissions() {
         
         return `
             <div class="mission-card ${isCompleted ? 'completed' : ''}" 
-                 onclick="showMissionDetail(${mission.id})"
-                 style="animation-delay: ${index * 0.1}s">
+                 onclick="showMissionDetail(${mission.id})">
                 <div class="mission-header">
                     <div class="mission-icon" style="background: ${difficultyColors[mission.difficulty]}20; color: ${difficultyColors[mission.difficulty]};">
                         <i class="${icon}"></i>
@@ -2249,16 +1916,6 @@ function renderMissions() {
             </div>
         `;
     }).join('');
-    
-    // Добавляем анимации для миссий
-    setTimeout(() => {
-        const missionCards = document.querySelectorAll('.mission-card');
-        missionCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.animation = `slideInUp 0.5s ease ${index * 0.1}s forwards`;
-        });
-    }, 100);
 }
 
 function getDifficultyText(difficulty) {
@@ -2654,7 +2311,6 @@ function showProfileSection(section) {
 
 function saveProfile() {
     const name = document.getElementById('profileNameInput').value;
-    const lastName = document.getElementById('profileLastNameInput').value;
     const email = document.getElementById('profileEmailInput').value;
     
     if (!name || !email) {
@@ -2668,7 +2324,6 @@ function saveProfile() {
     if (!currentUser) return;
     
     currentUser.name = name;
-    currentUser.profile.lastName = lastName;
     currentUser.email = email;
     
     const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
@@ -2776,9 +2431,6 @@ function applyTranslations(lang) {
     // Обновляем заголовок страницы
     document.title = translation.appTitle || 'FinanceMind';
     
-    // Обновляем навигацию
-    updateNavigationText(lang);
-    
     // Обновляем текущий язык в настройках
     const currentLanguageElement = document.getElementById('currentLanguage');
     if (currentLanguageElement) {
@@ -2792,24 +2444,6 @@ function applyTranslations(lang) {
     renderGoals();
     updateMissions();
     updateFincoinsBalance();
-}
-
-function updateNavigationText(lang) {
-    const navItems = document.querySelectorAll('.nav-item');
-    const translation = translations[lang];
-    
-    navItems.forEach(item => {
-        const span = item.querySelector('span');
-        if (span) {
-            const page = item.getAttribute('onclick');
-            if (page) {
-                if (page.includes('dashboard')) span.textContent = translation.homeNav;
-                else if (page.includes('analytics')) span.textContent = translation.analyticsNav;
-                else if (page.includes('missions')) span.textContent = translation.missionsNav;
-                else if (page.includes('chat')) span.textContent = translation.chatNav;
-            }
-        }
-    });
 }
 
 function initLanguage() {
@@ -3461,7 +3095,6 @@ function exportAllData() {
 
 // ========== УВЕДОМЛЕНИЯ ==========
 
-// Добавляем улучшенную анимацию для уведомлений
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -3472,27 +3105,12 @@ function showNotification(message, type = 'info') {
         <span>${message}</span>
     `;
     
-    // Добавляем анимацию появления
-    notification.style.cssText = `
-        transform: translateX(100px);
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    `;
-    
     const container = document.getElementById('notificationContainer');
     if (container) {
         container.appendChild(notification);
         
-        // Анимация появления
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-            notification.style.opacity = '1';
-        }, 10);
-        
         setTimeout(() => {
             notification.classList.add('hiding');
-            notification.style.transform = 'translateX(100px)';
-            notification.style.opacity = '0';
             
             setTimeout(() => {
                 if (notification.parentNode) {
@@ -3605,5 +3223,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initLanguage();
     console.log('FinanceMind инициализирован с улучшенной навигацией и анимациями');
 });
+
 
 
