@@ -769,9 +769,28 @@ function logoutAndReset() {
     showNotification(logoutText, 'info');
 }
 
+function showLoginForm() {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+    
+    // Сброс полей формы
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+}
+
+function showRegisterForm() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'block';
+    
+    // Сброс полей формы
+    document.getElementById('regName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+}
+
 function register() {
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
     
     if (!name || !email || !password) {
@@ -786,6 +805,14 @@ function register() {
         const errorText = currentLanguage === 'ru' ? 'Пароль должен содержать минимум 6 символов' :
                         currentLanguage === 'en' ? 'Password must be at least 6 characters long' :
                         'Құпия сөз кемінде 6 таңбадан тұруы керек';
+        showNotification(errorText, 'error');
+        return;
+    }
+    
+    if (!validateEmail(email)) {
+        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, введите корректный email адрес' :
+                        currentLanguage === 'en' ? 'Please enter a valid email address' :
+                        'Дұрыс email мекенжайын енгізіңіз';
         showNotification(errorText, 'error');
         return;
     }
@@ -828,7 +855,7 @@ function register() {
 }
 
 function login() {
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     
     if (!email || !password) {
@@ -888,12 +915,17 @@ function login() {
     }
 }
 
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
 function initializeUserData(userId) {
     const userData = {
         expenses: [],
         goals: [],
         missions: [],
-        fincoins: 100,
+        fincoins: 100, // Начальный бонус
         purchasedItems: [],
         completedMissions: [],
         hasPremiumSubscription: false,
@@ -911,18 +943,6 @@ function initializeUserData(userId) {
     purchasedItems = [];
 }
 
-// ========== ФУНКЦИИ ДЛЯ РАБОТЫ С ФОРМАМИ ==========
-
-function showLoginForm() {
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'block';
-}
-
-function showRegisterForm() {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'block';
-}
-
 function showAppInterface() {
     document.getElementById('authPage').style.display = 'none';
     document.getElementById('appHeader').style.display = 'flex';
@@ -930,7 +950,8 @@ function showAppInterface() {
     
     // Показать кнопку админа если пользователь админ
     if (currentUser && currentUser.role === 'admin') {
-        document.getElementById('adminButton').style.display = 'flex';
+        const adminButton = document.getElementById('adminButton');
+        if (adminButton) adminButton.style.display = 'flex';
     }
     
     initLanguage();
@@ -2255,7 +2276,7 @@ function getFinancialAdvice() {
             "Барлық шығындарды үнемі бақылаңыз - тіпті кішкентайларын да. Бұл сіздің қаржыларыңыздың толық көрінісін көруге көмектеседі.",
             "3-6 айлық шығындар үшін қаржылық қорғаныс желісін құрыңыз.",
             "50/30/20 ережесін пайдаланыңыз: 50% қажеттіліктерге, 30% тілектерге, 20% жинақтарға және инвестицияларға.",
-            "Ірі сатып алу алдында ойлану үшін 24-48 сағат уақыт беріңіз.",
+            "Ірі сатып алу алдында ойлану үшін 24-48 сағат уақыт беріңыз.",
             "Жинақтарды автоматтандырыңыз - жинақ шотына автоматты аударымдарды орнатыңыз."
         ]
     };
@@ -3124,10 +3145,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedUser = localStorage.getItem('currentUser');
     
     if (isLoggedIn === 'true' && savedUser) {
-        currentUser = JSON.parse(savedUser);
-        loadUserData();
-        showAppInterface();
-        setTimeout(() => showPage('dashboard'), 100);
+        try {
+            currentUser = JSON.parse(savedUser);
+            loadUserData();
+            showAppInterface();
+            setTimeout(() => showPage('dashboard'), 100);
+        } catch (error) {
+            console.error('Ошибка при загрузке пользователя:', error);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isLoggedIn');
+            showLoginForm();
+        }
     } else {
         const authPage = document.getElementById('authPage');
         if (authPage) authPage.style.display = 'block';
@@ -3148,6 +3176,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateInput = document.getElementById('expenseDate');
     if (dateInput) dateInput.value = today;
     
+    // Установка даты для цели (следующий месяц)
+    const goalDateInput = document.getElementById('goalDeadline');
+    if (goalDateInput) {
+        const nextMonth = new Date();
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        goalDateInput.value = nextMonth.toISOString().split('T')[0];
+    }
+    
     // Обработчик Enter в чате
     const chatInput = document.getElementById('chatInput');
     if (chatInput) {
@@ -3156,6 +3192,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Обработчики для форм авторизации
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            login();
+        });
+    }
+    
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            register();
+        });
+    }
+    
     initLanguage();
     console.log('FinanceMind инициализирован');
-}
+});
