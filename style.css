@@ -68,304 +68,524 @@ html, body {
 /* Подключаем Font Awesome для иконок */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
-/* ========== ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ ВСЕХ УСТРОЙСТВ ========== */
-
-/* Мобильная версия (до 767px) */
-@media (max-width: 767px) {
-    .app-container {
-        width: 100%;
-        min-height: 100vh;
-        max-width: 100%;
-        height: auto;
-        background: var(--bg-light);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        border-radius: 0;
-        box-shadow: none;
-    }
-    
-    .main-content {
-        flex: 1;
-        overflow-y: auto;
-        height: auto;
-        padding-bottom: 80px;
-        background: var(--bg-light);
-        min-height: calc(100vh - 180px);
-    }
-    
-    .page {
-        min-height: calc(100vh - 180px);
-        padding: 16px;
-    }
-    
-    /* Фиксированная высота для чата на мобильных */
-    .chat-page {
-        height: calc(100vh - 110px);
-    }
-    
-    .chat-container {
-        height: 100%;
-    }
+/* ========== СТРАНИЦА АНАЛИТИКИ (ПОЛНЫЙ ЭКРАН) ========== */
+.analytics-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background: var(--bg-light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
 }
 
-/* Планшетная версия (768px - 1199px) */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .app-container {
-        width: 100%;
-        min-height: 100vh;
-        height: auto;
-        background: var(--bg-light);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        border-radius: 0;
-        box-shadow: none;
-        margin: 0;
+.analytics-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+}
+
+/* Учеба секция */
+.study-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border);
+    width: 100%;
+}
+
+.study-section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.no-description {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Добавить новый расход */
+.add-expense-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border);
+    width: 100%;
+}
+
+.add-expense-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    background: var(--bg-light);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Категории */
+.categories-section {
+    margin: 16px 0;
+}
+
+.categories-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.category-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--bg-light);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+}
+
+.category-option:hover {
+    border-color: var(--primary);
+}
+
+.category-option.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.category-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.category-option.selected .category-checkbox {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.category-option.selected .category-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.category-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* Разделитель */
+.section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+    border: none;
+}
+
+/* Bank Connection Section */
+.bank-connection-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border);
+    width: 100%;
+}
+
+.bank-connection-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.bank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bank-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--bg-light);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.bank-item:hover {
+    border-color: var(--primary);
+}
+
+.bank-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bank-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.bank-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 15px;
+}
+
+.connect-btn {
+    padding: 8px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 100px;
+}
+
+.connect-btn:hover {
+    background: var(--primary-dark);
+}
+
+.connect-btn.connected {
+    background: var(--success);
+    cursor: default;
+}
+
+.connect-btn.connected:hover {
+    background: var(--success);
+}
+
+/* Transaction Statistics */
+.transaction-stats-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border);
+    width: 100%;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    background: var(--bg-light);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 2px solid var(--border);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.stat-item:hover {
+    border-color: var(--primary);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.stat-note {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* Income/Expense Stats */
+.income-expense-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.income-card, .expense-card {
+    background: var(--bg-light);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 2px solid var(--border);
+    text-align: center;
+}
+
+.income-card {
+    border-color: var(--success);
+    background: var(--success-light);
+}
+
+.expense-card {
+    border-color: var(--danger);
+    background: var(--danger-light);
+}
+
+.income-value, .expense-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.income-value {
+    color: var(--success);
+}
+
+.expense-value {
+    color: var(--danger);
+}
+
+.income-label, .expense-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Другое Section */
+.other-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border);
+    width: 100%;
+}
+
+.other-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.empty-message {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Кнопка добавления расхода */
+.add-expense-btn {
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-expense-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 767px) {
+    .analytics-container {
+        padding: 16px;
+        padding-bottom: 100px; /* Учитываем навигацию внизу */
     }
     
-    .main-content {
-        flex: 1;
-        overflow-y: auto;
-        height: calc(100vh - 180px);
-        padding-bottom: 80px;
-        background: var(--bg-light);
-    }
-    
-    .page {
-        padding: 24px;
-        min-height: calc(100vh - 180px);
-    }
-    
-    /* Адаптивные сетки для планшетов */
-    .expense-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .reports-grid,
-    .adult-tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .missions-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+    .stats-grid,
+    .income-expense-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
     
     .category-options {
-        flex-wrap: wrap;
-        justify-content: flex-start;
+        flex-direction: column;
     }
     
-    .category-btn {
-        flex: 0 0 calc(33.333% - 8px);
+    .category-option {
+        width: 100%;
+    }
+    
+    .bank-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .connect-btn {
+        width: 100%;
+    }
+    
+    .stat-item,
+    .income-card,
+    .expense-card {
+        padding: 16px;
     }
 }
 
-/* Десктопная версия (1200px и больше) */
-@media (min-width: 1200px) {
-    .app-container {
-        width: 100%;
-        min-height: 100vh;
-        height: auto;
-        background: var(--bg-light);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        border-radius: 0;
-        box-shadow: none;
-        margin: 0;
+/* Адаптация для планшетов */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .analytics-container {
+        padding: 24px;
+        padding-bottom: 100px;
     }
     
-    .main-content {
-        flex: 1;
-        overflow-y: auto;
-        height: calc(100vh - 180px);
-        padding-bottom: 80px;
-        background: var(--bg-light);
-        display: flex;
-        flex-direction: column;
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .page {
-        padding: 32px;
-        min-height: calc(100vh - 180px);
-        display: flex;
-        flex-direction: column;
+    .category-options {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    /* Десктопные сетки и макеты */
-    .dashboard-page,
-    .analytics-page {
+    .bank-list {
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+/* Адаптация для десктопа */
+@media (min-width: 1200px) {
+    .analytics-container {
+        padding: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 100px;
+    }
+    
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
     
-    /* Дашборд для десктопа */
-    .dashboard .user-info {
-        grid-column: 1 / -1;
+    .study-section,
+    .add-expense-section,
+    .bank-connection-section,
+    .transaction-stats-section,
+    .other-section {
+        grid-column: span 1;
     }
     
-    .dashboard .ai-advice {
-        grid-column: span 8;
-    }
-    
-    .dashboard .instruction-card {
-        grid-column: span 4;
-    }
-    
-    .dashboard .expense-stats {
-        grid-column: 1 / -1;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-    
-    .dashboard .goals-progress {
-        grid-column: span 8;
-    }
-    
-    .dashboard .active-mission-banner {
-        grid-column: span 4;
-    }
-    
-    /* Аналитика для десктопа */
-    .analytics-page .reports-section {
-        grid-column: span 6;
-    }
-    
-    .analytics-page .adult-tools-section {
-        grid-column: span 6;
-    }
-    
-    .analytics-page .analytics-chart {
-        grid-column: span 8;
-    }
-    
-    .analytics-page .pie-chart-container {
-        grid-column: span 4;
-    }
-    
-    .analytics-page .expense-history {
-        grid-column: span 6;
-    }
-    
-    .analytics-page .add-expense-form {
-        grid-column: span 6;
-    }
-    
-    /* Миссии для десктопа */
-    .missions-page .missions-balance {
-        grid-column: 1 / -1;
-    }
-    
-    .missions-page .active-mission-section {
-        grid-column: span 4;
-    }
-    
-    .missions-page .missions-grid {
-        grid-column: span 8;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .missions-page .completed-missions-section {
-        grid-column: 1 / -1;
-    }
-    
-    /* Магазин для десктопа */
-    .store-page .store-balance {
-        grid-column: 1 / -1;
-    }
-    
-    .store-page .store-category {
-        grid-column: span 4;
-    }
-    
-    /* Настройки для десктопа */
-    .settings-page {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 32px;
-    }
-    
-    .settings-page .profile-header {
-        grid-column: 1 / -1;
-    }
-    
-    .settings-page .settings-section {
+    .add-expense-section {
         grid-column: 1;
     }
     
-    .settings-page .profile-section {
+    .bank-connection-section {
         grid-column: 2;
+        grid-row: 1;
     }
     
-    .settings-page .logout-btn {
-        grid-column: 1 / -1;
+    .transaction-stats-section {
+        grid-column: span 2;
     }
     
-    /* Чат для десктопа */
-    .chat-page {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 0;
-        padding: 0;
-        height: 100%;
-    }
-    
-    .chat-history-sidebar {
-        position: relative;
-        right: 0;
-        width: 100%;
-        border-right: 2px solid var(--border);
-        border-left: none;
-    }
-    
-    .chat-container {
-        height: 100%;
-    }
-    
-    .chat-history-sidebar-toggle {
-        display: none;
-    }
-    
-    /* Десктопные улучшения интерфейса */
-    .expense-stats {
+    .stats-grid {
         grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-    
-    .reports-grid,
-    .adult-tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .missions-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
     }
     
     .category-options {
-        flex-wrap: wrap;
-        justify-content: flex-start;
+        grid-template-columns: repeat(3, 1fr);
     }
     
-    .category-btn {
-        flex: 0 0 calc(20% - 8px);
-    }
-    
-    .form-row {
-        display: flex;
-        gap: 20px;
-    }
-    
-    .form-col {
-        flex: 1;
+    .bank-list {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1991,8 +2211,8 @@ html, body {
     transition: var(--transition);
 }
 
-/* ========== ANALYTICS PAGE ========== */
-.analytics-page {
+/* ========== ANALYTICS PAGE (СТАРЫЕ СТИЛИ) ========== */
+.analytics-page-old {
     display: none;
 }
 
