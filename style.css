@@ -61,27 +61,590 @@ html, body {
     background: #F5F5F7;
     color: var(--text-primary);
     line-height: 1.6;
-    overflow: auto;
+    overflow: hidden;
     min-height: 100vh;
 }
 
 /* Подключаем Font Awesome для иконок */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
-/* ========== СТРАНИЦА АНАЛИТИКИ (ПОЛНЫЙ ЭКРАН) ========== */
-.analytics-page {
+/* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
+.app-container {
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-light);
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    background: var(--bg-light);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* ========== HEADER АДАПТАЦИЯ ========== */
+.app-header {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    padding: 50px 20px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
     z-index: 100;
+    height: auto;
+    min-height: 80px;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+/* Скрыть языковой переключатель на всех страницах кроме главной */
+.language-switcher {
+    display: none; /* Скрываем по умолчанию */
+    gap: 8px;
+    margin-top: 4px;
+}
+
+/* Показываем только на главной странице */
+.page.dashboard .language-switcher {
+    display: flex;
+}
+
+.lang-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lang-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.header-icon:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    height: calc(100vh - 180px);
+    padding-bottom: 80px;
+    background: var(--bg-light);
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ========== PAGE STYLES ========== */
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: var(--bg-light);
+    display: none;
+    z-index: 1;
+}
+
+.page.active {
+    opacity: 1;
+    display: block;
+    position: relative;
+}
+
+.page::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========== BANKS PAGE STYLES ========== */
+.banks-page {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-light);
+    position: relative;
+    overflow-y: auto;
+    padding-bottom: 80px;
+}
+
+.banks-page.active {
+    display: block;
+}
+
+.banks-container {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.banks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.banks-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.search-container {
+    position: relative;
+    width: 300px;
+    max-width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 45px 14px 20px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-container i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.weather-widget {
+    background: linear-gradient(135deg, #4F6DFF, #6C63FF);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 30px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.weather-info i {
+    font-size: 24px;
+    color: #87CEEB;
+}
+
+.weather-day {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.bank-connection-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid var(--border);
+}
+
+.bank-connection-section h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.bank-connection-section p {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.bank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bank-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg-light);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+.bank-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.bank-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.bank-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+}
+
+.bank-logo.kaspi {
+    background: linear-gradient(135deg, #00A887, #008975);
+}
+
+.bank-logo.halyk {
+    background: linear-gradient(135deg, #F6B100, #D49A00);
+}
+
+.bank-logo.freedom {
+    background: linear-gradient(135deg, #1E40AF, #1E3A8A);
+}
+
+.bank-logo.jusan {
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+}
+
+.bank-logo.forte {
+    background: linear-gradient(135deg, #10B981, #059669);
+}
+
+.bank-details h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.bank-details p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+.connect-btn {
+    padding: 12px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    min-width: 140px;
+    justify-content: center;
+}
+
+.connect-btn:hover {
+    background: var(--primary-dark);
+}
+
+.connect-btn.connected {
+    background: var(--success);
+    cursor: default;
+}
+
+.connect-btn.connected:hover {
+    background: var(--success);
+}
+
+.transaction-stats-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid var(--border);
+}
+
+.transaction-stats-section h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 25px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stat-item {
+    background: var(--bg-light);
+    border-radius: var(--radius);
+    padding: 25px;
+    border: 2px solid var(--border);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.stat-item:hover {
+    border-color: var(--primary);
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 15px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.quick-actions-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    margin-bottom: 80px;
+    border: 2px solid var(--border);
+}
+
+.quick-actions-section h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 25px;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.action-btn {
+    padding: 20px;
+    background: var(--bg-light);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition);
+    justify-content: flex-start;
+    text-align: left;
+    min-height: 70px;
+}
+
+.action-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.action-btn i {
+    font-size: 20px;
+    color: var(--primary);
+    width: 24px;
+    text-align: center;
+}
+
+/* Modal for Bank Connection */
+.bank-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.bank-modal-content {
+    background: var(--bg-light);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 2px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.bank-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.bank-modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.bank-modal-close {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: var(--transition);
+}
+
+.bank-modal-close:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+
+.bank-modal-body {
+    margin-bottom: 30px;
+}
+
+.bank-form-group {
+    margin-bottom: 20px;
+}
+
+.bank-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 15px;
+}
+
+.bank-form-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 16px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.bank-form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.bank-modal-footer {
+    display: flex;
+    gap: 15px;
+}
+
+/* ========== СТРАНИЦА АНАЛИТИКИ (ПОЛНЫЙ ЭКРАН) ========== */
+.analytics-page {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-light);
+    position: relative;
+    overflow-y: auto;
+    padding-bottom: 80px;
+}
+
+.analytics-page.active {
+    display: flex;
 }
 
 .analytics-container {
@@ -249,7 +812,7 @@ html, body {
 }
 
 /* Bank Connection Section */
-.bank-connection-section {
+.bank-connection-section-analytics {
     background: var(--bg-card);
     border-radius: var(--radius);
     padding: 20px;
@@ -258,20 +821,20 @@ html, body {
     width: 100%;
 }
 
-.bank-connection-section h3 {
+.bank-connection-section-analytics h3 {
     font-size: 18px;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 16px;
 }
 
-.bank-list {
+.bank-list-analytics {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.bank-item {
+.bank-item-analytics {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -282,11 +845,11 @@ html, body {
     transition: var(--transition);
 }
 
-.bank-item:hover {
+.bank-item-analytics:hover {
     border-color: var(--primary);
 }
 
-.bank-info {
+.bank-info-analytics {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -311,7 +874,7 @@ html, body {
     font-size: 15px;
 }
 
-.connect-btn {
+.connect-btn-analytics {
     padding: 8px 20px;
     background: var(--primary);
     color: white;
@@ -324,21 +887,21 @@ html, body {
     min-width: 100px;
 }
 
-.connect-btn:hover {
+.connect-btn-analytics:hover {
     background: var(--primary-dark);
 }
 
-.connect-btn.connected {
+.connect-btn-analytics.connected {
     background: var(--success);
     cursor: default;
 }
 
-.connect-btn.connected:hover {
+.connect-btn-analytics.connected:hover {
     background: var(--success);
 }
 
 /* Transaction Statistics */
-.transaction-stats-section {
+.transaction-stats-section-analytics {
     background: var(--bg-card);
     border-radius: var(--radius);
     padding: 20px;
@@ -347,14 +910,14 @@ html, body {
     width: 100%;
 }
 
-.stats-grid {
+.stats-grid-analytics {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-bottom: 20px;
 }
 
-.stat-item {
+.stat-item-analytics {
     background: var(--bg-light);
     border-radius: var(--radius-sm);
     padding: 20px;
@@ -363,18 +926,18 @@ html, body {
     transition: var(--transition);
 }
 
-.stat-item:hover {
+.stat-item-analytics:hover {
     border-color: var(--primary);
 }
 
-.stat-value {
+.stat-value-analytics {
     font-size: 24px;
     font-weight: 700;
     color: var(--primary);
     margin-bottom: 4px;
 }
 
-.stat-label {
+.stat-label-analytics {
     font-size: 14px;
     color: var(--text-secondary);
     font-weight: 500;
@@ -478,1163 +1041,6 @@ html, body {
 
 .add-expense-btn:hover {
     background: var(--primary-dark);
-}
-
-/* Адаптация для мобильных устройств */
-@media (max-width: 767px) {
-    .analytics-container {
-        padding: 16px;
-        padding-bottom: 100px; /* Учитываем навигацию внизу */
-    }
-    
-    .stats-grid,
-    .income-expense-stats {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .category-options {
-        flex-direction: column;
-    }
-    
-    .category-option {
-        width: 100%;
-    }
-    
-    .bank-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-    
-    .connect-btn {
-        width: 100%;
-    }
-    
-    .stat-item,
-    .income-card,
-    .expense-card {
-        padding: 16px;
-    }
-}
-
-/* Адаптация для планшетов */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .analytics-container {
-        padding: 24px;
-        padding-bottom: 100px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .category-options {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .bank-list {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-    }
-}
-
-/* Адаптация для десктопа */
-@media (min-width: 1200px) {
-    .analytics-container {
-        padding: 32px;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding-bottom: 100px;
-    }
-    
-    .analytics-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
-    
-    .study-section,
-    .add-expense-section,
-    .bank-connection-section,
-    .transaction-stats-section,
-    .other-section {
-        grid-column: span 1;
-    }
-    
-    .add-expense-section {
-        grid-column: 1;
-    }
-    
-    .bank-connection-section {
-        grid-column: 2;
-        grid-row: 1;
-    }
-    
-    .transaction-stats-section {
-        grid-column: span 2;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .category-options {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .bank-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Общие стили для всех устройств */
-.app-container {
-    background: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-
-/* ========== HEADER АДАПТАЦИЯ ========== */
-.app-header {
-    background: var(--bg-light);
-    color: var(--text-primary);
-    padding: 20px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: auto;
-    min-height: 80px;
-    flex-shrink: 0;
-}
-
-@media (max-width: 767px) {
-    .app-header {
-        padding: 16px 20px;
-        min-height: 70px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-    }
-    
-    .header-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-    
-    .main-content {
-        margin-top: 70px;
-    }
-}
-
-@media (min-width: 768px) {
-    .app-header {
-        padding: 20px 32px;
-        min-height: 80px;
-    }
-}
-
-/* ========== NAVIGATION АДАПТАЦИЯ ========== */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: var(--bg-light);
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 0;
-    border-top: 2px solid var(--border);
-    z-index: 100;
-    height: auto;
-    min-height: 70px;
-}
-
-@media (max-width: 767px) {
-    .bottom-nav {
-        height: 70px;
-        padding: 8px 0;
-    }
-    
-    .nav-item {
-        padding: 8px;
-        max-width: 70px;
-    }
-    
-    .nav-icon {
-        font-size: 20px;
-    }
-    
-    .nav-label {
-        font-size: 11px;
-    }
-    
-    .main-content {
-        padding-bottom: 70px;
-    }
-}
-
-@media (min-width: 768px) {
-    .bottom-nav {
-        height: 80px;
-        padding: 16px 0;
-    }
-    
-    .nav-item {
-        padding: 12px;
-        max-width: 80px;
-    }
-    
-    .nav-icon {
-        font-size: 22px;
-    }
-    
-    .main-content {
-        padding-bottom: 80px;
-    }
-}
-
-/* ========== ТИПОГРАФИЯ ДЛЯ РАЗНЫХ УСТРОЙСТВ ========== */
-@media (max-width: 767px) {
-    h1 {
-        font-size: 24px;
-        line-height: 1.3;
-    }
-    
-    h2 {
-        font-size: 20px;
-        line-height: 1.3;
-    }
-    
-    h3 {
-        font-size: 18px;
-        line-height: 1.4;
-    }
-    
-    .account-type-title,
-    .auth-title {
-        font-size: 24px;
-    }
-    
-    .section-title {
-        font-size: 18px;
-    }
-    
-    .user-name {
-        font-size: 20px;
-    }
-    
-    .stat-value {
-        font-size: 20px;
-    }
-}
-
-@media (min-width: 768px) {
-    h1 {
-        font-size: 32px;
-        line-height: 1.2;
-    }
-    
-    h2 {
-        font-size: 24px;
-        line-height: 1.3;
-    }
-    
-    h3 {
-        font-size: 20px;
-        line-height: 1.4;
-    }
-    
-    .account-type-title,
-    .auth-title {
-        font-size: 32px;
-    }
-    
-    .section-title {
-        font-size: 20px;
-    }
-    
-    .user-name {
-        font-size: 24px;
-    }
-    
-    .stat-value {
-        font-size: 24px;
-    }
-}
-
-@media (min-width: 1200px) {
-    h1 {
-        font-size: 36px;
-    }
-    
-    h2 {
-        font-size: 28px;
-    }
-    
-    h3 {
-        font-size: 22px;
-    }
-    
-    .account-type-title,
-    .auth-title {
-        font-size: 36px;
-    }
-    
-    .section-title {
-        font-size: 22px;
-    }
-    
-    .user-name {
-        font-size: 28px;
-    }
-    
-    .stat-value {
-        font-size: 28px;
-    }
-}
-
-/* ========== ФОРМЫ И ИНПУТЫ АДАПТАЦИЯ ========== */
-@media (max-width: 767px) {
-    .form-input {
-        padding: 14px;
-        font-size: 16px;
-    }
-    
-    .btn {
-        padding: 14px 20px;
-        font-size: 16px;
-        height: 52px;
-    }
-    
-    .btn-primary,
-    .btn-outline {
-        min-height: 52px;
-    }
-    
-    .floating-label-text {
-        font-size: 14px;
-    }
-}
-
-@media (min-width: 768px) {
-    .form-input {
-        padding: 16px;
-        font-size: 16px;
-    }
-    
-    .btn {
-        padding: 16px 24px;
-        font-size: 17px;
-        height: 56px;
-    }
-    
-    .btn-primary,
-    .btn-outline {
-        min-height: 56px;
-    }
-}
-
-/* ========== КАРТОЧКИ И КОМПОНЕНТЫ АДАПТАЦИЯ ========== */
-@media (max-width: 767px) {
-    .card,
-    .stat-card,
-    .report-card,
-    .mission-card,
-    .store-item {
-        padding: 16px;
-        margin-bottom: 12px;
-    }
-    
-    .user-info,
-    .ai-advice {
-        padding: 16px;
-        margin-bottom: 16px;
-    }
-    
-    .goals-progress,
-    .expense-history,
-    .add-expense-form {
-        padding: 16px;
-        margin-bottom: 16px;
-    }
-    
-    .expense-item {
-        padding: 16px;
-    }
-}
-
-@media (min-width: 768px) {
-    .card,
-    .stat-card,
-    .report-card,
-    .mission-card,
-    .store-item {
-        padding: 20px;
-        margin-bottom: 16px;
-    }
-    
-    .user-info,
-    .ai-advice {
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    
-    .goals-progress,
-    .expense-history,
-    .add-expense-form {
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    
-    .expense-item {
-        padding: 20px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .card,
-    .stat-card,
-    .report-card,
-    .mission-card,
-    .store-item {
-        padding: 24px;
-        margin-bottom: 20px;
-    }
-    
-    .user-info,
-    .ai-advice {
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .goals-progress,
-    .expense-history,
-    .add-expense-form {
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-    
-    .expense-item {
-        padding: 20px;
-    }
-}
-
-/* ========== ГРАФИКИ АДАПТАЦИЯ ========== */
-.chart-container {
-    height: 250px;
-    position: relative;
-    margin: 20px 0;
-}
-
-@media (max-width: 767px) {
-    .chart-container {
-        height: 220px;
-        margin: 16px 0;
-    }
-    
-    .analytics-chart,
-    .pie-chart-container {
-        padding: 16px;
-    }
-}
-
-@media (min-width: 768px) {
-    .chart-container {
-        height: 250px;
-        margin: 20px 0;
-    }
-}
-
-@media (min-width: 1200px) {
-    .chart-container {
-        height: 300px;
-        margin: 24px 0;
-    }
-}
-
-/* ========== ЧАТ АДАПТАЦИЯ ========== */
-@media (max-width: 767px) {
-    .chat-page {
-        padding: 0;
-    }
-    
-    .chat-container {
-        height: calc(100vh - 140px);
-    }
-    
-    .chat-messages {
-        padding: 12px;
-        padding-bottom: 80px;
-    }
-    
-    .message {
-        max-width: 85%;
-        padding: 12px 16px;
-        font-size: 15px;
-    }
-    
-    .chat-input-container {
-        padding: 8px 12px;
-        height: 60px;
-    }
-}
-
-@media (min-width: 768px) {
-    .chat-container {
-        height: calc(100% - 80px);
-    }
-    
-    .chat-messages {
-        padding: 16px;
-        padding-bottom: 80px;
-    }
-    
-    .message {
-        max-width: 75%;
-        padding: 14px 18px;
-        font-size: 16px;
-    }
-    
-    .chat-input-container {
-        padding: 12px 16px;
-        height: 70px;
-    }
-}
-
-/* ========== МОДАЛЬНЫЕ ОКНА АДАПТАЦИЯ ========== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    padding: 20px;
-}
-
-.modal-content {
-    background: var(--bg-light);
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-    border: 2px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 767px) {
-    .modal-content {
-        max-width: 90%;
-        padding: 20px;
-    }
-    
-    .modal-overlay {
-        padding: 16px;
-    }
-}
-
-@media (min-width: 768px) {
-    .modal-content {
-        max-width: 500px;
-        padding: 24px;
-    }
-}
-
-/* ========== АККАУНТ ТАЙП СТРАНИЦА АДАПТАЦИЯ ========== */
-.account-type-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 1000;
-    overflow-y: auto;
-}
-
-.account-type-container {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 40px 30px;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-
-@media (max-width: 767px) {
-    .account-type-container {
-        padding: 30px 20px;
-        max-width: 340px;
-    }
-    
-    .account-type-button {
-        padding: 16px;
-    }
-    
-    .account-button-icon {
-        width: 44px;
-        height: 44px;
-        font-size: 20px;
-        margin-right: 16px;
-    }
-}
-
-/* ========== AUTH PAGE АДАПТАЦИЯ ========== */
-.auth-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 1000;
-    overflow-y: auto;
-}
-
-.auth-container {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 40px 30px;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-
-@media (max-width: 767px) {
-    .auth-container {
-        padding: 30px 20px;
-        max-width: 340px;
-    }
-}
-
-/* ========== UTILITY КЛАССЫ ДЛЯ АДАПТИВНОСТИ ========== */
-
-/* Скрыть элементы на мобильных */
-@media (max-width: 767px) {
-    .hide-on-mobile {
-        display: none !important;
-    }
-}
-
-/* Скрыть элементы на планшетах */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .hide-on-tablet {
-        display: none !important;
-    }
-}
-
-/* Скрыть элементы на десктопе */
-@media (min-width: 1200px) {
-    .hide-on-desktop {
-        display: none !important;
-    }
-}
-
-/* Показывать элементы только на мобильных */
-@media (max-width: 767px) {
-    .show-on-mobile {
-        display: block !important;
-    }
-}
-
-/* Показать элементы только на планшетах */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .show-on-tablet {
-        display: block !important;
-    }
-}
-
-/* Показать элементы только на десктопе */
-@media (min-width: 1200px) {
-    .show-on-desktop {
-        display: block !important;
-    }
-}
-
-/* ========== ИСПРАВЛЕНИЕ СКРОЛЛА ========== */
-.scroll-container {
-    -webkit-overflow-scrolling: touch;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-}
-
-.scroll-container::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.scroll-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 4px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-    background: var(--text-light);
-}
-
-/* ========== ТАЧ ФРЕНДЛИ СТИЛИ ========== */
-@media (hover: none) and (pointer: coarse) {
-    button,
-    .btn,
-    .nav-item,
-    .category-btn,
-    .settings-item {
-        min-height: 44px;
-    }
-    
-    input,
-    select,
-    textarea {
-        font-size: 16px;
-    }
-    
-    .tap-highlight {
-        -webkit-tap-highlight-color: transparent;
-    }
-}
-
-/* ========== ЛАНДШАФТНЫЙ РЕЖИМ ========== */
-@media (max-height: 500px) and (orientation: landscape) {
-    .app-container {
-        height: 100vh;
-        border-radius: 0;
-        margin: 0;
-    }
-    
-    .main-content {
-        height: calc(100vh - 140px);
-    }
-    
-    .bottom-nav {
-        height: 60px;
-    }
-    
-    .app-header {
-        min-height: 60px;
-    }
-}
-
-/* ========== ВЫСОКОКОНТРАСТНЫЙ РЕЖИМ ========== */
-@media (prefers-contrast: high) {
-    :root {
-        --border: #000000;
-        --text-primary: #000000;
-        --text-secondary: #333333;
-    }
-    
-    [data-theme="dark"] {
-        --border: #FFFFFF;
-        --text-primary: #FFFFFF;
-        --text-secondary: #CCCCCC;
-    }
-    
-    .card,
-    .stat-card,
-    .report-card {
-        border: 2px solid var(--border);
-    }
-}
-
-/* ========== АНИМАЦИИ ДЛЯ ПЕРЕХОДОВ ========== */
-.page {
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ========== ОПТИМИЗАЦИЯ ДЛЯ МЕДЛЕННЫХ УСТРОЙСТВ ========== */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* ========== ПОДДЕРЖКА РАЗНЫХ ЯЗЫКОВ ========== */
-[lang="kz"] {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KZ', sans-serif;
-}
-
-[lang="ru"] {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-[lang="en"] {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* ========== КОНЕЦ АДАПТИВНЫХ СТИЛЕЙ ========== */
-
-/* ========== СТРАНИЦА ВЫБОРА ТИПА АККАУНТА ========== */
-.account-type-page {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 25px;
-    z-index: 1000;
-}
-
-.account-type-container {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 40px 30px;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 340px;
-    text-align: center;
-}
-
-.account-type-header {
-    margin-bottom: 30px;
-}
-
-.account-type-logo {
-    width: 80px;
-    height: 80px;
-    background: var(--primary);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: white;
-    font-size: 32px;
-    font-weight: 600;
-}
-
-.account-type-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-}
-
-.account-type-subtitle {
-    color: var(--text-secondary);
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.account-type-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.account-type-button {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg-light);
-    cursor: pointer;
-    text-align: left;
-    position: relative;
-    transition: var(--transition);
-}
-
-.account-type-button:hover {
-    border-color: var(--primary);
-}
-
-.account-type-button.selected {
-    border-color: var(--primary);
-    background: var(--primary-light);
-}
-
-.account-button-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: white;
-    margin-right: 20px;
-    flex-shrink: 0;
-}
-
-.account-button-icon.teen {
-    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-}
-
-.account-button-icon.parent {
-    background: linear-gradient(135deg, #4ECDC4, #44A08D);
-}
-
-.account-button-icon.adult {
-    background: linear-gradient(135deg, #4F6DFF, #6C63FF);
-}
-
-.account-button-content {
-    flex: 1;
-}
-
-.account-button-content h3 {
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-    font-size: 17px;
-}
-
-.account-type-description {
-    background: var(--primary-light);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: left;
-    border-left: 3px solid var(--primary);
-}
-
-.account-type-footer {
-    color: var(--text-secondary);
-    font-size: 14px;
-}
-
-.account-type-footer a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-/* ========== ПЛАВАЮЩИЕ ЛЕЙБЛЫ ========== */
-.form-group {
-    position: relative;
-    margin-bottom: 24px;
-}
-
-.floating-label-text {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    font-size: 15px;
-    pointer-events: none;
-    transition: all 0.3s ease;
-    background: var(--bg-light);
-    padding: 0 8px;
-}
-
-.form-input {
-    width: 100%;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    background: var(--bg-light);
-    color: var(--text-primary);
-    transition: var(--transition);
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.form-input:focus + .floating-label-text,
-.form-input:not(:placeholder-shown) + .floating-label-text {
-    top: 0;
-    font-size: 13px;
-    color: var(--primary);
-    transform: translateY(-50%) scale(0.9);
-}
-
-.form-input::placeholder {
-    color: transparent;
-}
-
-.password-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.password-input-container .form-input {
-    padding-right: 50px;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 16px;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 5px;
-    z-index: 3;
-    font-size: 16px;
-}
-
-/* ========== APP HEADER ========== */
-.app-header {
-    background: var(--bg-light);
-    color: var(--text-primary);
-    padding: 50px 20px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--border);
-    position: relative;
-    z-index: 100;
-    height: 110px;
-    flex-shrink: 0;
-}
-
-.header-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.header-title {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-}
-
-/* Скрыть языковой переключатель на всех страницах кроме главной */
-.language-switcher {
-    display: none; /* Скрываем по умолчанию */
-    gap: 8px;
-    margin-top: 4px;
-}
-
-/* Показываем только на главной странице */
-.page.dashboard .language-switcher {
-    display: flex;
-}
-
-.lang-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-card);
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.lang-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-.header-actions {
-    display: flex;
-    gap: 12px;
-}
-
-.header-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius);
-    background: var(--bg-card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--text-primary);
-    border: 1px solid var(--border);
-    transition: var(--transition);
-}
-
-.header-icon:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary);
-}
-
-/* ========== MAIN CONTENT ========== */
-.main-content {
-    flex: 1;
-    overflow-y: auto;
-    position: relative;
-    height: calc(100% - 180px);
-    padding-bottom: 80px;
-    background: var(--bg-light);
-}
-
-/* ========== PAGE STYLES ========== */
-.page {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    padding: 20px;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    background: var(--bg-light);
-}
-
-.page.active {
-    opacity: 1;
-}
-
-.page::-webkit-scrollbar {
-    display: none;
 }
 
 /* ========== AUTH PAGE ========== */
@@ -1840,6 +1246,10 @@ html, body {
 /* ========== DASHBOARD ========== */
 .dashboard {
     display: none;
+}
+
+.dashboard.active {
+    display: block;
 }
 
 .user-info {
@@ -2157,19 +1567,21 @@ html, body {
     background: #DC2626;
 }
 
-/* Bottom Navigation */
+/* ========== NAVIGATION АДАПТАЦИЯ ========== */
 .bottom-nav {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background: var(--bg-light);
     display: flex;
     justify-content: space-around;
-    padding: 16px 0;
+    padding: 12px 0;
     border-top: 2px solid var(--border);
     z-index: 100;
-    height: 80px;
+    height: auto;
+    min-height: 70px;
+    flex-shrink: 0;
 }
 
 .nav-item {
@@ -2183,6 +1595,7 @@ html, body {
     flex: 1;
     max-width: 70px;
     transition: var(--transition);
+    cursor: pointer;
 }
 
 .nav-item.active {
@@ -2621,6 +2034,10 @@ html, body {
     display: none;
 }
 
+.settings-page.active {
+    display: block;
+}
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -2980,6 +2397,10 @@ html, body {
     overflow: hidden;
 }
 
+.chat-page.active {
+    display: flex;
+}
+
 .chat-container {
     flex: 1;
     display: flex;
@@ -3312,6 +2733,10 @@ html, body {
     display: none;
 }
 
+.missions-page.active {
+    display: block;
+}
+
 .missions-balance {
     display: flex;
     justify-content: space-between;
@@ -3600,6 +3025,10 @@ html, body {
 /* ========== STORE PAGE ========== */
 .store-page {
     display: none;
+}
+
+.store-page.active {
+    display: block;
 }
 
 .store-balance {
@@ -4025,87 +3454,157 @@ html, body {
     font-size: 15px;
 }
 
-/* ========== COMPACT CLASSES ========== */
-.compact {
-    /* Компактные стили для экономии места */
-}
+/* ========== UTILITY КЛАССЫ ДЛЯ АДАПТИВНОСТИ ========== */
 
-.compact .section-header {
-    margin: 16px 0 12px;
-}
-
-.compact .card {
-    padding: 20px;
-    margin-bottom: 12px;
-}
-
-.compact .user-info {
-    padding: 20px;
-    margin-bottom: 16px;
-}
-
-.compact .ai-advice {
-    padding: 20px;
-    margin-bottom: 16px;
-}
-
-/* ========== SCROLLBAR HIDING ========== */
-::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: transparent;
-}
-
-/* ========== ACCESSIBILITY ========== */
-*:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* ========== PLACEHOLDER STYLES ========== */
-::placeholder {
-    color: var(--text-light);
-    opacity: 1;
-}
-
-/* ========== DISABLED ELEMENTS ========== */
-:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* ========== MOBILE OPTIMIZATION ========== */
-@media (max-width: 500px) {
-    .app-container {
+/* Скрыть элементы на мобильных */
+@media (max-width: 767px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+    
+    .app-header {
+        padding: 16px 20px;
+        min-height: 70px;
+        position: fixed;
+        top: 0;
         width: 100%;
-        height: 100vh;
-        border-radius: 0;
-        box-shadow: none;
+        z-index: 1000;
+    }
+    
+    .header-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
     
     .main-content {
-        padding: 0 0 80px;
-        height: calc(100vh - 180px);
+        margin-top: 70px;
+        height: calc(100vh - 150px);
     }
     
-    .expense-stats {
+    .bottom-nav {
+        height: 70px;
+        padding: 8px 0;
+    }
+    
+    .nav-item {
+        padding: 8px;
+        max-width: 70px;
+    }
+    
+    .nav-icon {
+        font-size: 20px;
+    }
+    
+    .nav-label {
+        font-size: 11px;
+    }
+    
+    .stats-grid,
+    .income-expense-stats,
+    .stats-grid-analytics {
         grid-template-columns: 1fr;
-    }
-    
-    .form-row {
-        flex-direction: column;
         gap: 12px;
     }
     
     .category-options {
-        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .category-option {
+        width: 100%;
+    }
+    
+    .bank-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .connect-btn {
+        width: 100%;
+    }
+    
+    .stat-item,
+    .income-card,
+    .expense-card,
+    .stat-item-analytics {
+        padding: 16px;
+    }
+    
+    .banks-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .stats-grid,
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bank-modal-content {
+        padding: 25px;
+    }
+    
+    .bank-modal-footer {
+        flex-direction: column;
+    }
+    
+    .weather-widget {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    /* Уменьшение сообщений чата для mobile */
+    .chat-messages {
+        padding: 12px 12px 70px;
+        max-height: calc(100vh - 180px);
+    }
+    
+    .message {
+        max-width: 82%;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .chat-input-container {
+        padding: 8px 12px;
+        height: 60px;
+    }
+    
+    .chat-input-wrapper {
+        height: 44px;
+        padding: 6px 8px;
+        width: 100%;
+    }
+    
+    .chat-input {
+        padding: 6px 8px;
+        font-size: 13px;
+        min-height: 32px;
+        max-height: 32px;
+        width: 100%;
+    }
+    
+    .chat-send-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+    
+    /* Боковая панель истории чатов */
+    .chat-history-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .chat-history-sidebar.open {
+        right: 0;
     }
     
     .user-info {
@@ -4172,518 +3671,117 @@ html, body {
         height: 40px;
         font-size: 18px;
     }
-    
-    /* Уменьшение сообщений чата для mobile */
-    .chat-messages {
-        padding: 12px 12px 70px;
-        max-height: calc(100vh - 180px);
+}
+
+/* Скрыть элементы на планшетах */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .hide-on-tablet {
+        display: none !important;
     }
     
-    .message {
-        max-width: 82%;
-        padding: 10px 12px;
-        font-size: 14px;
+    .analytics-container {
+        padding: 24px;
+        padding-bottom: 100px;
     }
     
-    .chat-input-container {
-        padding: 8px 12px;
-        height: 60px;
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .chat-input-wrapper {
-        height: 44px;
-        padding: 6px 8px;
-        width: 100%;
+    .category-options {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .chat-input {
-        padding: 6px 8px;
-        font-size: 13px;
-        min-height: 32px;
-        max-height: 32px;
-        width: 100%;
+    .bank-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
     
-    .chat-send-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 13px;
+    .app-header {
+        padding: 20px 32px;
+        min-height: 80px;
     }
     
-    /* Боковая панель истории чатов */
-    .chat-history-sidebar {
-        width: 100%;
-        right: -100%;
+    .bottom-nav {
+        height: 80px;
+        padding: 16px 0;
     }
     
-    .chat-history-sidebar.open {
-        right: 0;
-    }
-}
-
-/* ========== DESKTOP OPTIMIZATION ========== */
-@media (min-width: 501px) {
-    .app-container {
-        margin: 0 auto;
-        border-radius: 0;
-        overflow: hidden;
-        box-shadow: none;
-    }
-/* ========== BANKS PAGE STYLES ========== */
-.banks-page {
-    display: none;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-light);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 100;
-}
-
-.banks-container {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    width: 100%;
-    height: 100%;
-}
-
-.banks-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.banks-header h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-}
-
-.search-container {
-    position: relative;
-    width: 300px;
-    max-width: 100%;
-}
-
-.search-input {
-    width: 100%;
-    padding: 14px 45px 14px 20px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
-    font-size: 16px;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    transition: var(--transition);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.search-container i {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    font-size: 16px;
-}
-
-.weather-widget {
-    background: linear-gradient(135deg, #4F6DFF, #6C63FF);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 30px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.weather-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.weather-info i {
-    font-size: 24px;
-    color: #87CEEB;
-}
-
-.weather-day {
-    font-size: 16px;
-    opacity: 0.9;
-}
-
-.bank-connection-section {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    margin-bottom: 30px;
-    border: 2px solid var(--border);
-}
-
-.bank-connection-section h3 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-}
-
-.bank-connection-section p {
-    color: var(--text-secondary);
-    margin-bottom: 25px;
-    font-size: 16px;
-}
-
-.bank-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.bank-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: var(--bg-light);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    transition: var(--transition);
-}
-
-.bank-item:hover {
-    border-color: var(--primary);
-    transform: translateY(-2px);
-}
-
-.bank-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.bank-logo {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: white;
-}
-
-.bank-logo.kaspi {
-    background: linear-gradient(135deg, #00A887, #008975);
-}
-
-.bank-logo.halyk {
-    background: linear-gradient(135deg, #F6B100, #D49A00);
-}
-
-.bank-logo.freedom {
-    background: linear-gradient(135deg, #1E40AF, #1E3A8A);
-}
-
-.bank-details h4 {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 5px;
-}
-
-.bank-details p {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin: 0;
-}
-
-.connect-btn {
-    padding: 12px 24px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition);
-    min-width: 140px;
-}
-
-.connect-btn:hover {
-    background: var(--primary-dark);
-}
-
-.connect-btn.connected {
-    background: var(--success);
-    cursor: default;
-}
-
-.connect-btn.connected:hover {
-    background: var(--success);
-}
-
-.transaction-stats-section {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    margin-bottom: 30px;
-    border: 2px solid var(--border);
-}
-
-.transaction-stats-section h3 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 25px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.stat-item {
-    background: var(--bg-light);
-    border-radius: var(--radius);
-    padding: 25px;
-    border: 2px solid var(--border);
-    text-align: center;
-    transition: var(--transition);
-}
-
-.stat-item:hover {
-    border-color: var(--primary);
-}
-
-.stat-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 8px;
-}
-
-.stat-label {
-    font-size: 15px;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.quick-actions-section {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    margin-bottom: 30px;
-    border: 2px solid var(--border);
-}
-
-.quick-actions-section h3 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 25px;
-}
-
-.actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.action-btn {
-    padding: 20px;
-    background: var(--bg-light);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-primary);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: var(--transition);
-    justify-content: flex-start;
-    text-align: left;
-}
-
-.action-btn:hover {
-    border-color: var(--primary);
-    background: var(--primary-light);
-    color: var(--primary);
-}
-
-.action-btn i {
-    font-size: 20px;
-    color: var(--primary);
-}
-
-/* Modal for Bank Connection */
-.bank-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    padding: 20px;
-}
-
-.bank-modal-content {
-    background: var(--bg-light);
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-    border: 2px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.bank-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.bank-modal-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.bank-modal-close {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius);
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: var(--transition);
-}
-
-.bank-modal-close:hover {
-    background: var(--danger);
-    color: white;
-    border-color: var(--danger);
-}
-
-.bank-modal-body {
-    margin-bottom: 30px;
-}
-
-.bank-form-group {
-    margin-bottom: 20px;
-}
-
-.bank-form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 15px;
-}
-
-.bank-form-input {
-    width: 100%;
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 16px;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    transition: var(--transition);
-}
-
-.bank-form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.bank-modal-footer {
-    display: flex;
-    gap: 15px;
-}
-
-/* Responsive Design for Banks Page */
-@media (max-width: 768px) {
-    .banks-header {
-        flex-direction: column;
-        align-items: stretch;
+    .nav-item {
+        padding: 12px;
+        max-width: 80px;
     }
     
-    .search-container {
-        width: 100%;
+    .nav-icon {
+        font-size: 22px;
     }
     
-    .stats-grid,
+    .main-content {
+        padding-bottom: 80px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
     .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Скрыть элементы на десктопе */
+@media (min-width: 1200px) {
+    .hide-on-desktop {
+        display: none !important;
+    }
+    
+    .analytics-container {
+        padding: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 100px;
+    }
+    
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    
+    .study-section,
+    .add-expense-section,
+    .bank-connection-section-analytics,
+    .transaction-stats-section-analytics,
+    .other-section {
+        grid-column: span 1;
+    }
+    
+    .add-expense-section {
+        grid-column: 1;
+    }
+    
+    .bank-connection-section-analytics {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .transaction-stats-section-analytics {
+        grid-column: span 2;
+    }
+    
+    .stats-grid-analytics {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .category-options {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .bank-list-analytics {
         grid-template-columns: 1fr;
     }
     
-    .bank-item {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-    
-    .connect-btn {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .bank-modal-content {
-        padding: 25px;
-    }
-    
-    .bank-modal-footer {
-        flex-direction: column;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .actions-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1025px) {
     .stats-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -4692,5 +3790,734 @@ html, body {
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/* Показывать элементы только на мобильных */
+@media (max-width: 767px) {
+    .show-on-mobile {
+        display: block !important;
+    }
 }
+
+/* Показать элементы только на планшетах */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .show-on-tablet {
+        display: block !important;
+    }
+}
+
+/* Показать элементы только на десктопе */
+@media (min-width: 1200px) {
+    .show-on-desktop {
+        display: block !important;
+    }
+}
+
+/* ========== ТИПОГРАФИЯ ДЛЯ РАЗНЫХ УСТРОЙСТВ ========== */
+@media (max-width: 767px) {
+    h1 {
+        font-size: 24px;
+        line-height: 1.3;
+    }
+    
+    h2 {
+        font-size: 20px;
+        line-height: 1.3;
+    }
+    
+    h3 {
+        font-size: 18px;
+        line-height: 1.4;
+    }
+    
+    .account-type-title,
+    .auth-title {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+    }
+    
+    .user-name {
+        font-size: 20px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    .stat-value-analytics {
+        font-size: 20px;
+    }
+    
+    .banks-header h2 {
+        font-size: 24px;
+    }
+    
+    .bank-connection-section h3,
+    .transaction-stats-section h3,
+    .quick-actions-section h3 {
+        font-size: 20px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+    }
+}
+
+@media (min-width: 768px) {
+    h1 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+    
+    h2 {
+        font-size: 24px;
+        line-height: 1.3;
+    }
+    
+    h3 {
+        font-size: 20px;
+        line-height: 1.4;
+    }
+    
+    .account-type-title,
+    .auth-title {
+        font-size: 32px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .user-name {
+        font-size: 24px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+    }
+    
+    .stat-value-analytics {
+        font-size: 24px;
+    }
+}
+
+@media (min-width: 1200px) {
+    h1 {
+        font-size: 36px;
+    }
+    
+    h2 {
+        font-size: 28px;
+    }
+    
+    h3 {
+        font-size: 22px;
+    }
+    
+    .account-type-title,
+    .auth-title {
+        font-size: 36px;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+    
+    .user-name {
+        font-size: 28px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+    }
+    
+    .stat-value-analytics {
+        font-size: 28px;
+    }
+}
+
+/* ========== ФОРМЫ И ИНПУТЫ АДАПТАЦИЯ ========== */
+@media (max-width: 767px) {
+    .form-input {
+        padding: 14px;
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 14px 20px;
+        font-size: 16px;
+        height: 52px;
+    }
+    
+    .btn-primary,
+    .btn-outline {
+        min-height: 52px;
+    }
+    
+    .floating-label-text {
+        font-size: 14px;
+    }
+    
+    .bank-form-input {
+        padding: 14px;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .form-input {
+        padding: 16px;
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 16px 24px;
+        font-size: 17px;
+        height: 56px;
+    }
+    
+    .btn-primary,
+    .btn-outline {
+        min-height: 56px;
+    }
+}
+
+/* ========== КАРТОЧКИ И КОМПОНЕНТЫ АДАПТАЦИЯ ========== */
+@media (max-width: 767px) {
+    .card,
+    .stat-card,
+    .report-card,
+    .mission-card,
+    .store-item {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .user-info,
+    .ai-advice {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .goals-progress,
+    .expense-history,
+    .add-expense-form {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .expense-item {
+        padding: 16px;
+    }
+    
+    .bank-connection-section,
+    .transaction-stats-section,
+    .quick-actions-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-item {
+        padding: 20px;
+    }
+    
+    .action-btn {
+        padding: 16px;
+        min-height: 60px;
+    }
+}
+
+@media (min-width: 768px) {
+    .card,
+    .stat-card,
+    .report-card,
+    .mission-card,
+    .store-item {
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+    
+    .user-info,
+    .ai-advice {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .goals-progress,
+    .expense-history,
+    .add-expense-form {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .expense-item {
+        padding: 20px;
+    }
+    
+    .bank-connection-section,
+    .transaction-stats-section,
+    .quick-actions-section {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card,
+    .stat-card,
+    .report-card,
+    .mission-card,
+    .store-item {
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .user-info,
+    .ai-advice {
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .goals-progress,
+    .expense-history,
+    .add-expense-form {
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .expense-item {
+        padding: 20px;
+    }
+}
+
+/* ========== ГРАФИКИ АДАПТАЦИЯ ========== */
+.chart-container {
+    height: 250px;
+    position: relative;
+    margin: 20px 0;
+}
+
+@media (max-width: 767px) {
+    .chart-container {
+        height: 220px;
+        margin: 16px 0;
+    }
+    
+    .analytics-chart,
+    .pie-chart-container {
+        padding: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .chart-container {
+        height: 250px;
+        margin: 20px 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .chart-container {
+        height: 300px;
+        margin: 24px 0;
+    }
+}
+
+/* ========== ИСПРАВЛЕНИЕ СКРОЛЛА ========== */
+.scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+    background: var(--text-light);
+}
+
+/* ========== ТАЧ ФРЕНДЛИ СТИЛИ ========== */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    .btn,
+    .nav-item,
+    .category-btn,
+    .settings-item {
+        min-height: 44px;
+    }
+    
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+    
+    .tap-highlight {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* ========== ЛАНДШАФТНЫЙ РЕЖИМ ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .app-container {
+        height: 100vh;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .main-content {
+        height: calc(100vh - 140px);
+    }
+    
+    .bottom-nav {
+        height: 60px;
+    }
+    
+    .app-header {
+        min-height: 60px;
+    }
+}
+
+/* ========== ВЫСОКОКОНТРАСТНЫЙ РЕЖИМ ========== */
+@media (prefers-contrast: high) {
+    :root {
+        --border: #000000;
+        --text-primary: #000000;
+        --text-secondary: #333333;
+    }
+    
+    [data-theme="dark"] {
+        --border: #FFFFFF;
+        --text-primary: #FFFFFF;
+        --text-secondary: #CCCCCC;
+    }
+    
+    .card,
+    .stat-card,
+    .report-card {
+        border: 2px solid var(--border);
+    }
+}
+
+/* ========== АНИМАЦИИ ДЛЯ ПЕРЕХОДОВ ========== */
+.page {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== ОПТИМИЗАЦИЯ ДЛЯ МЕДЛЕННЫХ УСТРОЙСТВ ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========== ПОДДЕРЖКА РАЗНЫХ ЯЗЫКОВ ========== */
+[lang="kz"] {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KZ', sans-serif;
+}
+
+[lang="ru"] {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+[lang="en"] {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ========== СТРАНИЦА ВЫБОРА ТИПА АККАУНТА ========== */
+.account-type-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 25px;
+    z-index: 1000;
+}
+
+.account-type-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 40px 30px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+}
+
+.account-type-header {
+    margin-bottom: 30px;
+}
+
+.account-type-logo {
+    width: 80px;
+    height: 80px;
+    background: var(--primary);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.account-type-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.account-type-subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.account-type-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.account-type-button {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-light);
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    transition: var(--transition);
+}
+
+.account-type-button:hover {
+    border-color: var(--primary);
+}
+
+.account-type-button.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.account-button-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.account-button-icon.teen {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+}
+
+.account-button-icon.parent {
+    background: linear-gradient(135deg, #4ECDC4, #44A08D);
+}
+
+.account-button-icon.adult {
+    background: linear-gradient(135deg, #4F6DFF, #6C63FF);
+}
+
+.account-button-content {
+    flex: 1;
+}
+
+.account-button-content h3 {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-size: 17px;
+}
+
+.account-type-description {
+    background: var(--primary-light);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    border-left: 3px solid var(--primary);
+}
+
+.account-type-footer {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.account-type-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ========== ПЛАВАЮЩИЕ ЛЕЙБЛЫ ========== */
+.form-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.floating-label-text {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 15px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: var(--bg-light);
+    padding: 0 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    background: var(--bg-light);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-input:focus + .floating-label-text,
+.form-input:not(:placeholder-shown) + .floating-label-text {
+    top: 0;
+    font-size: 13px;
+    color: var(--primary);
+    transform: translateY(-50%) scale(0.9);
+}
+
+.form-input::placeholder {
+    color: transparent;
+}
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container .form-input {
+    padding-right: 50px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    z-index: 3;
+    font-size: 16px;
+}
+
+/* ========== SCROLLBAR HIDING ========== */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+/* ========== ACCESSIBILITY ========== */
+*:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ========== PLACEHOLDER STYLES ========== */
+::placeholder {
+    color: var(--text-light);
+    opacity: 1;
+}
+
+/* ========== DISABLED ELEMENTS ========== */
+:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ========== COMPACT CLASSES ========== */
+.compact {
+    /* Компактные стили для экономии места */
+}
+
+.compact .section-header {
+    margin: 16px 0 12px;
+}
+
+.compact .card {
+    padding: 20px;
+    margin-bottom: 12px;
+}
+
+.compact .user-info {
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.compact .ai-advice {
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
 
