@@ -21,8 +21,8 @@
                     <div class="account-type-logo">
                         <i class="fas fa-wallet"></i>
                     </div>
-                    <h1 class="account-type-title">FinanceMind</h1>
-                    <p class="account-type-subtitle" data-translate="selectAccountType">Выберите тип аккаунта</p>
+                    <h1 class="account-title">FinanceMind</h1>
+                    <p class="account-subtitle" data-translate="selectAccountType">Выберите тип аккаунта</p>
                 </div>
 
                 <div class="account-type-buttons">
@@ -466,7 +466,7 @@
                 </div>
             </div>
 
-            <!-- Banks Page - Исправлено: вынесена как отдельная страница -->
+            <!-- Banks Page -->
             <div class="page banks-page" id="banks" style="display: none;">
                 <div class="banks-container">
                     <div class="banks-header">
@@ -1015,43 +1015,6 @@
                 </button>
             </div>
 
-            <!-- Chat Page -->
-            <div class="page chat-page" id="chat" style="display: none;">
-                <div class="chat-container compact">
-                    <div class="chat-header compact">
-                        <h3 class="chat-title">AI Помощник</h3>
-                        <div class="chat-history-sidebar-toggle" onclick="toggleChatHistory()">
-                            <i class="fas fa-history"></i>
-                        </div>
-                    </div>
-                    
-                    <!-- Боковая панель истории чатов -->
-                    <div class="chat-history-sidebar" id="chatHistorySidebar">
-                        <div class="chat-history-header">
-                            <h3>История чатов</h3>
-                            <button class="close-history-btn" onclick="toggleChatHistory()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="chat-history-list" id="chatHistoryList">
-                            <!-- История чатов будет здесь -->
-                        </div>
-                    </div>
-                    
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- Сообщения будут добавляться динамически -->
-                    </div>
-                    <div class="chat-input-fixed-container compact">
-                        <div class="chat-input-container compact">
-                            <input type="text" class="chat-input" id="chatInput" placeholder="Напишите ваш вопрос..." onkeypress="handleChatInput(event)">
-                            <button class="chat-send-btn small" onclick="sendMessage()">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Admin Panel -->
             <div class="page admin-page" id="adminPanel" style="display: none;">
                 <div class="admin-header compact">
@@ -1130,32 +1093,21 @@
                 <div class="nav-icon">
                     <i class="fas fa-home"></i>
                 </div>
-                <span data-translate="homeNav">Главная</span>
             </a>
             <a href="#" class="nav-item" onclick="showPage('analytics')">
                 <div class="nav-icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <span data-translate="analyticsNav">Аналитика</span>
             </a>
-            <!-- ДОБАВЛЕНО: Кнопка для страницы Банки -->
             <a href="#" class="nav-item" onclick="showPage('banks')">
                 <div class="nav-icon">
                     <i class="fas fa-university"></i>
                 </div>
-                <span data-translate="banksNav">Банки</span>
             </a>
             <a href="#" class="nav-item" id="missionsNavItem" onclick="showPage('missions')">
                 <div class="nav-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
-                <span data-translate="missionsNav">Миссии</span>
-            </a>
-            <a href="#" class="nav-item" onclick="showPage('chat')">
-                <div class="nav-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <span>AI Помощник</span>
             </a>
         </div>
     </div>
@@ -1250,15 +1202,7 @@
                 </div>
 
                 <div class="instruction-section compact">
-                    <h4><i class="fas fa-robot"></i> <span data-translate="instructionsSection5">6. AI-помощник</span></h4>
-                    <ul>
-                        <li data-translate="instructionsSection5Item1">Получайте финансовые советы</li>
-                        <li data-translate="instructionsSection5Item2">Задавайте вопросы</li>
-                    </ul>
-                </div>
-
-                <div class="instruction-section compact">
-                    <h4><i class="fas fa-users"></i> <span>7. Родительский контроль</span></h4>
+                    <h4><i class="fas fa-users"></i> <span>6. Родительский контроль</span></h4>
                     <ul>
                         <li>Отправляйте ссылки для отслеживания расходов</li>
                         <li>Контролируйте подростковые аккаунты</li>
@@ -1267,7 +1211,7 @@
                 </div>
 
                 <div class="instruction-section compact">
-                    <h4><i class="fas fa-briefcase"></i> <span>8. Рабочий кабинет</span></h4>
+                    <h4><i class="fas fa-briefcase"></i> <span>7. Рабочий кабинет</span></h4>
                     <ul>
                         <li>Управляйте персональными данными</li>
                         <li>Настройте безопасность аккаунта</li>
@@ -1346,4 +1290,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
