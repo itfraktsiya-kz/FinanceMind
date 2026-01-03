@@ -6360,4 +6360,1357 @@ const missionIcons = {
     'categories': 'fas fa-tags',
     'planning': 'fas fa-tasks',
     'achievements': 'fas fa-trophy'
+
 };
+// ========== БАНКОВСКАЯ ПАНЕЛЬ - НОВЫЕ ФУНКЦИИ ==========
+
+// Основные переменные для банковской системы
+let transactions = [];
+let banks = [
+    {
+        id: 'kaspi',
+        name: 'Kaspi Bank',
+        logo: 'K',
+        color: '#00A887',
+        connected: false,
+        lastSync: null,
+        instructions: {
+            ru: `<strong>Загрузите выписку из банка</strong><br>
+                 Стандартной синхронизации с Kaspi нет, так как банк заблокировал подключения сторонних приложений.
+                 Используется ручная загрузка банковской выписки. Можно выбрать сразу несколько файлов.<br><br>
+                 <strong>Как скачать выписку в приложении Kaspi:</strong><br>
+                 1. Откройте приложение Kaspi<br>
+                 2. Перейдите в раздел «Мой банк»<br>
+                 3. Выберите свою карту<br>
+                 4. Перейдите во вкладку «Выписка»<br>
+                 5. Выберите нужный период<br>
+                 6. Нажмите на иконку выгрузки<br>
+                 7. Выберите язык<br>
+                 8. Нажмите «Скачать PDF» и сохраните файл`,
+            en: `<strong>Upload bank statement</strong><br>
+                 There is no standard synchronization with Kaspi as the bank has blocked connections from third-party applications.
+                 Manual uploading of bank statements is used. Multiple files can be selected at once.<br><br>
+                 <strong>How to download statement in Kaspi app:</strong><br>
+                 1. Open Kaspi app<br>
+                 2. Go to "My Bank" section<br>
+                 3. Select your card<br>
+                 4. Go to "Statement" tab<br>
+                 5. Select desired period<br>
+                 6. Click on download icon<br>
+                 7. Choose language<br>
+                 8. Click "Download PDF" and save the file`,
+            kz: `<strong>Банк выпискасын жүктеңіз</strong><br>
+                 Kaspi-мен стандартты синхрондау жоқ, себебі банк үшінші жақ қолданбаларынан қосылымдарды бұғаттады.
+                 Банк выпискасын қолмен жүктеу қолданылады. Бірнеше файлды бір уақытта таңдауға болады.<br><br>
+                 <strong>Kaspi қолданбасында выписканы қалай жүктеуге болады:</strong><br>
+                 1. Kaspi қолданбасын ашыңыз<br>
+                 2. «Менің банкім» бөліміне өтіңіз<br>
+                 3. Картаңызды таңдаңыз<br>
+                 4. «Выписка» қойыншасына өтіңіз<br>
+                 5. Қажетті кезеңді таңдаңыз<br>
+                 6. Жүктеу белгішесін басыңыз<br>
+                 7. Тілді таңдаңыз<br>
+                 8. «PDF жүктеу» түймесін басып, файлды сақтаңыз`
+        }
+    },
+    {
+        id: 'halyk',
+        name: 'Halyk Bank',
+        logo: 'H',
+        color: '#F6B100',
+        connected: false,
+        lastSync: null,
+        instructions: {
+            ru: `<strong>Загрузите выписку из банка</strong><br>
+                 Автоматической синхронизации с Halyk нет, но вы можете загружать выписки и видеть всю аналитику.<br><br>
+                 <strong>Как скачать выписку в приложении Halyk Kazakhstan:</strong><br>
+                 1. Откройте раздел «Счета»<br>
+                 2. Выберите нужную карту или счёт<br>
+                 3. Нажмите «Выписка» внизу экрана<br>
+                 4. Выберите период (рекомендуется 3–6 месяцев)<br>
+                 5. Нажмите на иконку документа<br>
+                 6. Дождитесь формирования выписки<br>
+                 7. Сохраните файл (на iOS сразу, на Android — через виртуальный диск)`,
+            en: `<strong>Upload bank statement</strong><br>
+                 There is no automatic synchronization with Halyk, but you can upload statements and see all analytics.<br><br>
+                 <strong>How to download statement in Halyk Kazakhstan app:</strong><br>
+                 1. Open "Accounts" section<br>
+                 2. Select desired card or account<br>
+                 3. Click "Statement" at the bottom of the screen<br>
+                 4. Select period (recommended 3-6 months)<br>
+                 5. Click on document icon<br>
+                 6. Wait for statement generation<br>
+                 7. Save the file (on iOS directly, on Android - through virtual drive)`,
+            kz: `<strong>Банк выпискасын жүктеңіз</strong><br>
+                 Halyk-пен автоматты синхрондау жоқ, бірақ сіз выпискаларды жүктей аласыз және барлық аналитиканы көре аласыз.<br><br>
+                 <strong>Halyk Kazakhstan қолданбасында выписканы қалай жүктеуге болады:</strong><br>
+                 1. «Шоттар» бөлімін ашыңыз<br>
+                 2. Қажетті картаны немесе шотты таңдаңыз<br>
+                 3. Экранның төменгі жағындағы «Выписка» түймесін басыңыз<br>
+                 4. Кезеңді таңдаңыз (ұсынылатын мерзім 3-6 ай)<br>
+                 5. Құжат белгішесін басыңыз<br>
+                 6. Выписка құрылғанша күтіңіз<br>
+                 7. Файлды сақтаңыз (iOS-те тікелей, Android-те виртуалды диск арқылы)`
+        }
+    },
+    {
+        id: 'freedom',
+        name: 'Freedom Bank',
+        logo: 'F',
+        color: '#1E40AF',
+        connected: false,
+        lastSync: null,
+        instructions: {
+            ru: `<strong>Загрузите выписку из банка</strong><br>
+                 Стандартной синхронизации с Freedom Finance нет, но доступна загрузка выписок.<br><br>
+                 <strong>Freedom SuperApp:</strong><br>
+                 1. Откройте «Операции»<br>
+                 2. Пролистайте до «История» → «Показать все»<br>
+                 3. Выберите параметры выписки<br>
+                 4. Нажмите на иконку загрузки<br>
+                 5. Нажмите «Сформировать выписку»<br>
+                 6. Дождитесь push-уведомления<br>
+                 7. Перейдите «Продукты» → «Мои деньги»<br>
+                 8. Откройте выписку со статусом «Готово»<br>
+                 9. Выгрузите файл<br><br>
+                 <strong>Freedom Banker:</strong><br>
+                 1. Нажмите иконку формирования выписки<br>
+                 2. Выберите карту<br>
+                 3. Выберите язык<br>
+                 4. Выберите период (3–6 месяцев)<br>
+                 5. Нажмите «Получить выписку»<br>
+                 6. После формирования нажмите «Поделиться» и сохраните файл`,
+            en: `<strong>Upload bank statement</strong><br>
+                 There is no standard synchronization with Freedom Finance, but statement upload is available.<br><br>
+                 <strong>Freedom SuperApp:</strong><br>
+                 1. Open "Operations"<br>
+                 2. Scroll to "History" → "Show all"<br>
+                 3. Select statement parameters<br>
+                 4. Click on download icon<br>
+                 5. Click "Generate statement"<br>
+                 6. Wait for push notification<br>
+                 7. Go to "Products" → "My money"<br>
+                 8. Open statement with status "Ready"<br>
+                 9. Export the file<br><br>
+                 <strong>Freedom Banker:</strong><br>
+                 1. Click statement generation icon<br>
+                 2. Select card<br>
+                 3. Choose language<br>
+                 4. Select period (3-6 months)<br>
+                 5. Click "Get statement"<br>
+                 6. After generation click "Share" and save the file`,
+            kz: `<strong>Банк выпискасын жүктеңіз</strong><br>
+                 Freedom Finance-мен стандартты синхрондау жоқ, бірақ выпискаларды жүктеу қолжетімді.<br><br>
+                 <strong>Freedom SuperApp:</strong><br>
+                 1. «Операцияларды» ашыңыз<br>
+                 2. «Тарих» → «Барлығын көрсету» дейін айналдырыңыз<br>
+                 3. Выписка параметрлерін таңдаңыз<br>
+                 4. Жүктеу белгішесін басыңыз<br>
+                 5. «Выписка құру» түймесін басыңыз<br>
+                 6. Push-хабарлама күтіңіз<br>
+                 7. «Өнімдер» → «Менің ақшам» бөліміне өтіңіз<br>
+                 8. «Дайын» статусы бар выписканы ашыңыз<br>
+                 9. Файлды экспорттаңыз<br><br>
+                 <strong>Freedom Banker:</strong><br>
+                 1. Выписка құру белгішесін басыңыз<br>
+                 2. Картаны таңдаңыз<br>
+                 3. Тілді таңдаңыз<br>
+                 4. Кезеңді таңдаңыз (3-6 ай)<br>
+                 5. «Выписка алу» түймесін басыңыз<br>
+                 6. Құрылғаннан кейін «Бөлісу» түймесін басып, файлды сақтаңыз`
+        }
+    }
+];
+
+let selectedBank = null;
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+// 1️⃣ Панель «Подключение банков»
+function showBankConnectionPanel() {
+    const modalId = 'bankConnectionModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].banksTitle || 'Подключение банков'}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="banks-grid">
+                        ${banks.map(bank => `
+                            <div class="bank-card" onclick="selectBank('${bank.id}')" 
+                                 style="border-color: ${bank.color}">
+                                <div class="bank-logo" style="background: ${bank.color}">
+                                    ${bank.logo}
+                                </div>
+                                <div class="bank-name">${bank.name}</div>
+                                <div class="bank-status ${bank.connected ? 'connected' : 'disconnected'}">
+                                    <i class="fas fa-${bank.connected ? 'check-circle' : 'plug'}"></i>
+                                    ${bank.connected ? 
+                                        (currentLanguage === 'ru' ? 'Подключено' : 
+                                         currentLanguage === 'en' ? 'Connected' : 'Қосылған') : 
+                                        (currentLanguage === 'ru' ? 'Подключить' : 
+                                         currentLanguage === 'en' ? 'Connect' : 'Қосу')}
+                                </div>
+                                ${bank.lastSync ? `
+                                    <div class="bank-last-sync">
+                                        ${currentLanguage === 'ru' ? 'Обновлено' : 
+                                         currentLanguage === 'en' ? 'Updated' : 'Жаңартылған'} 
+                                        ${new Date(bank.lastSync).toLocaleDateString(currentLanguage)}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="banks-stats" style="margin-top: 30px; padding: 20px; background: var(--light-bg); border-radius: var(--radius-sm);">
+                        <h4 style="margin-bottom: 15px;">
+                            <i class="fas fa-chart-bar"></i> 
+                            ${currentLanguage === 'ru' ? 'Статистика по операциям' : 
+                             currentLanguage === 'en' ? 'Transaction Statistics' : 
+                             'Операциялар бойынша статистика'}
+                        </h4>
+                        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div class="stat-item">
+                                <div class="stat-value">${transactions.length}</div>
+                                <div class="stat-label">${currentLanguage === 'ru' ? 'Всего операций' : 
+                                                       currentLanguage === 'en' ? 'Total transactions' : 
+                                                       'Барлық операциялар'}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${new Set(transactions.map(t => t.bank)).size}</div>
+                                <div class="stat-label">${currentLanguage === 'ru' ? 'Банков подключено' : 
+                                                       currentLanguage === 'en' ? 'Banks connected' : 
+                                                       'Қосылған банктер'}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${calculateTotalIncome().toLocaleString()} ₸</div>
+                                <div class="stat-label">${currentLanguage === 'ru' ? 'Общий доход' : 
+                                                       currentLanguage === 'en' ? 'Total income' : 
+                                                       'Жалпы табыс'}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${calculateTotalExpense().toLocaleString()} ₸</div>
+                                <div class="stat-label">${currentLanguage === 'ru' ? 'Общие расходы' : 
+                                                       currentLanguage === 'en' ? 'Total expenses' : 
+                                                       'Жалпы шығындар'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-outline" onclick="closeModal('${modalId}')" style="margin-right: 10px;">
+                        ${translations[currentLanguage].closeReport || 'Закрыть'}
+                    </button>
+                    <button class="btn btn-primary" onclick="openBankAnalytics()">
+                        <i class="fas fa-chart-pie"></i> 
+                        ${currentLanguage === 'ru' ? 'Аналитика' : 
+                         currentLanguage === 'en' ? 'Analytics' : 'Аналитика'}
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+}
+
+// 2️⃣ Экран подключения банка
+function selectBank(bankId) {
+    selectedBank = banks.find(bank => bank.id === bankId);
+    if (!selectedBank) return;
+    
+    closeModal('bankConnectionModal');
+    
+    const modalId = 'bankDetailModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 700px;">
+                <div class="modal-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="bank-logo-large" style="background: ${selectedBank.color}">
+                            ${selectedBank.logo}
+                        </div>
+                        <div>
+                            <h3>${selectedBank.name}</h3>
+                            <div class="bank-status ${selectedBank.connected ? 'connected' : 'disconnected'}">
+                                <i class="fas fa-${selectedBank.connected ? 'check-circle' : 'plug'}"></i>
+                                ${selectedBank.connected ? 
+                                    (currentLanguage === 'ru' ? 'Подключено' : 
+                                     currentLanguage === 'en' ? 'Connected' : 'Қосылған') : 
+                                    (currentLanguage === 'ru' ? 'Не подключено' : 
+                                     currentLanguage === 'en' ? 'Not connected' : 'Қосылмаған')}
+                            </div>
+                        </div>
+                    </div>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="bank-instructions" id="bankInstructions">
+                        ${selectedBank.instructions[currentLanguage] || selectedBank.instructions.ru}
+                    </div>
+                    
+                    <div class="file-upload-section" style="margin-top: 30px;">
+                        <h4 style="margin-bottom: 15px;">
+                            <i class="fas fa-file-upload"></i> 
+                            ${currentLanguage === 'ru' ? 'Загрузка выписки' : 
+                             currentLanguage === 'en' ? 'Statement Upload' : 
+                             'Выписканы жүктеу'}
+                        </h4>
+                        <div class="file-upload-area" 
+                             onclick="document.getElementById('bankStatementFile').click()"
+                             style="border: 2px dashed var(--border); border-radius: var(--radius-sm); 
+                                    padding: 40px; text-align: center; cursor: pointer; margin-bottom: 20px;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                            <p style="color: var(--text); font-size: 16px; margin-bottom: 10px;">
+                                ${currentLanguage === 'ru' ? 'Нажмите для загрузки файлов' : 
+                                 currentLanguage === 'en' ? 'Click to upload files' : 
+                                 'Файлдарды жүктеу үшін басыңыз'}
+                            </p>
+                            <p style="color: var(--text-light); font-size: 14px;">
+                                ${currentLanguage === 'ru' ? 'Поддерживаются PDF, XLS, CSV' : 
+                                 currentLanguage === 'en' ? 'PDF, XLS, CSV supported' : 
+                                 'PDF, XLS, CSV қолдау көрсетіледі'}
+                            </p>
+                        </div>
+                        <input type="file" id="bankStatementFile" multiple accept=".pdf,.xls,.xlsx,.csv" 
+                               style="display: none;" onchange="handleFileUpload(this.files)">
+                        
+                        <div class="uploaded-files" id="uploadedFiles" style="margin-top: 20px;"></div>
+                    </div>
+                    
+                    ${selectedBank.connected ? `
+                        <div class="bank-transactions" style="margin-top: 30px;">
+                            <h4 style="margin-bottom: 15px;">
+                                <i class="fas fa-history"></i> 
+                                ${currentLanguage === 'ru' ? 'Последние операции' : 
+                                 currentLanguage === 'en' ? 'Recent Transactions' : 
+                                 'Соңғы операциялар'}
+                            </h4>
+                            <div class="transactions-list" id="bankTransactionsList">
+                                ${renderBankTransactions(selectedBank.id)}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="closeModal('${modalId}')" style="flex: 1;">
+                        ${translations[currentLanguage].closeReport || 'Закрыть'}
+                    </button>
+                    ${selectedBank.connected ? `
+                        <button class="btn btn-danger" onclick="disconnectBank('${selectedBank.id}')" style="flex: 1;">
+                            <i class="fas fa-unlink"></i> 
+                            ${currentLanguage === 'ru' ? 'Отключить' : 
+                             currentLanguage === 'en' ? 'Disconnect' : 'Ажырату'}
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    } else {
+        // Обновляем содержимое существующего модального окна
+        const bankLogo = modal.querySelector('.bank-logo-large');
+        const bankName = modal.querySelector('h3');
+        const bankStatus = modal.querySelector('.bank-status');
+        const instructions = document.getElementById('bankInstructions');
+        
+        if (bankLogo) {
+            bankLogo.style.background = selectedBank.color;
+            bankLogo.textContent = selectedBank.logo;
+        }
+        if (bankName) bankName.textContent = selectedBank.name;
+        if (bankStatus) {
+            bankStatus.className = `bank-status ${selectedBank.connected ? 'connected' : 'disconnected'}`;
+            bankStatus.innerHTML = `<i class="fas fa-${selectedBank.connected ? 'check-circle' : 'plug'}"></i>
+                                   ${selectedBank.connected ? 
+                                     (currentLanguage === 'ru' ? 'Подключено' : 
+                                      currentLanguage === 'en' ? 'Connected' : 'Қосылған') : 
+                                     (currentLanguage === 'ru' ? 'Не подключено' : 
+                                      currentLanguage === 'en' ? 'Not connected' : 'Қосылмаған')}`;
+        }
+        if (instructions) {
+            instructions.innerHTML = selectedBank.instructions[currentLanguage] || selectedBank.instructions.ru;
+        }
+        
+        const transactionsList = document.getElementById('bankTransactionsList');
+        if (transactionsList) {
+            transactionsList.innerHTML = selectedBank.connected ? renderBankTransactions(selectedBank.id) : '';
+        }
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+}
+
+// 3️⃣ Инструкции по банкам (рендеринг динамических инструкций)
+function renderBankInstructions(bankName) {
+    const bank = banks.find(b => b.name === bankName || b.id === bankName);
+    if (!bank) return '';
+    
+    return bank.instructions[currentLanguage] || bank.instructions.ru;
+}
+
+// 4️⃣ Загрузка и обработка файлов
+function handleFileUpload(files) {
+    if (!files.length || !selectedBank) return;
+    
+    const uploadedFilesDiv = document.getElementById('uploadedFiles');
+    if (uploadedFilesDiv) {
+        uploadedFilesDiv.innerHTML = '';
+        
+        Array.from(files).forEach((file, index) => {
+            const fileElement = document.createElement('div');
+            fileElement.className = 'uploaded-file';
+            fileElement.style.cssText = `
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 12px; background: var(--light-bg); border-radius: var(--radius-sm);
+                margin-bottom: 10px;
+            `;
+            
+            fileElement.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-file${file.name.endsWith('.pdf') ? '-pdf' : 
+                                       file.name.endsWith('.xls') || file.name.endsWith('.xlsx') ? '-excel' : 
+                                       file.name.endsWith('.csv') ? '-csv' : ''}" 
+                       style="color: ${selectedBank.color}; font-size: 20px;"></i>
+                    <div>
+                        <div style="font-weight: 600; color: var(--text);">${file.name}</div>
+                        <div style="font-size: 12px; color: var(--text-light);">
+                            ${(file.size / 1024).toFixed(1)} KB • ${file.type || 'Unknown type'}
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="file-processing-indicator" id="processing-${index}">
+                        <div class="spinner" style="width: 20px; height: 20px; border: 2px solid var(--border); 
+                             border-top-color: ${selectedBank.color}; border-radius: 50%;"></div>
+                    </div>
+                    <button class="btn-icon" onclick="removeFile(this)" style="color: var(--danger);">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            uploadedFilesDiv.appendChild(fileElement);
+            
+            // Симуляция обработки файла
+            setTimeout(() => {
+                processFile(file, index);
+            }, 1000 + index * 500);
+        });
+    }
+    
+    showNotification(
+        currentLanguage === 'ru' ? `Загружено ${files.length} файл(ов)` : 
+        currentLanguage === 'en' ? `${files.length} file(s) uploaded` : 
+        `${files.length} файл(дар) жүктелді`,
+        'success'
+    );
+}
+
+function processFile(file, index) {
+    // В реальном приложении здесь была бы обработка PDF/XLS/CSV файлов
+    // Для демонстрации создаем мок-транзакции
+    const mockTransactions = generateMockTransactions(file.name, selectedBank.id);
+    
+    // Добавляем транзакции в общий список
+    mockTransactions.forEach(transaction => {
+        if (!transactions.some(t => t.id === transaction.id)) {
+            transactions.push(transaction);
+        }
+    });
+    
+    // Обновляем статус банка
+    selectedBank.connected = true;
+    selectedBank.lastSync = new Date().toISOString();
+    
+    // Обновляем банк в списке
+    const bankIndex = banks.findIndex(b => b.id === selectedBank.id);
+    if (bankIndex !== -1) {
+        banks[bankIndex] = selectedBank;
+    }
+    
+    // Сохраняем данные
+    saveToLocalStorage();
+    
+    // Обновляем индикатор обработки
+    const processingIndicator = document.getElementById(`processing-${index}`);
+    if (processingIndicator) {
+        processingIndicator.innerHTML = `
+            <i class="fas fa-check" style="color: var(--success); font-size: 20px;"></i>
+        `;
+    }
+    
+    // Показываем уведомление
+    showNotification(
+        currentLanguage === 'ru' ? `Обработано ${mockTransactions.length} операций из ${file.name}` : 
+        currentLanguage === 'en' ? `Processed ${mockTransactions.length} transactions from ${file.name}` : 
+        `${file.name} файлынан ${mockTransactions.length} операция өңделді`,
+        'success'
+    );
+    
+    // Обновляем список транзакций
+    const transactionsList = document.getElementById('bankTransactionsList');
+    if (transactionsList) {
+        transactionsList.innerHTML = renderBankTransactions(selectedBank.id);
+    }
+    
+    // Обновляем аналитику
+    setTimeout(() => {
+        renderCharts();
+        renderAnalytics();
+        generateAIInsights();
+    }, 1000);
+}
+
+function generateMockTransactions(fileName, bankId) {
+    const transactions = [];
+    const categories = ['Еда', 'Транспорт', 'Учеба', 'Развлечения', 'Другое'];
+    const descriptions = [
+        'Обед в ресторане', 'Такси', 'Курсы', 'Кино', 'Покупки в магазине',
+        'Кофе', 'Общественный транспорт', 'Книги', 'Концерт', 'Супермаркет'
+    ];
+    
+    // Генерируем 5-15 случайных транзакций
+    const count = Math.floor(Math.random() * 11) + 5;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    
+    for (let i = 0; i < count; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + Math.floor(Math.random() * 31));
+        
+        const isIncome = Math.random() > 0.7;
+        const category = isIncome ? 'Доход' : categories[Math.floor(Math.random() * categories.length)];
+        const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+        const amount = isIncome ? 
+            Math.floor(Math.random() * 50000) + 10000 : 
+            Math.floor(Math.random() * 20000) + 1000;
+        
+        transactions.push({
+            id: `${bankId}_${Date.now()}_${i}`,
+            date: date.toISOString().split('T')[0],
+            amount: amount,
+            type: isIncome ? "income" : "expense",
+            category: category,
+            description: description,
+            bank: bankId,
+            currency: '₸'
+        });
+    }
+    
+    return transactions;
+}
+
+function parseTransactions(data) {
+    // В реальном приложении здесь парсились бы реальные данные из файлов
+    // Для демонстрации возвращаем мок-данные
+    return generateMockTransactions('parsed', selectedBank?.id || 'unknown');
+}
+
+// 5️⃣ Период и фильтрация
+function filterByMonth(monthOffset = 0) {
+    const date = new Date(currentYear, currentMonth + monthOffset, 1);
+    currentMonth = date.getMonth();
+    currentYear = date.getFullYear();
+    
+    renderCharts();
+    renderAnalytics();
+    
+    // Обновляем отображение текущего месяца
+    const monthDisplay = document.getElementById('currentMonthDisplay');
+    if (monthDisplay) {
+        const monthNames = {
+            ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            en: ['January', 'February', 'March', 'April', 'May', 'June', 
+                 'July', 'August', 'September', 'October', 'November', 'December'],
+            kz: ['Қаңтар', 'Ақпан', 'Наурыз', 'Сәуір', 'Мамыр', 'Маусым', 
+                 'Шілде', 'Тамыз', 'Қыркүйек', 'Қазан', 'Қараша', 'Желтоқсан']
+        };
+        
+        monthDisplay.textContent = `${monthNames[currentLanguage][currentMonth]} ${currentYear}`;
+    }
+}
+
+// 6️⃣ Аналитика и графики
+function renderCharts() {
+    const filteredTransactions = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear;
+    });
+    
+    if (filteredTransactions.length === 0) return;
+    
+    // Линейный график доходов и расходов по дням
+    renderIncomeExpenseChart(filteredTransactions);
+    
+    // Круговая диаграмма расходов по категориям
+    renderExpenseCategoriesChart(filteredTransactions);
+    
+    // Обновляем баланс
+    updateBalanceDisplay(filteredTransactions);
+}
+
+function renderIncomeExpenseChart(transactions) {
+    const chartContainer = document.getElementById('bankLineChart');
+    if (!chartContainer) return;
+    
+    // Группируем по дням
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const dailyData = {};
+    
+    for (let i = 1; i <= daysInMonth; i++) {
+        dailyData[i] = { income: 0, expense: 0 };
+    }
+    
+    transactions.forEach(t => {
+        const day = new Date(t.date).getDate();
+        if (t.type === 'income') {
+            dailyData[day].income += t.amount;
+        } else {
+            dailyData[day].expense += t.amount;
+        }
+    });
+    
+    // Создаем canvas если его нет
+    chartContainer.innerHTML = '<canvas id="incomeExpenseChart"></canvas>';
+    
+    const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+    
+    if (window.incomeExpenseChart) {
+        window.incomeExpenseChart.destroy();
+    }
+    
+    const labels = Object.keys(dailyData);
+    const incomeData = Object.values(dailyData).map(d => d.income);
+    const expenseData = Object.values(dailyData).map(d => d.expense);
+    
+    window.incomeExpenseChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: currentLanguage === 'ru' ? 'Доходы' : 
+                           currentLanguage === 'en' ? 'Income' : 'Табыс',
+                    data: incomeData,
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: currentLanguage === 'ru' ? 'Расходы' : 
+                           currentLanguage === 'en' ? 'Expenses' : 'Шығындар',
+                    data: expenseData,
+                    borderColor: '#F44336',
+                    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ru' ? 'Дни месяца' : 
+                              currentLanguage === 'en' ? 'Days of month' : 'Айдың күндері'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '₸'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function renderExpenseCategoriesChart(transactions) {
+    const chartContainer = document.getElementById('bankPieChart');
+    if (!chartContainer) return;
+    
+    const expenses = transactions.filter(t => t.type === 'expense');
+    if (expenses.length === 0) return;
+    
+    // Группируем по категориям
+    const categories = {};
+    expenses.forEach(t => {
+        if (!categories[t.category]) {
+            categories[t.category] = 0;
+        }
+        categories[t.category] += t.amount;
+    });
+    
+    // Создаем canvas если его нет
+    chartContainer.innerHTML = '<canvas id="expenseCategoriesChart"></canvas>';
+    
+    const ctx = document.getElementById('expenseCategoriesChart').getContext('2d');
+    
+    if (window.expenseCategoriesChart) {
+        window.expenseCategoriesChart.destroy();
+    }
+    
+    const categoryColors = {
+        'Еда': '#FF6384',
+        'Транспорт': '#36A2EB',
+        'Учеба': '#FFCE56',
+        'Развлечения': '#9966FF',
+        'Другое': '#4BC0C0',
+        'Доход': '#4CAF50'
+    };
+    
+    window.expenseCategoriesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(categories),
+            datasets: [{
+                data: Object.values(categories),
+                backgroundColor: Object.keys(categories).map(cat => categoryColors[cat] || '#CCCCCC'),
+                borderWidth: 2,
+                borderColor: '#FFFFFF'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${formatAmount(value)} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateBalanceDisplay(transactions) {
+    const balanceContainer = document.getElementById('bankBalance');
+    if (!balanceContainer) return;
+    
+    const income = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const expense = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const balance = income - expense;
+    
+    balanceContainer.innerHTML = `
+        <div class="balance-stats">
+            <div class="balance-item">
+                <div class="balance-label">${currentLanguage === 'ru' ? 'Доходы' : 
+                                           currentLanguage === 'en' ? 'Income' : 'Табыс'}</div>
+                <div class="balance-value income">+${formatAmount(income)}</div>
+            </div>
+            <div class="balance-item">
+                <div class="balance-label">${currentLanguage === 'ru' ? 'Расходы' : 
+                                           currentLanguage === 'en' ? 'Expenses' : 'Шығындар'}</div>
+                <div class="balance-value expense">-${formatAmount(expense)}</div>
+            </div>
+            <div class="balance-item">
+                <div class="balance-label">${currentLanguage === 'ru' ? 'Баланс' : 
+                                           currentLanguage === 'en' ? 'Balance' : 'Баланс'}</div>
+                <div class="balance-value ${balance >= 0 ? 'income' : 'expense'}">
+                    ${balance >= 0 ? '+' : ''}${formatAmount(balance)}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 7️⃣ Хранение данных
+function saveToLocalStorage() {
+    if (currentUser && currentUser.id) {
+        const bankData = {
+            banks: banks,
+            transactions: transactions,
+            currentMonth: currentMonth,
+            currentYear: currentYear
+        };
+        localStorage.setItem(`bankData_${currentUser.id}`, JSON.stringify(bankData));
+    }
+}
+
+function loadFromLocalStorage() {
+    if (currentUser && currentUser.id) {
+        const savedData = localStorage.getItem(`bankData_${currentUser.id}`);
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                banks = data.banks || banks;
+                transactions = data.transactions || transactions;
+                currentMonth = data.currentMonth || new Date().getMonth();
+                currentYear = data.currentYear || new Date().getFullYear();
+            } catch (error) {
+                console.error('Ошибка загрузки банковских данных:', error);
+            }
+        }
+    }
+}
+
+// 8️⃣ ИИ-помощник (логика анализа данных)
+function generateAIInsights() {
+    const filteredTransactions = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear;
+    });
+    
+    if (filteredTransactions.length === 0) return '';
+    
+    const expenses = filteredTransactions.filter(t => t.type === 'expense');
+    const incomes = filteredTransactions.filter(t => t.type === 'income');
+    
+    // Находим самую большую категорию расходов
+    const expenseByCategory = {};
+    expenses.forEach(t => {
+        if (!expenseByCategory[t.category]) {
+            expenseByCategory[t.category] = 0;
+        }
+        expenseByCategory[t.category] += t.amount;
+    });
+    
+    let largestCategory = '';
+    let largestAmount = 0;
+    Object.entries(expenseByCategory).forEach(([category, amount]) => {
+        if (amount > largestAmount) {
+            largestAmount = amount;
+            largestCategory = category;
+        }
+    });
+    
+    // Сравниваем с прошлым месяцем
+    const prevMonthTransactions = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+        const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+        return transactionDate.getMonth() === prevMonth && 
+               transactionDate.getFullYear() === prevYear;
+    });
+    
+    const prevMonthExpenses = prevMonthTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+    
+    const currentMonthExpenses = expenses.reduce((sum, t) => sum + t.amount, 0);
+    const expenseChange = currentMonthExpenses - prevMonthExpenses;
+    const expenseChangePercent = prevMonthExpenses > 0 ? 
+        Math.round((expenseChange / prevMonthExpenses) * 100) : 0;
+    
+    // Находим повторяющиеся расходы
+    const recurringExpenses = findRecurringExpenses(expenses);
+    
+    // Формируем инсайты
+    const insights = [];
+    
+    if (largestCategory) {
+        insights.push(
+            currentLanguage === 'ru' ? `В этом месяце больше всего денег ушло на ${largestCategory.toLowerCase()} (${formatAmount(largestAmount)})` :
+            currentLanguage === 'en' ? `This month most money was spent on ${largestCategory.toLowerCase()} (${formatAmount(largestAmount)})` :
+            `Бұл айда ең көп ақша ${largestCategory.toLowerCase()} жұмсалды (${formatAmount(largestAmount)})`
+        );
+    }
+    
+    if (expenseChange !== 0) {
+        insights.push(
+            currentLanguage === 'ru' ? 
+                `Расходы ${expenseChange > 0 ? 'выросли' : 'снизились'} на ${Math.abs(expenseChangePercent)}% по сравнению с прошлым месяцем` :
+            currentLanguage === 'en' ? 
+                `Expenses ${expenseChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(expenseChangePercent)}% compared to last month` :
+            `Шығындар өткен аймен салыстырғанда ${Math.abs(expenseChangePercent)}% ${expenseChange > 0 ? 'өсті' : 'төмендеді'}`
+        );
+    }
+    
+    if (recurringExpenses.length > 0) {
+        const mostCommon = recurringExpenses[0];
+        insights.push(
+            currentLanguage === 'ru' ? 
+                `Обнаружены повторяющиеся расходы: "${mostCommon.description}" (${mostCommon.count} раз)` :
+            currentLanguage === 'en' ? 
+                `Recurring expenses detected: "${mostCommon.description}" (${mostCommon.count} times)` :
+            `Қайталанатын шығындар анықталды: "${mostCommon.description}" (${mostCommon.count} рет)`
+        );
+    }
+    
+    if (incomes.length > 0) {
+        const totalIncome = incomes.reduce((sum, t) => sum + t.amount, 0);
+        insights.push(
+            currentLanguage === 'ru' ? 
+                `Общий доход за месяц: ${formatAmount(totalIncome)}` :
+            currentLanguage === 'en' ? 
+                `Total monthly income: ${formatAmount(totalIncome)}` :
+            `Айлық жалпы табыс: ${formatAmount(totalIncome)}`
+        );
+    }
+    
+    return insights.join('. ') + '.';
+}
+
+function findRecurringExpenses(expenses) {
+    const expenseCounts = {};
+    const recurring = [];
+    
+    expenses.forEach(t => {
+        const key = `${t.description}_${t.amount}`;
+        expenseCounts[key] = (expenseCounts[key] || 0) + 1;
+    });
+    
+    Object.entries(expenseCounts).forEach(([key, count]) => {
+        if (count >= 2) {
+            const [description, amount] = key.split('_');
+            recurring.push({
+                description,
+                amount: parseInt(amount),
+                count
+            });
+        }
+    });
+    
+    return recurring.sort((a, b) => b.count - a.count);
+}
+
+// Вспомогательные функции
+function calculateTotalIncome() {
+    return transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+}
+
+function calculateTotalExpense() {
+    return transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+}
+
+function renderBankTransactions(bankId) {
+    const bankTransactions = transactions
+        .filter(t => t.bank === bankId)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 10);
+    
+    if (bankTransactions.length === 0) {
+        return `
+            <div class="empty-state" style="padding: 30px; text-align: center;">
+                <i class="fas fa-file-invoice" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                <p style="color: var(--text-light);">
+                    ${currentLanguage === 'ru' ? 'Нет операций для отображения' : 
+                     currentLanguage === 'en' ? 'No transactions to display' : 
+                     'Көрсету үшін операциялар жоқ'}
+                </p>
+            </div>
+        `;
+    }
+    
+    return bankTransactions.map(t => `
+        <div class="transaction-item" style="display: flex; align-items: center; justify-content: space-between; 
+             padding: 12px; border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="transaction-icon" style="width: 36px; height: 36px; border-radius: 50%; 
+                     background: ${t.type === 'income' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)'}; 
+                     color: ${t.type === 'income' ? '#4CAF50' : '#F44336'};
+                     display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-${t.type === 'income' ? 'arrow-down' : 'arrow-up'}"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600; color: var(--text);">${t.description}</div>
+                    <div style="font-size: 12px; color: var(--text-light);">
+                        ${formatDate(t.date)} • ${t.category}
+                    </div>
+                </div>
+            </div>
+            <div style="font-weight: 600; color: ${t.type === 'income' ? '#4CAF50' : '#F44336'};">
+                ${t.type === 'income' ? '+' : '-'}${formatAmount(t.amount)}
+            </div>
+        </div>
+    `).join('');
+}
+
+function disconnectBank(bankId) {
+    const bank = banks.find(b => b.id === bankId);
+    if (!bank) return;
+    
+    const confirmText = currentLanguage === 'ru' ? 
+        `Вы уверены, что хотите отключить ${bank.name}? Все данные будут сохранены.` :
+        currentLanguage === 'en' ? 
+        `Are you sure you want to disconnect ${bank.name}? All data will be saved.` :
+        `${bank.name} банкін ажыратуға сенімдісіз бе? Барлық деректер сақталады.`;
+    
+    if (confirm(confirmText)) {
+        bank.connected = false;
+        bank.lastSync = null;
+        
+        // Обновляем банк в списке
+        const bankIndex = banks.findIndex(b => b.id === bankId);
+        if (bankIndex !== -1) {
+            banks[bankIndex] = bank;
+        }
+        
+        saveToLocalStorage();
+        
+        showNotification(
+            currentLanguage === 'ru' ? `${bank.name} отключен` : 
+            currentLanguage === 'en' ? `${bank.name} disconnected` : 
+            `${bank.name} ажыратылды`,
+            'success'
+        );
+        
+        // Закрываем модальное окно
+        closeModal('bankDetailModal');
+        
+        // Показываем панель подключения банков
+        setTimeout(() => {
+            showBankConnectionPanel();
+        }, 300);
+    }
+}
+
+function openBankAnalytics() {
+    closeModal('bankConnectionModal');
+    
+    const modalId = 'bankAnalyticsModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 900px; width: 95%; height: 90vh;">
+                <div class="modal-header">
+                    <h3>${currentLanguage === 'ru' ? 'Аналитика банковских операций' : 
+                         currentLanguage === 'en' ? 'Bank Transactions Analytics' : 
+                         'Банк операциялары аналитикасы'}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px; overflow-y: auto; height: calc(100% - 120px);">
+                    <div class="analytics-controls" style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <button class="btn btn-outline" onclick="filterByMonth(-1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span id="currentMonthDisplay" style="margin: 0 15px; font-weight: 600;">
+                                    ${getCurrentMonthName()}
+                                </span>
+                                <button class="btn btn-outline" onclick="filterByMonth(1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" onclick="renderCharts()">
+                                <i class="fas fa-sync-alt"></i>
+                                ${currentLanguage === 'ru' ? 'Обновить' : 
+                                 currentLanguage === 'en' ? 'Refresh' : 'Жаңарту'}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-grid" style="display: grid; gap: 20px;">
+                        <div class="analytics-card">
+                            <h4 style="margin-bottom: 15px;">
+                                <i class="fas fa-chart-line"></i>
+                                ${currentLanguage === 'ru' ? 'Доходы и расходы по дням' : 
+                                 currentLanguage === 'en' ? 'Income and Expenses by Day' : 
+                                 'Күндер бойынша табыс пен шығындар'}
+                            </h4>
+                            <div style="height: 300px;">
+                                <div id="bankLineChart" style="height: 100%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="analytics-card">
+                                <h4 style="margin-bottom: 15px;">
+                                    <i class="fas fa-chart-pie"></i>
+                                    ${currentLanguage === 'ru' ? 'Расходы по категориям' : 
+                                     currentLanguage === 'en' ? 'Expenses by Category' : 
+                                     'Санаттар бойынша шығындар'}
+                                </h4>
+                                <div style="height: 250px;">
+                                    <div id="bankPieChart" style="height: 100%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-card">
+                                <h4 style="margin-bottom: 15px;">
+                                    <i class="fas fa-balance-scale"></i>
+                                    ${currentLanguage === 'ru' ? 'Баланс' : 
+                                     currentLanguage === 'en' ? 'Balance' : 'Баланс'}
+                                </h4>
+                                <div style="height: 250px;">
+                                    <div id="bankBalance" style="height: 100%; display: flex; align-items: center; justify-content: center;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h4 style="margin-bottom: 15px;">
+                                <i class="fas fa-lightbulb"></i>
+                                ${currentLanguage === 'ru' ? 'ИИ-анализ' : 
+                                 currentLanguage === 'en' ? 'AI Analysis' : 'ЖК-талдау'}
+                            </h4>
+                            <div id="aiInsights" style="padding: 15px; background: var(--light-bg); border-radius: var(--radius-sm); 
+                                 font-size: 14px; line-height: 1.5;">
+                                ${generateAIInsights() || 
+                                  (currentLanguage === 'ru' ? 'Загрузите банковские выписки для получения аналитики' : 
+                                   currentLanguage === 'en' ? 'Upload bank statements to get analytics' : 
+                                   'Аналитика алу үшін банк выпискаларын жүктеңіз')}
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h4 style="margin-bottom: 15px;">
+                                <i class="fas fa-exchange-alt"></i>
+                                ${currentLanguage === 'ru' ? 'Последние операции' : 
+                                 currentLanguage === 'en' ? 'Recent Transactions' : 
+                                 'Соңғы операциялар'}
+                            </h4>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                ${renderAllTransactions()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-primary" onclick="closeModal('${modalId}')" style="width: 100%;">
+                        ${translations[currentLanguage].closeReport || 'Закрыть'}
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Инициализируем графики
+    setTimeout(() => {
+        renderCharts();
+        renderAnalytics();
+        updateMonthDisplay();
+    }, 100);
+}
+
+function renderAllTransactions() {
+    const filteredTransactions = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear;
+    }).sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 20);
+    
+    if (filteredTransactions.length === 0) {
+        return `
+            <div class="empty-state" style="padding: 30px; text-align: center;">
+                <i class="fas fa-file-invoice" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                <p style="color: var(--text-light);">
+                    ${currentLanguage === 'ru' ? 'Нет операций за выбранный период' : 
+                     currentLanguage === 'en' ? 'No transactions for selected period' : 
+                     'Таңдалған кезеңде операциялар жоқ'}
+                </p>
+            </div>
+        `;
+    }
+    
+    return filteredTransactions.map(t => {
+        const bank = banks.find(b => b.id === t.bank);
+        return `
+            <div class="transaction-item" style="display: flex; align-items: center; justify-content: space-between; 
+                 padding: 12px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                    <div class="transaction-icon" style="width: 32px; height: 32px; border-radius: 50%; 
+                         background: ${bank?.color || '#CCCCCC'}20; color: ${bank?.color || '#CCCCCC'};
+                         display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                        ${bank?.logo || '?'}
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--text);">${t.description}</div>
+                        <div style="font-size: 11px; color: var(--text-light); display: flex; gap: 10px; margin-top: 4px;">
+                            <span>${formatDate(t.date)}</span>
+                            <span>${t.category}</span>
+                            <span>${bank?.name || 'Неизвестный банк'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-weight: 600; color: ${t.type === 'income' ? '#4CAF50' : '#F44336'};">
+                    ${t.type === 'income' ? '+' : '-'}${formatAmount(t.amount)}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderAnalytics() {
+    // Обновляем ИИ-инсайты
+    const aiInsights = document.getElementById('aiInsights');
+    if (aiInsights) {
+        aiInsights.textContent = generateAIInsights() || 
+            (currentLanguage === 'ru' ? 'Загрузите банковские выписки для получения аналитики' : 
+             currentLanguage === 'en' ? 'Upload bank statements to get analytics' : 
+             'Аналитика алу үшін банк выпискаларын жүктеңіз');
+    }
+}
+
+function getCurrentMonthName() {
+    const monthNames = {
+        ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+             'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+        en: ['January', 'February', 'March', 'April', 'May', 'June', 
+             'July', 'August', 'September', 'October', 'November', 'December'],
+        kz: ['Қаңтар', 'Ақпан', 'Наурыз', 'Сәуір', 'Мамыр', 'Маусым', 
+             'Шілде', 'Тамыз', 'Қыркүйек', 'Қазан', 'Қараша', 'Желтоқсан']
+    };
+    
+    return `${monthNames[currentLanguage][currentMonth]} ${currentYear}`;
+}
+
+function updateMonthDisplay() {
+    const monthDisplay = document.getElementById('currentMonthDisplay');
+    if (monthDisplay) {
+        monthDisplay.textContent = getCurrentMonthName();
+    }
+}
+
+function removeFile(button) {
+    const fileElement = button.closest('.uploaded-file');
+    if (fileElement && fileElement.parentNode) {
+        fileElement.parentNode.removeChild(fileElement);
+    }
+}
+
+// Добавляем переводы для банковской системы
+translations.ru.banksTitle = 'Подключение банков';
+translations.en.banksTitle = 'Bank Connection';
+translations.kz.banksTitle = 'Банктерді қосу';
+
+// Инициализация банковской системы при загрузке приложения
+document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем кнопку для банковской панели в навигацию
+    const bottomNav = document.getElementById('bottomNav');
+    if (bottomNav) {
+        const bankNavItem = document.createElement('div');
+        bankNavItem.className = 'nav-item';
+        bankNavItem.innerHTML = `
+            <i class="fas fa-university"></i>
+            <span>${currentLanguage === 'ru' ? 'Банки' : 
+                   currentLanguage === 'en' ? 'Banks' : 'Банктер'}</span>
+        `;
+        bankNavItem.onclick = showBankConnectionPanel;
+        bottomNav.appendChild(bankNavItem);
+    }
+    
+    // Загружаем банковские данные
+    loadFromLocalStorage();
+    
+    // Добавляем ссылку на банковскую панель в главное меню
+    setTimeout(() => {
+        const dashboard = document.getElementById('dashboard');
+        if (dashboard) {
+            // Ищем контейнер для инструкций и добавляем банковскую карточку после него
+            const instructionsSection = dashboard.querySelector('.instructions-card');
+            if (instructionsSection) {
+                const bankCard = document.createElement('div');
+                bankCard.className = 'instructions-card';
+                bankCard.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <h4 style="margin-bottom: 8px;">
+                                <i class="fas fa-university" style="color: var(--primary);"></i>
+                                ${currentLanguage === 'ru' ? 'Банковские выписки' : 
+                                 currentLanguage === 'en' ? 'Bank Statements' : 'Банк выпискалары'}
+                            </h4>
+                            <p style="color: var(--text-light); font-size: 14px;">
+                                ${currentLanguage === 'ru' ? 'Загружайте выписки и анализируйте расходы' : 
+                                 currentLanguage === 'en' ? 'Upload statements and analyze expenses' : 
+                                 'Выпискаларды жүктеп, шығындарды талдаңыз'}
+                            </p>
+                        </div>
+                        <button class="btn btn-primary" onclick="showBankConnectionPanel()">
+                            <i class="fas fa-plus"></i>
+                            ${currentLanguage === 'ru' ? 'Подключить' : 
+                             currentLanguage === 'en' ? 'Connect' : 'Қосу'}
+                        </button>
+                    </div>
+                `;
+                instructionsSection.parentNode.insertBefore(bankCard, instructionsSection.nextSibling);
+            }
+        }
+    }, 1000);
+});
+
+// Обновляем функцию initLanguage для загрузки банковских данных
+const originalInitLanguage = initLanguage;
+initLanguage = function() {
+    originalInitLanguage();
+    loadFromLocalStorage();
+};
+
+// Обновляем функцию logoutAndReset для очистки банковских данных
+const originalLogoutAndReset = logoutAndReset;
+logoutAndReset = function() {
+    if (currentUser) {
+        localStorage.removeItem(`bankData_${currentUser.id}`);
+    }
+    banks = banks.map(bank => ({ ...bank, connected: false, lastSync: null }));
+    transactions = [];
+    selectedBank = null;
+    currentMonth = new Date().getMonth();
+    currentYear = new Date().getFullYear();
+    originalLogoutAndReset();
+};
+
+// Обновляем функцию register для инициализации банковских данных
+const originalRegister = register;
+register = function() {
+    originalRegister();
+    saveToLocalStorage();
+};
+
+console.log('Банковская система инициализирована');
