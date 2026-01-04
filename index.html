@@ -466,6 +466,193 @@
                 </div>
             </div>
 
+            <!-- Missions Page -->
+            <div class="page missions-page" id="missions" style="display: none;">
+                <div class="missions-header compact">
+                    <h2 data-translate="missionsNav">Миссии</h2>
+                    <div class="missions-balance compact">
+                        <div class="balance-info">
+                            <i class="fas fa-coins"></i>
+                            <div>
+                                <div class="fincoins-text" data-translate="yourFincoins">Ваши FinCoins:</div>
+                                <div class="fincoins-amount" id="fincoinsBalance">20</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary earn-btn small" onclick="showPage('store')" data-translate="storeButton">Магазин</button>
+                    </div>
+                </div>
+
+                <!-- Активная миссия -->
+                <div class="active-mission-section compact" id="activeMissionSection" style="display: none;">
+                    <h3 class="section-title" data-translate="activeMission">Активная миссия</h3>
+                    <div class="active-mission-card" id="activeMissionCard">
+                        <!-- Активная миссия будет отображаться здесь -->
+                    </div>
+                </div>
+
+                <!-- Доступные миссии -->
+                <div class="missions-section compact">
+                    <div class="section-header compact">
+                        <div class="section-title" data-translate="availableMissions">Доступные миссии</div>
+                    </div>
+                    <div class="missions-grid compact" id="missionsList">
+                        <!-- Миссии будут добавляться динамически -->
+                    </div>
+                </div>
+
+                <!-- Завершенные миссии -->
+                <div class="missions-section compact">
+                    <div class="section-header compact">
+                        <div class="section-title" data-translate="completedMissions">Завершенные миссии</div>
+                    </div>
+                    <div class="missions-grid compact" id="completedMissionsList">
+                        <!-- Завершенные миссии будут добавляться динамически -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Page -->
+            <div class="page store-page" id="store" style="display: none;">
+                <div class="store-header compact">
+                    <h2 data-translate="storeNav">Магазин</h2>
+                    <div class="store-balance compact">
+                        <div class="balance-info">
+                            <i class="fas fa-coins"></i>
+                            <div>
+                                <div class="fincoins-text" data-translate="yourFincoins">Ваши FinCoins:</div>
+                                <div class="fincoins-amount" id="storeBalance">20</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary earn-btn small" onclick="showPage('missions')" data-translate="earnButton">Заработать</button>
+                    </div>
+                </div>
+
+                <!-- Премиум подписка -->
+                <div class="store-category compact">
+                    <h3 class="store-category-title" data-translate="premiumSubscription">Премиум подписка</h3>
+                    <div class="store-item compact">
+                        <div class="store-item-header">
+                            <div class="store-icon premium small">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="store-title-container">
+                                <div class="store-title">
+                                    <span data-translate="premiumTitle">FinanceMind Premium</span>
+                                    <span class="premium-badge small" data-translate="premiumBadge">PREMIUM</span>
+                                </div>
+                                <div class="store-description" data-translate="premiumDescription">Получите доступ ко всем премиум-функциям</div>
+                            </div>
+                        </div>
+                        <div class="store-features">
+                            <div class="store-feature">
+                                <i class="fas fa-chart-pie"></i>
+                                <span data-translate="extendedAnalytics">Расширенная аналитика</span>
+                            </div>
+                            <div class="store-feature">
+                                <i class="fas fa-robot"></i>
+                                <span data-translate="aiCoachTitle">Персональный AI-коуч</span>
+                            </div>
+                            <div class="store-feature">
+                                <i class="fas fa-palette"></i>
+                                <span data-translate="exclusiveThemes">Эксклюзивные темы</span>
+                            </div>
+                            <div class="store-feature">
+                                <i class="fas fa-icons"></i>
+                                <span data-translate="iconPack">Набор иконок</span>
+                            </div>
+                        </div>
+                        <div class="store-price">
+                            <div class="fincoin-price">
+                                <i class="fas fa-coins"></i>
+                                <span class="price-amount">1500</span>
+                            </div>
+                            <button class="buy-btn premium small" onclick="buyPremiumSubscription()" data-translate="buyNow">Купить сейчас</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Другие товары -->
+                <div class="store-category compact">
+                    <h3 class="store-category-title" data-translate="premiumFeatures">Премиум функции</h3>
+                    
+                    <div class="store-item compact">
+                        <div class="store-item-header">
+                            <div class="store-icon analytics small">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="store-title-container">
+                                <div class="store-title" data-translate="extendedAnalytics">Расширенная аналитика</div>
+                                <div class="store-description" data-translate="extendedAnalyticsDesc">Подробные отчеты и прогнозы расходов</div>
+                            </div>
+                        </div>
+                        <div class="store-price">
+                            <div class="fincoin-price">
+                                <i class="fas fa-coins"></i>
+                                <span class="price-amount">300</span>
+                            </div>
+                            <button class="buy-btn small" onclick="buyItem('extended_analytics', 300)">Купить</button>
+                        </div>
+                    </div>
+
+                    <div class="store-item compact">
+                        <div class="store-item-header">
+                            <div class="store-icon ai small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="store-title-container">
+                                <div class="store-title" data-translate="aiCoachTitle">Персональный AI-коуч</div>
+                                <div class="store-description" data-translate="aiCoachDesc">Индивидуальные финансовые рекомендации</div>
+                            </div>
+                        </div>
+                        <div class="store-price">
+                            <div class="fincoin-price">
+                                <i class="fas fa-coins"></i>
+                                <span class="price-amount">500</span>
+                            </div>
+                            <button class="buy-btn small" onclick="buyItem('ai_coach', 500)">Купить</button>
+                        </div>
+                    </div>
+
+                    <div class="store-item compact">
+                        <div class="store-item-header">
+                            <div class="store-icon themes small">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="store-title-container">
+                                <div class="store-title" data-translate="exclusiveThemes">Эксклюзивные темы</div>
+                                <div class="store-description" data-translate="exclusiveThemesDesc">5 уникальных цветовых схем</div>
+                            </div>
+                        </div>
+                        <div class="store-price">
+                            <div class="fincoin-price">
+                                <i class="fas fa-coins"></i>
+                                <span class="price-amount">200</span>
+                            </div>
+                            <button class="buy-btn small" onclick="buyItem('themes_pack', 200)">Купить</button>
+                        </div>
+                    </div>
+
+                    <div class="store-item compact">
+                        <div class="store-item-header">
+                            <div class="store-icon icons small">
+                                <i class="fas fa-icons"></i>
+                            </div>
+                            <div class="store-title-container">
+                                <div class="store-title" data-translate="iconPack">Набор иконок</div>
+                                <div class="store-description" data-translate="iconPackDesc">Стильные иконки для категорий</div>
+                            </div>
+                        </div>
+                        <div class="store-price">
+                            <div class="fincoin-price">
+                                <i class="fas fa-coins"></i>
+                                <span class="price-amount">150</span>
+                            </div>
+                            <button class="buy-btn small" onclick="buyItem('icon_pack', 150)">Купить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Chat Page (AI-помощник) -->
             <div class="page chat-page" id="chat" style="display: none;">
                 <div class="chat-header">
@@ -512,7 +699,7 @@
                 </div>
             </div>
 
-            <!-- Banks Page (третья панель) -->
+            <!-- Banks Page -->
             <div class="page banks-page" id="banks" style="display: none;">
                 <div class="banks-container">
                     <div class="banks-header">
@@ -534,20 +721,14 @@
                                     <div class="bank-details">
                                         <h4>Kaspi Bank</h4>
                                         <div class="bank-status">
-                                            <div class="status-dot connected"></div>
-                                            <span class="status-text">Подключено</span>
+                                            <div class="status-dot disconnected"></div>
+                                            <span class="status-text">Не подключено</span>
                                         </div>
-                                        <p class="bank-update">Обновлено 04.01.2026</p>
                                     </div>
                                 </div>
-                                <div class="bank-actions">
-                                    <button class="bank-action-btn sync" onclick="syncBank('kaspi')" title="Синхронизировать">
-                                        <i class="fas fa-sync-alt"></i>
-                                    </button>
-                                    <button class="bank-action-btn disconnect" onclick="disconnectBank('kaspi')" title="Отключить">
-                                        <i class="fas fa-unlink"></i>
-                                    </button>
-                                </div>
+                                <button class="connect-btn" onclick="connectBank('kaspi')">
+                                    <i class="fas fa-plug"></i> Подключить
+                                </button>
                             </div>
 
                             <!-- Halyk Bank -->
@@ -567,59 +748,6 @@
                                 <button class="connect-btn" onclick="connectBank('halyk')">
                                     <i class="fas fa-plug"></i> Подключить
                                 </button>
-                            </div>
-
-                            <!-- Freedom Bank -->
-                            <div class="bank-item" id="freedomBankItem">
-                                <div class="bank-info">
-                                    <div class="bank-logo freedom">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <div class="bank-details">
-                                        <h4>Freedom Bank</h4>
-                                        <div class="bank-status">
-                                            <div class="status-dot disconnected"></div>
-                                            <span class="status-text">Не подключено</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="connect-btn" onclick="connectBank('freedom')">
-                                    <i class="fas fa-plug"></i> Подключить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Transaction Statistics -->
-                    <div class="transaction-stats-section">
-                        <h3>Статистика по операциям</h3>
-                        <div class="stats-cards">
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="totalTransactions">0</div>
-                                    <div class="stat-label">Всего операций</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="totalAmount">0 ₸</div>
-                                    <div class="stat-label">Общая сумма</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-calendar-check"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value" id="lastMonthTransactions">0</div>
-                                    <div class="stat-label">За месяц</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -655,7 +783,7 @@
                 <div class="settings-section compact">
                     <h3 class="settings-section-title" data-translate="accountManagement">Управление аккаунтом</h3>
                     
-                    <div class="settings-item compact" onclick="showProfileSection('personal')">
+                    <div class="settings-item compact" onclick="openPersonalDataSection()">
                         <div class="settings-item-left">
                             <div class="settings-item-icon personal small">
                                 <i class="fas fa-user-circle"></i>
@@ -668,7 +796,7 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     
-                    <div class="settings-item compact" onclick="showProfileSection('security')">
+                    <div class="settings-item compact" onclick="openSecuritySection()">
                         <div class="settings-item-left">
                             <div class="settings-item-icon security small">
                                 <i class="fas fa-shield-alt"></i>
@@ -682,7 +810,7 @@
                     </div>
 
                     <!-- Управление подростковыми аккаунтами (только для родительского режима) -->
-                    <div class="settings-item compact" id="parentControlsItem" style="display: none;" onclick="showProfileSection('parent')">
+                    <div class="settings-item compact" id="parentControlsItem" style="display: none;" onclick="openTeenAccountsSection()">
                         <div class="settings-item-left">
                             <div class="settings-item-icon parent small">
                                 <i class="fas fa-users"></i>
@@ -696,7 +824,7 @@
                     </div>
 
                     <!-- Семейные подключения -->
-                    <div class="settings-item compact" onclick="showProfileSection('family')">
+                    <div class="settings-item compact" onclick="openFamilyConnectionsSection()">
                         <div class="settings-item-left">
                             <div class="settings-item-icon family small">
                                 <i class="fas fa-users"></i>
@@ -823,7 +951,7 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation - Only shown after login - 3 панели -->
+        <!-- Bottom Navigation - Only shown after login - 5 панелей -->
         <div class="bottom-nav" id="bottomNav" style="display: none;">
             <a href="#" class="nav-item active" onclick="showPage('dashboard')">
                 <div class="nav-icon">
@@ -836,6 +964,18 @@
                     <i class="fas fa-chart-pie"></i>
                 </div>
                 <div class="nav-label">Аналитика</div>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('missions')">
+                <div class="nav-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="nav-label">Миссии</div>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('chat')">
+                <div class="nav-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="nav-label">Помощник</div>
             </a>
             <a href="#" class="nav-item" onclick="showPage('banks')">
                 <div class="nav-icon">
@@ -910,11 +1050,28 @@
                 </div>
 
                 <div class="instruction-section compact">
-                    <h4><i class="fas fa-university"></i> <span>3. Банки</span></h4>
+                    <h4><i class="fas fa-trophy"></i> <span data-translate="instructionsSection3">3. Миссии</span></h4>
+                    <ul>
+                        <li data-translate="instructionsSection3Item1">Выполняйте задания</li>
+                        <li data-translate="instructionsSection3Item2">Зарабатывайте FinCoins</li>
+                        <li data-translate="instructionsSection3Item3">Отслеживайте прогресс</li>
+                    </ul>
+                </div>
+
+                <div class="instruction-section compact">
+                    <h4><i class="fas fa-university"></i> <span>4. Банки</span></h4>
                     <ul>
                         <li>Подключайте банковские счета</li>
                         <li>Синхронизируйте транзакции</li>
                         <li>Анализируйте банковские операции</li>
+                    </ul>
+                </div>
+
+                <div class="instruction-section compact">
+                    <h4><i class="fas fa-comments"></i> <span data-translate="instructionsSection5">5. AI-помощник</span></h4>
+                    <ul>
+                        <li data-translate="instructionsSection5Item1">Получайте финансовые советы</li>
+                        <li data-translate="instructionsSection5Item2">Задавайте вопросы</li>
                     </ul>
                 </div>
             </div>
@@ -955,17 +1112,35 @@
         </div>
     </div>
 
-    <!-- Bank Connection Modal -->
-    <div class="modal-overlay" id="bankModal" style="display: none;">
+    <!-- Calendar Modal -->
+    <div class="modal-overlay" id="calendarModal" style="display: none;">
         <div class="modal-content compact">
             <div class="modal-header compact">
-                <h3 class="modal-title" id="bankModalTitle">Подключение банка</h3>
-                <button class="modal-close small" onclick="closeBankModal()">
+                <h3 class="modal-title">Календарь</h3>
+                <button class="modal-close small" onclick="closeCalendarModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" id="bankModalBody">
-                <!-- Содержание модального окна подключения банка -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" onclick="changeCalendarMonth(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="calendar-month-year" id="calendarMonthYear"></div>
+                    <button class="calendar-nav-btn" onclick="changeCalendarMonth(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
+                </div>
+                <div class="calendar-days" id="calendarDays"></div>
             </div>
         </div>
     </div>
@@ -973,4 +1148,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
