@@ -2314,30 +2314,39 @@ function updateChatHeader() {
     const chatHeader = document.querySelector('.chat-header');
     if (!chatHeader) return;
     
-    // Проверяем, есть ли уже кнопка очистки
-    let clearChatBtn = chatHeader.querySelector('.clear-chat-btn');
-    
-    if (!clearChatBtn) {
-        clearChatBtn = document.createElement('button');
-        clearChatBtn.className = 'btn btn-icon clear-chat-btn';
-        clearChatBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-        clearChatBtn.title = translations[currentLanguage].clearChatButton;
-        clearChatBtn.onclick = clearChatHistory;
-        
-        // Добавляем кнопку рядом с заголовком
-        const chatTitle = chatHeader.querySelector('h2');
-        if (chatTitle) {
-            chatTitle.style.flex = '1';
-            clearChatBtn.style.marginLeft = 'auto';
-            clearChatBtn.style.marginRight = '10px';
-            chatHeader.appendChild(clearChatBtn);
-        }
-    }
-    
     // Обновляем заголовок
     const chatTitle = chatHeader.querySelector('h2');
     if (chatTitle) {
         chatTitle.textContent = translations[currentLanguage].chatNav;
+    }
+    
+    // Проверяем, есть ли уже кнопка очистки в другом месте (например, внутри чата)
+    const existingClearBtn = document.querySelector('.clear-chat-history-btn');
+    if (existingClearBtn) {
+        existingClearBtn.remove();
+    }
+    
+    // Добавляем кнопку очистки в удобное место
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages && !document.querySelector('.clear-chat-history-btn')) {
+        const clearButton = document.createElement('button');
+        clearButton.className = 'btn btn-outline clear-chat-history-btn';
+        clearButton.style.cssText = `
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            z-index: 100;
+            padding: 8px 16px;
+            font-size: 14px;
+        `;
+        clearButton.innerHTML = `<i class="fas fa-trash-alt"></i> ${translations[currentLanguage].clearChatButton}`;
+        clearButton.onclick = clearChatHistory;
+        
+        // Добавляем кнопку в чат
+        const chatContainer = document.getElementById('chat');
+        if (chatContainer) {
+            chatContainer.appendChild(clearButton);
+        }
     }
 }
 
@@ -2358,6 +2367,14 @@ function clearChatHistory() {
         saveChatHistory();
         currentChatPage = 0;
         renderChatMessagesWithHistory();
+        
+        // Удаляем кнопку очистки и пересоздаем ее
+        const existingClearBtn = document.querySelector('.clear-chat-history-btn');
+        if (existingClearBtn) {
+            existingClearBtn.remove();
+        }
+        // Добавляем новую кнопку
+        setTimeout(() => addClearChatButton(), 100);
         
         showNotification(
             currentLanguage === 'ru' ? 'История чата очищена' :
@@ -2426,6 +2443,113 @@ function sendMessage() {
     }, 1500 + Math.random() * 1000);
 }
 
+// НОВАЯ ФУНКЦИЯ: добавление кнопки очистки чата
+function addClearChatButton() {
+    // Проверяем, есть ли уже кнопка очистки
+    if (document.querySelector('.clear-chat-btn')) return;
+    
+    const chatContainer = document.getElementById('chat');
+    if (!chatContainer) return;
+    
+    // Находим контейнер с сообщениями
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    
+    // Добавляем кнопку очистки в нижней части чата
+    const clearButton = document.createElement('button');
+    clearButton.className = 'btn btn-outline clear-chat-btn';
+    clearButton.style.cssText = `
+        margin: 10px auto;
+        display: block;
+        background: rgba(244, 67, 54, 0.1);
+        color: #F44336;
+        border-color: #F44336;
+    `;
+    clearButton.innerHTML = `<i class="fas fa-trash-alt"></i> ${translations[currentLanguage].clearChatButton}`;
+    clearButton.onclick = clearChatHistory;
+    
+    // Добавляем кнопку после сообщений
+    chatMessages.appendChild(clearButton);
+}
+
+// Обновляем функцию updateChat
+function updateChat() {
+    renderChatMessagesWithHistory();
+    
+    setTimeout(() => {
+        scrollChatToBottom();
+        fixChatScroll();
+        
+        // Добавляем кнопку очистки напрямую
+        addClearChatButton();
+    }, 50);
+}
+
+// Обновляем функцию showPage для чата
+function showPage(page) {
+    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
+    
+    mainPages.forEach(p => {
+        const pageElement = document.getElementById(p);
+        if (pageElement) {
+            pageElement.style.display = 'none';
+        }
+    });
+    
+    const targetPage = document.getElementById(page);
+    if (targetPage) {
+        targetPage.style.display = 'block';
+        fadeInElement(targetPage);
+        targetPage.classList.add('scroll-container');
+    }
+    
+    const modals = document.querySelectorAll('.modal-overlay');
+    modals.forEach(modal => {
+        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal' && modal.id !== 'reportModal') {
+            modal.style.display = 'none';
+        }
+    });
+    
+    updateHeaderTitle(page);
+    updateActiveNavigation(page);
+    
+    if (page === 'chat') {
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            scrollChatToBottom();
+            fixChatScroll();
+            // Вместо updateChatHeader() используем прямую инициализацию
+            renderChatMessagesWithHistory();
+            addClearChatButton();
+        }, 100);
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+    
+    if (page === 'analytics' && currentUser) {
+        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
+        userData.analyticsViews = (userData.analyticsViews || 0) + 1;
+        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
+    }
+    
+    if (currentUser && page === 'dashboard') {
+        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
+        userData.appVisits = (userData.appVisits || 0) + 1;
+        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
+        updateMissionsProgress();
+    }
+    
+    updatePageContent(page);
+    
+    setTimeout(() => {
+        fixButtonSizes();
+        fixScrollIssues();
+        if (page === 'settings') {
+            fixAccountManagementButtons();
+            addLogoutButtonToSettings();
+        }
+    }, 50);
+}
 // ========== ДОБАВЛЕНИЕ КНОПКИ ВЫЙТИ В НАСТРОЙКИ ==========
 
 function addLogoutButtonToSettings() {
@@ -7714,3 +7838,4 @@ register = function() {
 };
 
 console.log('Банковская система инициализирована');
+
