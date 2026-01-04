@@ -2368,14 +2368,6 @@ function clearChatHistory() {
         currentChatPage = 0;
         renderChatMessagesWithHistory();
         
-        // Удаляем кнопку очистки и пересоздаем ее
-        const existingClearBtn = document.querySelector('.clear-chat-history-btn');
-        if (existingClearBtn) {
-            existingClearBtn.remove();
-        }
-        // Добавляем новую кнопку
-        setTimeout(() => addClearChatButton(), 100);
-        
         showNotification(
             currentLanguage === 'ru' ? 'История чата очищена' :
             currentLanguage === 'en' ? 'Chat history cleared' :
@@ -7838,4 +7830,5 @@ register = function() {
 };
 
 console.log('Банковская система инициализирована');
+
 
