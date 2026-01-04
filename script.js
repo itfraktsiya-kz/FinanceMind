@@ -2221,9 +2221,6 @@ function getAIResponse(message) {
 
 // ========== ФУНКЦИИ ДЛЯ ЧАТА С КНОПКОЙ ОЧИСТКИ ==========
 
-let currentChatPage = 0;
-const CHATS_PER_PAGE = 20;
-
 function renderChatMessagesWithHistory() {
     const chatMessages = document.getElementById('chatMessages');
     if (!chatMessages) return;
@@ -2395,19 +2392,15 @@ function sendMessage() {
     }, 1500 + Math.random() * 1000);
 }
 
-// Добавление кнопки очистки чата
 function addClearChatButton() {
-    // Проверяем, есть ли уже кнопка очистки
     if (document.querySelector('.clear-chat-btn')) return;
     
     const chatContainer = document.getElementById('chat');
     if (!chatContainer) return;
     
-    // Находим контейнер с сообщениями
     const chatMessages = document.getElementById('chatMessages');
     if (!chatMessages) return;
     
-    // Добавляем кнопку очистки в нижней части чата
     const clearButton = document.createElement('button');
     clearButton.className = 'btn btn-outline clear-chat-btn';
     clearButton.style.cssText = `
@@ -2423,11 +2416,9 @@ function addClearChatButton() {
     clearButton.innerHTML = `<i class="fas fa-trash-alt"></i> ${translations[currentLanguage].clearChatButton}`;
     clearButton.onclick = clearChatHistory;
     
-    // Добавляем кнопку после сообщений
     chatMessages.appendChild(clearButton);
 }
 
-// Обновляем функцию showPage для чата
 function showPage(page) {
     const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
     
@@ -2495,14 +2486,12 @@ function showPage(page) {
 // ========== ИСПРАВЛЕНИЕ КНОПОК УПРАВЛЕНИЯ АККАУНТОМ ==========
 
 function fixAccountManagementButtons() {
-    // Находим все элементы управления аккаунтом
     const personalDataBtn = document.querySelector('[onclick*="personalData"]');
     const securityBtn = document.querySelector('[onclick*="security"]');
     const teenAccountsBtn = document.querySelector('[onclick*="teenAccounts"]');
     const familyConnectionsBtn = document.querySelector('[onclick*="familyConnections"]');
     const languageThemeBtn = document.querySelector('[onclick*="languageTheme"]');
     
-    // Удаляем старые обработчики событий
     if (personalDataBtn) {
         personalDataBtn.removeAttribute('onclick');
         personalDataBtn.addEventListener('click', () => openPersonalDataSection());
@@ -2535,7 +2524,6 @@ function addLogoutButtonToSettings() {
     const settingsPage = document.getElementById('settings');
     if (!settingsPage) return;
     
-    // Проверяем, есть ли уже кнопка выхода
     let logoutButton = document.getElementById('logoutButtonContainer');
     
     if (!logoutButton) {
@@ -2557,248 +2545,8 @@ function addLogoutButtonToSettings() {
             </p>
         `;
         
-        // Добавляем кнопку в конец настроек
         settingsPage.appendChild(logoutButton);
     }
-}
-
-// ========== ОБНОВЛЕННЫЙ AI ПОМОЩНИК С ПРОМПТОМ ==========
-
-function getAIResponse(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    // Базовые ответы из промпта
-    const baseResponses = {
-        ru: [
-            "Сегодня можем разобрать траты, поставить цель или просто сэкономить немного денег.",
-            "В этот раз я научу тебя простому и понятному управлению деньгами.",
-            "Хочешь попробовать челлендж — сэкономить 5 000 ₸ за 3 дня?",
-            "Сегодня могу дать тебе финансовый совет дня — это займёт меньше минуты.",
-            "Давай начнём с малого: посмотрим, куда уходят твои деньги.",
-            "Могу помочь составить план расходов на ближайшие 3 дня.",
-            "Сегодня научу тебя откладывать деньги так, чтобы это было незаметно.",
-            "Если не знаешь, что спросить — я предложу полезную тему сам."
-        ],
-        en: [
-            "Today we can analyze expenses, set a goal, or just save some money.",
-            "This time I'll teach you simple and understandable money management.",
-            "Want to try a challenge - save 5,000 ₸ in 3 days?",
-            "Today I can give you a financial tip of the day - it will take less than a minute.",
-            "Let's start small: let's see where your money goes.",
-            "I can help create a spending plan for the next 3 days.",
-            "Today I'll teach you how to save money so it's unnoticeable.",
-            "If you don't know what to ask - I'll suggest a useful topic myself."
-        ],
-        kz: [
-            "Бүгін шығындарды талдай аламыз, мақсат қоя аламыз немесе жай ғана ақша үнемдей аламыз.",
-            "Осы жолы мен сізге қарапайым және түсінікті ақшаны басқаруды үйретемін.",
-            "Сынақты байқап көргіңіз келе ме — 3 күнде 5 000 ₸ үнемдеу?",
-            "Бүгін сізге күннің қаржылық кеңесін бере аламын — бұл бір минуттан аз уақыт алады.",
-            "Кішкене нәрседен бастайық: ақшаңыз қайда кететінін қарайық.",
-            "Келесі 3 күнге шығындар жоспарын құруға көмектесе аламын.",
-            "Бүгін сізге ақшаны байқалмайтындай етіп үнемдеуді үйретемін.",
-            "Егер не сұрау керектігін білмесеңіз — мен пайдалы тақырыпты өзім ұсынамын."
-        ]
-    };
-    
-    // Универсальные фразы из промпта
-    const universalPhrases = {
-        ru: [
-            "Хочешь, я дам тебе 5 финансовых советов на сегодня?",
-            "Опиши свою ситуацию, и я подскажу решение.",
-            "Хочешь быстрый совет или подробный разбор?",
-            "Могу предложить несколько вариантов, а ты выберешь.",
-            "Я объясню это простыми словами и на примере."
-        ],
-        en: [
-            "Want me to give you 5 financial tips for today?",
-            "Describe your situation and I'll suggest a solution.",
-            "Want a quick tip or detailed analysis?",
-            "I can suggest several options, and you choose.",
-            "I'll explain it in simple words and with examples."
-        ],
-        kz: [
-            "Бүгін сізге 5 қаржылық кеңес бергім келе ме?",
-            "Жағдайыңызды сипаттаңыз, мен шешімді ұсынамын.",
-            "Жылдам кеңес немесе егжей-тегжейлі талдау керек пе?",
-            "Бірнеше нұсқаны ұсына аламын, ал сіз таңдайсыз.",
-            "Мен оны қарапайым сөздермен және мысалдармен түсіндіремін."
-        ]
-    };
-    
-    // Ответы на конкретные вопросы из промпта
-    if (lowerMessage.includes('что будем делать') || lowerMessage.includes('what shall we do') || lowerMessage.includes('не істейік')) {
-        const responses = {
-            ru: [
-                "Давай проверим твои последние расходы и найдём, где можно сэкономить. Могу составить план на неделю или помочь с целями.",
-                "Сегодня можем проанализировать твои траты за месяц. Хочешь, покажу самые крупные расходы и дам советы по оптимизации?",
-                "Предлагаю начать с постановки финансовой цели. О чём ты мечтаешь? Помогу разбить на шаги и рассчитать сроки."
-            ],
-            en: [
-                "Let's check your recent expenses and find where you can save. I can create a weekly plan or help with goals.",
-                "Today we can analyze your monthly spending. Want me to show the biggest expenses and give optimization tips?",
-                "I suggest starting with setting a financial goal. What are you dreaming about? I'll help break it down into steps and calculate timelines."
-            ],
-            kz: [
-                "Соңғы шығындарыңызды тексеріп, үнемдеуге болатын жерлерді табайық. Апталық жоспар құра аламын немесе мақсаттарға көмектесе аламын.",
-                "Бүгін айлық шығындарыңызды талдай аламыз. Ең үлкен шығындарды көрсетіп, оңтайландыру бойынша кеңестер бергім келе ме?",
-                "Қаржылық мақсатты белгілеуден бастауды ұсынамын. Сіз не туралы армандайсыз? Оны қадамдарға бөлуге және мерзімдерді есептеуге көмектесемін."
-            ]
-        };
-        
-        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
-        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
-        
-        return `${randomResponse} ${randomUniversal}`;
-    }
-    
-    if (lowerMessage.includes('чему ты меня научишь') || lowerMessage.includes('what will you teach me') || lowerMessage.includes('маған не үйретесің')) {
-        const responses = {
-            ru: [
-                "Научу основам бюджетирования и помогу наладить контроль над финансами. Начнём с анализа текущих расходов?",
-                "Покажу, как ставить реальные финансовые цели и достигать их. Хочешь попробовать создать первую цель прямо сейчас?",
-                "Расскажу про разные методы экономии и помогу выбрать подходящий именно тебе. Давай обсудим твои привычки в тратах."
-            ],
-            en: [
-                "I'll teach you the basics of budgeting and help you gain control over your finances. Let's start with analyzing current expenses?",
-                "I'll show you how to set realistic financial goals and achieve them. Want to try creating your first goal right now?",
-                "I'll tell you about different saving methods and help you choose the one that suits you. Let's discuss your spending habits."
-            ],
-            kz: [
-                "Бюджеттеудің негіздерін үйретемін және қаржыларды бақылауға көмектесемін. Ағымдағы шығындарды талдаудан бастайық?",
-                "Реалистік қаржылық мақсаттарды қалай белгілеуге және оларға қалай жетуге болатынын көрсетемін. Дәл қазір бірінші мақсатыңызды құруға тырысқыңыз келе ме?",
-                "Әртүрлі үнемдеу әдістері туралы айтып, сізге лайықтысын таңдауға көмектесемін. Шығындар әдеттеріңізді талқылайық."
-            ]
-        };
-        
-        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
-        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
-        
-        return `${randomResponse} ${randomBase}`;
-    }
-    
-    if (lowerMessage.includes('как сэкономить 5000') || lowerMessage.includes('how to save 5000') || lowerMessage.includes('5000 үнемдеу')) {
-        const response = {
-            ru: "Мы временно сократим мелкие траты: еду вне дома, спонтанные покупки и ненужные подписки. Хочешь, я составлю простой план на 3 дня или дам быстрый чек-лист?",
-            en: "We'll temporarily reduce small expenses: eating out, spontaneous purchases, and unnecessary subscriptions. Want me to create a simple 3-day plan or give a quick checklist?",
-            kz: "Біз уақытша кішкентай шығындарды азайтамыз: үйден тыс тамақтану, импульстік сатып алулар және қажетсіз жазылымдар. 3 күндік қарапайым жоспар құрайын ба, әлде жылдам тексеру тізімін берейін бе?"
-        };
-        
-        return response[currentLanguage];
-    }
-    
-    // Приветственные сообщения
-    if (lowerMessage.includes('привет') || lowerMessage.includes('hello') || lowerMessage.includes('hi') || 
-        lowerMessage.includes('сәлем') || lowerMessage.includes('салем') || lowerMessage.includes('здравствуй')) {
-        const greetings = {
-            ru: [
-                "Привет! Рад тебя видеть. Сегодня можем разобрать траты или поставить новую финансовую цель. С чего начнём?",
-                "Здравствуй! Готов помочь с финансами. Хочешь быстрый совет или планируем что-то серьёзное?",
-                "Приветствую! Вижу, ты зашёл проверить свои финансы. Давай сделаем это продуктивно - что тебя беспокоит?"
-            ],
-            en: [
-                "Hello! Glad to see you. Today we can analyze expenses or set a new financial goal. Where shall we start?",
-                "Hi! Ready to help with finances. Want a quick tip or planning something serious?",
-                "Welcome! I see you've come to check your finances. Let's make it productive - what's bothering you?"
-            ],
-            kz: [
-                "Сәлем! Сені көргеніме қуаныштымын. Бүгін шығындарды талдай аламыз немесе жаңа қаржылық мақсат қоя аламыз. Қайдан бастайық?",
-                "Сәлеметсіз бе! Қаржыларыңызға көмектесуге дайынмын. Жылдам кеңес керек пе, әлде бір нәрсені жоспарлайсыз ба?",
-                "Қош келдіңіз! Қаржыларыңызды тексеруге келгеніңізді көріп тұрмын. Оны өнімді етейік - сізді не мазалайды?"
-            ]
-        };
-        
-        const randomGreeting = greetings[currentLanguage][Math.floor(Math.random() * greetings[currentLanguage].length)];
-        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
-        
-        return `${randomGreeting} ${randomUniversal}`;
-    }
-    
-    // Вопросы о расходах
-    if (lowerMessage.includes('расход') || lowerMessage.includes('expense') || lowerMessage.includes('трат') || 
-        lowerMessage.includes('шығын') || lowerMessage.includes('қанша жұмсадым')) {
-        const responses = {
-            ru: [
-                "Чтобы добавить расход, перейдите в раздел 'Аналитика' и нажмите 'Добавить расход'. Но давай сначала посмотрим твою статистику - есть интересные закономерности.",
-                "Я вижу твои последние траты. Хочешь, покажу категории, где можно сэкономить? Или лучше составим план на следующую неделю?",
-                "Работа с расходами - основа финансового контроля. Сегодня могу дать тебе 3 простых советы по оптимизации трат. Интересно?"
-            ],
-            en: [
-                "To add an expense, go to the 'Analytics' section and click 'Add Expense'. But let's first look at your statistics - there are interesting patterns.",
-                "I see your recent expenses. Want me to show categories where you can save? Or better create a plan for next week?",
-                "Working with expenses is the basis of financial control. Today I can give you 3 simple tips for optimizing spending. Interested?"
-            ],
-            kz: [
-                "Шығын қосу үшін 'Аналитика' бөліміне өтіп, 'Шығын қосу' түймесін басыңыз. Бірақ алдымен статистикаңызды қарайық - қызықты заңдылықтар бар.",
-                "Соңғы шығындарыңызды көріп тұрмын. Үнемдеуге болатын санаттарды көрсетейін бе? Немесе келесі аптаға жоспар құрайық?",
-                "Шығындармен жұмыс істеу - қаржылық бақылаудың негізі. Бүгін сізге шығындарды оңтайландыру бойынша 3 қарапайым кеңес бере аламын. Қызықты ма?"
-            ]
-        };
-        
-        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
-        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
-        
-        return `${randomResponse} ${randomBase}`;
-    }
-    
-    // Вопросы о накоплениях
-    if (lowerMessage.includes('накоп') || lowerMessage.includes('save') || lowerMessage.includes('экономи') || 
-        lowerMessage.includes('жинақ') || lowerMessage.includes('үнемдеу')) {
-        const responses = {
-            ru: [
-                "Для накоплений рекомендую установить финансовые цели. Но давай начнём с малого - попробуй откладывать 10% от любой суммы, которую получаешь. Работает безотказно!",
-                "Вижу, у тебя уже есть цели. Хочешь, оптимизируем их или поставим новую? Могу показать, как быстрее достичь желаемого.",
-                "Секрет накоплений - в регулярности. Сегодня научу тебя трём методикам, которые действительно работают. Готов узнать?"
-            ],
-            en: [
-                "For savings, I recommend setting financial goals. But let's start small - try saving 10% of any amount you receive. Works flawlessly!",
-                "I see you already have goals. Want to optimize them or set a new one? I can show you how to achieve what you want faster.",
-                "The secret of savings is regularity. Today I'll teach you three methods that really work. Ready to learn?"
-            ],
-            kz: [
-                "Жинақтар үшін қаржылық мақсаттарды белгілеуді ұсынамын. Бірақ кішкене нәрседен бастайық - алатын кез келген соманың 10% үнемдеуге тырысыңыз. Жақсы жұмыс істейді!",
-                "Сізде мақсаттар бар екенін көріп тұрмын. Оларды оңтайландырайық ба, әлде жаңасын белгілейік бе? Қалаған нәрсеңізге тезірек қалай жетуге болатынын көрсете аламын.",
-                "Жинақтардың құпиясы - үнемділікте. Бүгін сізге шынымен жұмыс істейтін үш әдісті үйретемін. Білгіңіз келе ме?"
-            ]
-        };
-        
-        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
-        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
-        
-        return `${randomResponse} ${randomUniversal}`;
-    }
-    
-    // Вопросы о бюджете
-    if (lowerMessage.includes('бюджет') || lowerMessage.includes('budget')) {
-        const responses = {
-            ru: [
-                "Бюджетирование - ключ к финансовому успеху. Попробуй правило 50/30/20. Хочешь, помогу адаптировать его под твои доходы?",
-                "Вижу, ты интересуешься планированием. Могу составить персональный бюджет на месяц. Для этого нужно знать твои основные категории расходов.",
-                "Работа с бюджетом не должна быть сложной. Сегодня научу тебя простой системе, которую можно вести за 5 минут в день. Начнём?"
-            ],
-            en: [
-                "Budgeting is key to financial success. Try the 50/30/20 rule. Want me to help adapt it to your income?",
-                "I see you're interested in planning. I can create a personal monthly budget. For this, I need to know your main expense categories.",
-                "Working with a budget shouldn't be difficult. Today I'll teach you a simple system that can be maintained in 5 minutes a day. Shall we start?"
-            ],
-            kz: [
-                "Бюджеттеу - қаржылық табысқа жетудің кілті. 50/30/20 ережесін пайдаланып көріңіз. Оны сіздің табысыңызға бейімдеуге көмектесейін бе?",
-                "Жоспарлауға қызығатыныңызды көріп тұрмын. Жеке айлық бюджет құра аламын. Бұл үшін сіздің негізгі шығын санаттарыңызды білуім керек.",
-                "Бюджетпен жұмыс істеу қиын болмауы керек. Бүгін сізге күніне 5 минутта жүргізуге болатын қарапайым жүйені үйретемін. Бастайық па?"
-            ]
-        };
-        
-        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
-        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
-        
-        return `${randomResponse} ${randomBase}`;
-    }
-    
-    // Если вопрос не распознан - используем комбинацию из промпта
-    const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
-    const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
-    
-    return `${randomBase} ${randomUniversal}`;
 }
 
 // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ==========
@@ -2831,7 +2579,6 @@ function savePersonalData() {
     }
     
     if (currentUser) {
-        // Проверяем, не используется ли email другим пользователем
         const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
         const emailExists = users.some(user => 
             user.email === email && user.id !== currentUser.id
@@ -2851,7 +2598,6 @@ function savePersonalData() {
         currentUser.lastName = lastName;
         currentUser.email = email;
         
-        // Обновляем в списке пользователей
         const userIndex = users.findIndex(user => user.id === currentUser.id);
         if (userIndex !== -1) {
             users[userIndex] = currentUser;
@@ -2946,7 +2692,6 @@ function saveNewPassword() {
         return;
     }
     
-    // Проверяем текущий пароль
     if (currentUser.password !== currentPassword) {
         showNotification(
             currentLanguage === 'ru' ? 'Неверный текущий пароль' :
@@ -2957,7 +2702,6 @@ function saveNewPassword() {
         return;
     }
     
-    // Обновляем пароль
     const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
     const userIndex = users.findIndex(user => user.id === currentUser.id);
     
@@ -2984,13 +2728,11 @@ function saveSecuritySettings() {
     const biometricToggle = document.getElementById('biometricToggle');
     const twoFactorToggle = document.getElementById('twoFactorToggle');
     
-    // Сохраняем настройки безопасности
     const securitySettings = {
         biometricLogin: biometricToggle?.checked || false,
         twoFactorAuth: twoFactorToggle?.checked || false
     };
     
-    // Сохраняем в настройках пользователя
     if (currentUser) {
         if (!currentUser.settings) {
             currentUser.settings = {};
@@ -2999,7 +2741,6 @@ function saveSecuritySettings() {
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
-        // Обновляем в списке пользователей
         const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
         const userIndex = users.findIndex(user => user.id === currentUser.id);
         if (userIndex !== -1) {
@@ -3017,8 +2758,6 @@ function saveSecuritySettings() {
     
     closeModal('securityModal');
 }
-
-// ========== ОБНОВЛЕННЫЕ ФУНКЦИИ ДЛЯ КНОПОК ЛИЧНОГО КАБИНЕТА ==========
 
 function handleSettingsClick(section) {
     console.log('Opening section:', section);
@@ -3045,7 +2784,6 @@ function handleSettingsClick(section) {
 }
 
 function openPersonalDataSection() {
-    // Создаем или показываем модальное окно для персональных данных
     const modalId = 'personalDataModal';
     let modal = document.getElementById(modalId);
     
@@ -3107,12 +2845,10 @@ function openPersonalDataSection() {
     modal.style.display = 'flex';
     fadeInElement(modal);
     
-    // Показываем уведомление
     showNotification(translations[currentLanguage].personalDataDesc, 'info');
 }
 
 function openSecuritySection() {
-    // Создаем или показываем модальное окно для безопасности
     const modalId = 'securityModal';
     let modal = document.getElementById(modalId);
     
@@ -3206,12 +2942,10 @@ function openSecuritySection() {
     modal.style.display = 'flex';
     fadeInElement(modal);
     
-    // Показываем уведомление
     showNotification(translations[currentLanguage].securitySettingsDesc, 'info');
 }
 
 function openTeenAccountsSection() {
-    // Проверяем, что пользователь - родитель
     if (!currentUser || currentUser.accountType !== 'parent') {
         showNotification(
             currentLanguage === 'ru' ? 'Эта функция доступна только для родительских аккаунтов' :
@@ -3222,7 +2956,6 @@ function openTeenAccountsSection() {
         return;
     }
     
-    // Создаем или показываем модальное окно для управления подростковыми аккаунтами
     const modalId = 'teenAccountsModal';
     let modal = document.getElementById(modalId);
     
@@ -3285,15 +3018,12 @@ function openTeenAccountsSection() {
     modal.style.display = 'flex';
     fadeInElement(modal);
     
-    // Загружаем список подростковых аккаунтов
     loadTeenAccountsList();
     
-    // Показываем уведомление
     showNotification(translations[currentLanguage].manageTeenAccounts, 'info');
 }
 
 function openFamilyConnectionsSection() {
-    // Создаем или показываем модальное окно для семейных подключений
     const modalId = 'familyConnectionsModal';
     let modal = document.getElementById(modalId);
     
@@ -3364,15 +3094,12 @@ function openFamilyConnectionsSection() {
     modal.style.display = 'flex';
     fadeInElement(modal);
     
-    // Загружаем текущие подключения
     loadCurrentConnections();
     
-    // Показываем уведомление
     showNotification(translations[currentLanguage].familyConnections, 'info');
 }
 
 function openLanguageThemeSection() {
-    // Создаем или показываем модальное окно для языка и темы
     const modalId = 'languageThemeModal';
     let modal = document.getElementById(modalId);
     
@@ -3438,18 +3165,13 @@ function openLanguageThemeSection() {
     modal.style.display = 'flex';
     fadeInElement(modal);
     
-    // Показываем уведомление
     showNotification(translations[currentLanguage].languageSettingsTitle, 'info');
 }
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ==========
 
 function loadTeenAccountsList() {
     const teenAccountsList = document.getElementById('teenAccountsList');
     if (!teenAccountsList) return;
     
-    // В реальном приложении здесь был бы запрос к серверу
-    // Для демонстрации используем мок-данные
     const mockTeenAccounts = [
         { id: 1, name: "Алексей Иванов", email: "alexey@example.com", connectedSince: "2024-01-15", spendingLimit: 5000 },
         { id: 2, name: "Мария Петрова", email: "maria@example.com", connectedSince: "2024-02-01", spendingLimit: 3000 }
@@ -3510,8 +3232,6 @@ function loadTeenAccountsList() {
 }
 
 function addTeenAccount() {
-    // В реальном приложении здесь была бы форма для добавления подросткового аккаунта
-    // Для демонстрации показываем модальное окно с инструкцией
     const modalId = 'addTeenAccountModal';
     let modal = document.getElementById(modalId);
     
@@ -3596,8 +3316,6 @@ function connectTeenAccount() {
         return;
     }
     
-    // В реальном приложении здесь была бы проверка кода и подключение
-    // Для демонстрации просто показываем успешное сообщение
     showNotification(
         currentLanguage === 'ru' ? 'Подростковый аккаунт успешно подключен' :
         currentLanguage === 'en' ? 'Teen account successfully connected' :
@@ -3607,14 +3325,12 @@ function connectTeenAccount() {
     
     closeModal('addTeenAccountModal');
     
-    // Обновляем список
     setTimeout(() => {
         loadTeenAccountsList();
     }, 500);
 }
 
 function viewTeenSpending(teenId) {
-    // В реальном приложении здесь открывалась бы страница с расходами подростка
     showNotification(
         currentLanguage === 'ru' ? 'Просмотр расходов подросткового аккаунта' :
         currentLanguage === 'en' ? 'Viewing teen account spending' :
@@ -3624,7 +3340,6 @@ function viewTeenSpending(teenId) {
 }
 
 function setTeenLimits(teenId) {
-    // В реальном приложении здесь открывалась бы форма установки лимитов
     showNotification(
         currentLanguage === 'ru' ? 'Установка лимитов для подросткового аккаунта' :
         currentLanguage === 'en' ? 'Setting limits for teen account' :
@@ -3634,10 +3349,8 @@ function setTeenLimits(teenId) {
 }
 
 function generateParentLink() {
-    // Генерируем уникальный код для подключения
     const connectionCode = 'FM' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
     
-    // Сохраняем код для текущего пользователя
     if (currentUser) {
         if (!currentUser.connectionCodes) {
             currentUser.connectionCodes = [];
@@ -3645,12 +3358,11 @@ function generateParentLink() {
         currentUser.connectionCodes.push({
             code: connectionCode,
             generatedAt: new Date().toISOString(),
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 дней
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
         });
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
-        // Обновляем в списке пользователей
         const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
         const userIndex = users.findIndex(user => user.id === currentUser.id);
         if (userIndex !== -1) {
@@ -3659,7 +3371,6 @@ function generateParentLink() {
         }
     }
     
-    // Показываем код пользователю
     const modalId = 'connectionLinkModal';
     let modal = document.getElementById(modalId);
     
@@ -3700,7 +3411,6 @@ function generateParentLink() {
         `;
         document.body.appendChild(modal);
     } else {
-        // Обновляем код в существующем модальном окне
         const codeBox = modal.querySelector('.code-box code');
         if (codeBox) {
             codeBox.textContent = connectionCode;
@@ -3733,7 +3443,6 @@ function shareConnectionCode(code) {
             text: shareText,
         });
     } else {
-        // Fallback для браузеров без поддержки Web Share API
         copyConnectionCode(code);
     }
 }
@@ -3751,8 +3460,6 @@ function connectToParentFromCode() {
         return;
     }
     
-    // В реальном приложении здесь была бы проверка кода и подключение к родительскому аккаунту
-    // Для демонстрации просто показываем успешное сообщение
     showNotification(
         currentLanguage === 'ru' ? 'Вы успешно подключились к родительскому аккаунту' :
         currentLanguage === 'en' ? 'You have successfully connected to parent account' :
@@ -3767,8 +3474,6 @@ function loadCurrentConnections() {
     const currentConnections = document.getElementById('currentConnections');
     if (!currentConnections) return;
     
-    // В реальном приложении здесь загружались бы реальные подключения
-    // Для демонстрации показываем мок-данные
     const mockConnections = currentUser?.accountType === 'parent' 
         ? [
             { type: 'child', name: "Алексей Иванов", email: "alexey@example.com", connectedSince: "2024-01-15" }
@@ -3852,11 +3557,241 @@ function disconnectAccount(connectionType) {
             'success'
         );
         
-        // Обновляем список подключений
         setTimeout(() => {
             loadCurrentConnections();
         }, 500);
     }
+}
+
+// ========== ОБНОВЛЕННЫЙ AI ПОМОЩНИК С ПРОМПТОМ ==========
+
+function getAIResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    const baseResponses = {
+        ru: [
+            "Сегодня можем разобрать траты, поставить цель или просто сэкономить немного денег.",
+            "В этот раз я научу тебя простому и понятному управлению деньгами.",
+            "Хочешь попробовать челлендж — сэкономить 5 000 ₸ за 3 дня?",
+            "Сегодня могу дать тебе финансовый совет дня — это займёт меньше минуты.",
+            "Давай начнём с малого: посмотрим, куда уходят твои деньги.",
+            "Могу помочь составить план расходов на ближайшие 3 дня.",
+            "Сегодня научу тебя откладывать деньги так, чтобы это было незаметно.",
+            "Если не знаешь, что спросить — я предложу полезную тему сам."
+        ],
+        en: [
+            "Today we can analyze expenses, set a goal, or just save some money.",
+            "This time I'll teach you simple and understandable money management.",
+            "Want to try a challenge - save 5,000 ₸ in 3 days?",
+            "Today I can give you a financial tip of the day - it will take less than a minute.",
+            "Let's start small: let's see where your money goes.",
+            "I can help create a spending plan for the next 3 days.",
+            "Today I'll teach you how to save money so it's unnoticeable.",
+            "If you don't know what to ask - I'll suggest a useful topic myself."
+        ],
+        kz: [
+            "Бүгін шығындарды талдай аламыз, мақсат қоя аламыз немесе жай ғана ақша үнемдей аламыз.",
+            "Осы жолы мен сізге қарапайым және түсінікті ақшаны басқаруды үйретемін.",
+            "Сынақты байқап көргіңіз келе ме — 3 күнде 5 000 ₸ үнемдеу?",
+            "Бүгін сізге күннің қаржылық кеңесін бере аламын — бұл бір минуттан аз уақыт алады.",
+            "Кішкене нәрседен бастайық: ақшаңыз қайда кететінін қарайық.",
+            "Келесі 3 күнге шығындар жоспарын құруға көмектесе аламын.",
+            "Бүгін сізге ақшаны байқалмайтындай етіп үнемдеуді үйретемін.",
+            "Егер не сұрау керектігін білмесеңіз — мен пайдалы тақырыпты өзім ұсынамын."
+        ]
+    };
+    
+    const universalPhrases = {
+        ru: [
+            "Хочешь, я дам тебе 5 финансовых советов на сегодня?",
+            "Опиши свою ситуацию, и я подскажу решение.",
+            "Хочешь быстрый совет или подробный разбор?",
+            "Могу предложить несколько вариантов, а ты выберешь.",
+            "Я объясню это простыми словами и на примере."
+        ],
+        en: [
+            "Want me to give you 5 financial tips for today?",
+            "Describe your situation and I'll suggest a solution.",
+            "Want a quick tip or detailed analysis?",
+            "I can suggest several options, and you choose.",
+            "I'll explain it in simple words and with examples."
+        ],
+        kz: [
+            "Бүгін сізге 5 қаржылық кеңес бергім келе ме?",
+            "Жағдайыңызды сипаттаңыз, мен шешімді ұсынамын.",
+            "Жылдам кеңес немесе егжей-тегжейлі талдау керек пе?",
+            "Бірнеше нұсқаны ұсына аламын, ал сіз таңдайсыз.",
+            "Мен оны қарапайым сөздермен және мысалдармен түсіндіремін."
+        ]
+    };
+    
+    if (lowerMessage.includes('что будем делать') || lowerMessage.includes('what shall we do') || lowerMessage.includes('не істейік')) {
+        const responses = {
+            ru: [
+                "Давай проверим твои последние расходы и найдём, где можно сэкономить. Могу составить план на неделю или помочь с целями.",
+                "Сегодня можем проанализировать твои траты за месяц. Хочешь, покажу самые крупные расходы и дам советы по оптимизации?",
+                "Предлагаю начать с постановки финансовой цели. О чём ты мечтаешь? Помогу разбить на шаги и рассчитать сроки."
+            ],
+            en: [
+                "Let's check your recent expenses and find where you can save. I can create a weekly plan or help with goals.",
+                "Today we can analyze your monthly spending. Want me to show the biggest expenses and give optimization tips?",
+                "I suggest starting with setting a financial goal. What are you dreaming about? I'll help break it down into steps and calculate timelines."
+            ],
+            kz: [
+                "Соңғы шығындарыңызды тексеріп, үнемдеуге болатын жерлерді табайық. Апталық жоспар құра аламын немесе мақсаттарға көмектесе аламын.",
+                "Бүгін айлық шығындарыңызды талдай аламыз. Ең үлкен шығындарды көрсетіп, оңтайландыру бойынша кеңестер бергім келе ме?",
+                "Қаржылық мақсатты белгілеуден бастауды ұсынамын. Сіз не туралы армандайсыз? Оны қадамдарға бөлуге және мерзімдерді есептеуге көмектесемін."
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomUniversal}`;
+    }
+    
+    if (lowerMessage.includes('чему ты меня научишь') || lowerMessage.includes('what will you teach me') || lowerMessage.includes('маған не үйретесің')) {
+        const responses = {
+            ru: [
+                "Научу основам бюджетирования и помогу наладить контроль над финансами. Начнём с анализа текущих расходов?",
+                "Покажу, как ставить реальные финансовые цели и достигать их. Хочешь попробовать создать первую цель прямо сейчас?",
+                "Расскажу про разные методы экономии и помогу выбрать подходящий именно тебе. Давай обсудим твои привычки в тратах."
+            ],
+            en: [
+                "I'll teach you the basics of budgeting and help you gain control over your finances. Let's start with analyzing current expenses?",
+                "I'll show you how to set realistic financial goals and achieve them. Want to try creating your first goal right now?",
+                "I'll tell you about different saving methods and help you choose the one that suits you. Let's discuss your spending habits."
+            ],
+            kz: [
+                "Бюджеттеудің негіздерін үйретемін және қаржыларды бақылауға көмектесемін. Ағымдағы шығындарды талдаудан бастайық?",
+                "Реалистік қаржылық мақсаттарды қалай белгілеуге және оларға қалай жетуге болатынын көрсетемін. Дәл қазір бірінші мақсатыңызды құруға тырысқыңыз келе ме?",
+                "Әртүрлі үнемдеу әдістері туралы айтып, сізге лайықтысын таңдауға көмектесемін. Шығындар әдеттеріңізді талқылайық."
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    if (lowerMessage.includes('как сэкономить 5000') || lowerMessage.includes('how to save 5000') || lowerMessage.includes('5000 үнемдеу')) {
+        const response = {
+            ru: "Мы временно сократим мелкие траты: еду вне дома, спонтанные покупки и ненужные подписки. Хочешь, я составлю простой план на 3 дня или дам быстрый чек-лист?",
+            en: "We'll temporarily reduce small expenses: eating out, spontaneous purchases, and unnecessary subscriptions. Want me to create a simple 3-day plan or give a quick checklist?",
+            kz: "Біз уақытша кішкентай шығындарды азайтамыз: үйден тыс тамақтану, импульстік сатып алулар және қажетсіз жазылымдар. 3 күндік қарапайым жоспар құрайын ба, әлде жылдам тексеру тізімін берейін бе?"
+        };
+        
+        return response[currentLanguage];
+    }
+    
+    if (lowerMessage.includes('привет') || lowerMessage.includes('hello') || lowerMessage.includes('hi') || 
+        lowerMessage.includes('сәлем') || lowerMessage.includes('салем') || lowerMessage.includes('здравствуй')) {
+        const greetings = {
+            ru: [
+                "Привет! Рад тебя видеть. Сегодня можем разобрать траты или поставить новую финансовую цель. С чего начнём?",
+                "Здравствуй! Готов помочь с финансами. Хочешь быстрый совет или планируем что-то серьёзное?",
+                "Приветствую! Вижу, ты зашёл проверить свои финансы. Давай сделаем это продуктивно - что тебя беспокоит?"
+            ],
+            en: [
+                "Hello! Glad to see you. Today we can analyze expenses or set a new financial goal. Where shall we start?",
+                "Hi! Ready to help with finances. Want a quick tip or planning something serious?",
+                "Welcome! I see you've come to check your finances. Let's make it productive - what's bothering you?"
+            ],
+            kz: [
+                "Сәлем! Сені көргеніме қуаныштымын. Бүгін шығындарды талдай аламыз немесе жаңа қаржылық мақсат қоя аламыз. Қайдан бастайық?",
+                "Сәлеметсіз бе! Қаржыларыңызға көмектесуге дайынмын. Жылдам кеңес керек пе, әлде бір нәрсені жоспарлайсыз ба?",
+                "Қош келдіңіз! Қаржыларыңызды тексеруге келгеніңізді көріп тұрмын. Оны өнімді етейік - сізді не мазалайды?"
+            ]
+        };
+        
+        const randomGreeting = greetings[currentLanguage][Math.floor(Math.random() * greetings[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomGreeting} ${randomUniversal}`;
+    }
+    
+    if (lowerMessage.includes('расход') || lowerMessage.includes('expense') || lowerMessage.includes('трат') || 
+        lowerMessage.includes('шығын') || lowerMessage.includes('қанша жұмсадым')) {
+        const responses = {
+            ru: [
+                "Чтобы добавить расход, перейдите в раздел 'Аналитика' и нажмите 'Добавить расход'. Но давай сначала посмотрим твою статистику - есть интересные закономерности.",
+                "Я вижу твои последние траты. Хочешь, покажу категории, где можно сэкономить? Или лучше составим план на следующую неделю?",
+                "Работа с расходами - основа финансового контроля. Сегодня могу дать тебе 3 простых советы по оптимизации трат. Интересно?"
+            ],
+            en: [
+                "To add an expense, go to the 'Analytics' section and click 'Add Expense'. But let's first look at your statistics - there are interesting patterns.",
+                "I see your recent expenses. Want me to show categories where you can save? Or better create a plan for next week?",
+                "Working with expenses is the basis of financial control. Today I can give you 3 simple tips for optimizing spending. Interested?"
+            ],
+            kz: [
+                "Шығын қосу үшін 'Аналитика' бөліміне өтіп, 'Шығын қосу' түймесін басыңыз. Бірақ алдымен статистикаңызды қарайық - қызықты заңдылықтар бар.",
+                "Соңғы шығындарыңызды көріп тұрмын. Үнемдеуге болатын санаттарды көрсетейін бе? Немесе келесі аптаға жоспар құрайық?",
+                "Шығындармен жұмыс істеу - қаржылық бақылаудың негізі. Бүгін сізге шығындарды оңтайландыру бойынша 3 қарапайым кеңес бере аламын. Қызықты ма?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    if (lowerMessage.includes('накоп') || lowerMessage.includes('save') || lowerMessage.includes('экономи') || 
+        lowerMessage.includes('жинақ') || lowerMessage.includes('үнемдеу')) {
+        const responses = {
+            ru: [
+                "Для накоплений рекомендую установить финансовые цели. Но давай начнём с малого - попробуй откладывать 10% от любой суммы, которую получаешь. Работает безотказно!",
+                "Вижу, у тебя уже есть цели. Хочешь, оптимизируем их или поставим новую? Могу показать, как быстрее достичь желаемого.",
+                "Секрет накоплений - в регулярности. Сегодня научу тебя трём методикам, которые действительно работают. Готов узнать?"
+            ],
+            en: [
+                "For savings, I recommend setting financial goals. But let's start small - try saving 10% of any amount you receive. Works flawlessly!",
+                "I see you already have goals. Want to optimize them or set a new one? I can show you how to achieve what you want faster.",
+                "The secret of savings is regularity. Today I'll teach you three methods that really work. Ready to learn?"
+            ],
+            kz: [
+                "Жинақтар үшін қаржылық мақсаттарды белгілеуді ұсынамын. Бірақ кішкене нәрседен бастайық - алатын кез келген соманың 10% үнемдеуге тырысыңыз. Жақсы жұмыс істейді!",
+                "Сізде мақсаттар бар екенін көріп тұрмын. Оларды оңтайландырайық ба, әлде жаңасын белгілейік бе? Қалаған нәрсеңізге тезірек қалай жетуге болатынын көрсете аламын.",
+                "Жинақтардың құпиясы - үнемділікте. Бүгін сізге шынымен жұмыс істейтін үш әдісті үйретемін. Білгіңіз келе ме?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomUniversal}`;
+    }
+    
+    if (lowerMessage.includes('бюджет') || lowerMessage.includes('budget')) {
+        const responses = {
+            ru: [
+                "Бюджетирование - ключ к финансовому успеху. Попробуй правило 50/30/20. Хочешь, помогу адаптировать его под твои доходы?",
+                "Вижу, ты интересуешься планированием. Могу составить персональный бюджет на месяц. Для этого нужно знать твои основные категории расходов.",
+                "Работа с бюджетом не должна быть сложной. Сегодня научу тебя простой системе, которую можно вести за 5 минут в день. Начнём?"
+            ],
+            en: [
+                "Budgeting is key to financial success. Try the 50/30/20 rule. Want me to help adapt it to your income?",
+                "I see you're interested in planning. I can create a personal monthly budget. For this, I need to know your main expense categories.",
+                "Working with a budget shouldn't be difficult. Today I'll teach you a simple system that can be maintained in 5 minutes a day. Shall we start?"
+            ],
+            kz: [
+                "Бюджеттеу - қаржылық табысқа жетудің кілті. 50/30/20 ережесін пайдаланып көріңіз. Оны сіздің табысыңызға бейімдеуге көмектесейін бе?",
+                "Жоспарлауға қызығатыныңызды көріп тұрмын. Жеке айлық бюджет құра аламын. Бұл үшін сіздің негізгі шығын санаттарыңызды білуім керек.",
+                "Бюджетпен жұмыс істеу қиын болмауы керек. Бүгін сізге күніне 5 минутта жүргізуге болатын қарапайым жүйені үйретемін. Бастайық па?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+    const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+    
+    return `${randomBase} ${randomUniversal}`;
 }
 
 // ========== ИСПРАВЛЕНИЕ КНОПОК ==========
@@ -4072,8 +4007,6 @@ function updateSettingsInterface() {
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
-// УБИРАЕМ РЕГИСТРАЦИЮ И ЛОГИН - СРАЗУ ПОКАЗЫВАЕМ ПРИЛОЖЕНИЕ
-
 function logout() {
     const confirmText = translations[currentLanguage].logoutConfirm || "Вы уверены, что хотите выйти из аккаунта?";
     
@@ -4101,12 +4034,10 @@ function logoutAndReset() {
         missionProgressInterval = null;
     }
     
-    // Создаем автоматически пользователя при выходе
     autoCreateUserAndShowApp();
 }
 
 function autoCreateUserAndShowApp() {
-    // Создаем пользователя автоматически
     const autoUser = {
         id: 'auto_user_' + Date.now().toString(),
         name: 'Гость',
@@ -4132,7 +4063,6 @@ function autoCreateUserAndShowApp() {
 }
 
 function showAppInterface() {
-    // Прячем все страницы авторизации
     const authPage = document.getElementById('authPage');
     const accountTypePage = document.getElementById('accountTypePage');
     
@@ -4143,7 +4073,6 @@ function showAppInterface() {
         accountTypePage.style.display = 'none';
     }
     
-    // Показываем основной интерфейс во весь экран
     const appHeader = document.getElementById('appHeader');
     const bottomNav = document.getElementById('bottomNav');
     
@@ -4155,24 +4084,20 @@ function showAppInterface() {
         bottomNav.style.display = 'flex';
     }
     
-    // Загружаем данные
     loadUserData();
     loadChatHistory();
     loadFamilyConnections();
     
-    // Показываем админ панель если нужно
     if (currentUser && currentUser.role === 'admin') {
         const adminButton = document.getElementById('adminButton');
         if (adminButton) adminButton.style.display = 'flex';
     }
     
-    // Инициализируем интерфейс
     initLanguage();
     updateInterfaceForAccountType();
     startMissionProgressTracking();
     checkUrlConnectionParams();
     
-    // Показываем главную страницу
     setTimeout(() => {
         showPage('dashboard');
         fixScrollIssues();
@@ -4401,7 +4326,6 @@ function updateSettingsForAccountType(accountType) {
         parentControlsItem.style.display = accountType === 'parent' ? 'block' : 'none';
     }
     
-    // Добавляем кнопку выхода
     addLogoutButtonToSettings();
 }
 
@@ -6583,30 +6507,24 @@ function downloadReport() {
     const reportContent = document.getElementById('reportContent');
     if (!reportContent) return;
     
-    // Создаем canvas для конвертации в PNG
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // Устанавливаем размеры canvas
     canvas.width = 800;
     canvas.height = 600;
     
-    // Заполняем фон
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Добавляем заголовок
     ctx.fillStyle = '#333333';
     ctx.font = 'bold 24px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(translations[currentLanguage][currentReport === 'monthly' ? 'monthlyReport' : 'detailedReport'], canvas.width/2, 50);
     
-    // Добавляем дату
     ctx.font = '16px Arial';
     const currentDate = new Date().toLocaleDateString(currentLanguage);
     ctx.fillText(currentDate, canvas.width/2, 80);
     
-    // Добавляем основные данные (упрощенная версия)
     const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
@@ -6636,13 +6554,11 @@ function downloadReport() {
                  currentLanguage === 'en' ? 'Number of records:' : 
                  'Жазбалар саны:'} ${expenses.length}`, 50, 210);
     
-    // Добавляем подпись
     ctx.fillStyle = '#999999';
     ctx.font = '12px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(`${translations[currentLanguage].appTitle} - ${currentDate}`, canvas.width/2, canvas.height - 20);
     
-    // Конвертируем canvas в PNG и скачиваем
     const link = document.createElement('a');
     link.download = `financemind_report_${new Date().toISOString().split('T')[0]}.png`;
     link.href = canvas.toDataURL('image/png');
@@ -6725,91 +6641,12 @@ function updateLanguageSettings() {
     });
 }
 
-// ========== УБИРАЕМ ЛИШНИЕ БАНКИ - ОСТАВЛЯЕМ ТОЛЬКО KASPI И HALYK ==========
-
-// Обновляем массив банков - оставляем только Kaspi и Halyk
-banks = [
-    {
-        id: 'kaspi',
-        name: 'Kaspi Bank',
-        logo: 'K',
-        color: '#00A887',
-        connected: false,
-        lastSync: null,
-        instructions: {
-            ru: `<strong>Загрузите выписку из Kaspi</strong><br>
-                 1. Откройте приложение Kaspi<br>
-                 2. Перейдите в раздел «Мой банк»<br>
-                 3. Выберите свою карту<br>
-                 4. Перейдите во вкладку «Выписка»<br>
-                 5. Выберите нужный период<br>
-                 6. Нажмите на иконку выгрузки<br>
-                 7. Выберите язык<br>
-                 8. Нажмите «Скачать PDF» и сохраните файл`,
-            en: `<strong>Upload Kaspi statement</strong><br>
-                 1. Open Kaspi app<br>
-                 2. Go to "My Bank" section<br>
-                 3. Select your card<br>
-                 4. Go to "Statement" tab<br>
-                 5. Select desired period<br>
-                 6. Click on download icon<br>
-                 7. Choose language<br>
-                 8. Click "Download PDF" and save the file`,
-            kz: `<strong>Kaspi выпискасын жүктеңіз</strong><br>
-                 1. Kaspi қолданбасын ашыңыз<br>
-                 2. «Менің банкім» бөліміне өтіңіз<br>
-                 3. Картаңызды таңдаңыз<br>
-                 4. «Выписка» қойыншасына өтіңіз<br>
-                 5. Қажетті кезеңді таңдаңыз<br>
-                 6. Жүктеу белгішесін басыңыз<br>
-                 7. Тілді таңдаңыз<br>
-                 8. «PDF жүктеу» түймесін басып, файлды сақтаңыз`
-        }
-    },
-    {
-        id: 'halyk',
-        name: 'Halyk Bank',
-        logo: 'H',
-        color: '#F6B100',
-        connected: false,
-        lastSync: null,
-        instructions: {
-            ru: `<strong>Загрузите выписку из Halyk</strong><br>
-                 1. Откройте раздел «Счета»<br>
-                 2. Выберите нужную карту или счёт<br>
-                 3. Нажмите «Выписка» внизу экрана<br>
-                 4. Выберите период (рекомендуется 3–6 месяцев)<br>
-                 5. Нажмите на иконку документа<br>
-                 6. Дождитесь формирования выписки<br>
-                 7. Сохраните файл`,
-            en: `<strong>Upload Halyk statement</strong><br>
-                 1. Open "Accounts" section<br>
-                 2. Select desired card or account<br>
-                 3. Click "Statement" at the bottom of the screen<br>
-                 4. Select period (recommended 3-6 months)<br>
-                 5. Click on document icon<br>
-                 6. Wait for statement generation<br>
-                 7. Save the file`,
-            kz: `<strong>Halyk выпискасын жүктеңіз</strong><br>
-                 1. «Шоттар» бөлімін ашыңыз<br>
-                 2. Қажетті картаны немесе шотты таңдаңыз<br>
-                 3. Экранның төменгі жағындағы «Выписка» түймесін басыңыз<br>
-                 4. Кезеңді таңдаңыз (ұсынылатын мерзім 3-6 ай)<br>
-                 5. Құжат белгішесін басыңыз<br>
-                 6. Выписка құрылғанша күтіңіз<br>
-                 7. Файлды сақтаңыз`
-        }
-    }
-];
-
 // ========== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Убираем проверку логина и сразу создаем пользователя
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const savedUser = localStorage.getItem('currentUser');
     
-    // Если нет пользователя, создаем автоматически
     if (!savedUser || isLoggedIn !== 'true') {
         autoCreateUserAndShowApp();
     } else {
@@ -6831,12 +6668,10 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('chatHistory');
-            // Создаем пользователя автоматически
             autoCreateUserAndShowApp();
         }
     }
     
-    // Инициализация других элементов
     setTimeout(() => {
         initializeFloatingLabels();
     }, 100);
@@ -6884,7 +6719,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ========== ДОПОЛНИТЕЛЬНЫЕ КОНСТАНТЫ ==========
 
-// Миссии приложения (10 рабочих миссий)
 const appMissions = [
     {
         id: 1,
@@ -7179,7 +7013,6 @@ const appMissions = [
     }
 ];
 
-// Иконки для категорий
 const categoryIcons = {
     'Еда': 'fas fa-utensils',
     'Транспорт': 'fas fa-bus',
@@ -7188,7 +7021,6 @@ const categoryIcons = {
     'Другое': 'fas fa-ellipsis-h'
 };
 
-// Цвета для категорий
 const categoryColors = {
     'Еда': '#FF6384',
     'Транспорт': '#36A2EB',
@@ -7197,7 +7029,6 @@ const categoryColors = {
     'Другое': '#4BC0C0'
 };
 
-// Иконки для миссий
 const missionIcons = {
     'engagement': 'fas fa-door-open',
     'goals': 'fas fa-bullseye',
@@ -7210,5 +7041,4 @@ const missionIcons = {
     'planning': 'fas fa-tasks',
     'achievements': 'fas fa-trophy'
 };
-
 
