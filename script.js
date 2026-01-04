@@ -2492,39 +2492,6 @@ function showPage(page) {
     }, 50);
 }
 
-// ========== ДОБАВЛЕНИЕ КНОПКИ ВЫЙТИ В НАСТРОЙКИ ==========
-
-function addLogoutButtonToSettings() {
-    const settingsPage = document.getElementById('settings');
-    if (!settingsPage) return;
-    
-    // Проверяем, есть ли уже кнопка выхода
-    let logoutButton = document.getElementById('logoutButtonContainer');
-    
-    if (!logoutButton) {
-        logoutButton = document.createElement('div');
-        logoutButton.id = 'logoutButtonContainer';
-        logoutButton.className = 'settings-section';
-        logoutButton.style.marginTop = '30px';
-        logoutButton.style.paddingTop = '20px';
-        logoutButton.style.borderTop = '1px solid var(--border)';
-        
-        logoutButton.innerHTML = `
-            <button class="btn btn-danger" onclick="logout()" style="width: 100%;">
-                <i class="fas fa-sign-out-alt"></i> ${translations[currentLanguage].logout}
-            </button>
-            <p style="text-align: center; margin-top: 10px; color: var(--text-light); font-size: 14px;">
-                ${currentLanguage === 'ru' ? 'Выйти из текущего аккаунта' :
-                 currentLanguage === 'en' ? 'Log out from current account' :
-                 'Ағымдағы аккаунтан шығу'}
-            </p>
-        `;
-        
-        // Добавляем кнопку в конец настроек
-        settingsPage.appendChild(logoutButton);
-    }
-}
-
 // ========== ИСПРАВЛЕНИЕ КНОПОК УПРАВЛЕНИЯ АККАУНТОМ ==========
 
 function fixAccountManagementButtons() {
@@ -2560,6 +2527,278 @@ function fixAccountManagementButtons() {
         languageThemeBtn.removeAttribute('onclick');
         languageThemeBtn.addEventListener('click', () => openLanguageThemeSection());
     }
+}
+
+// ========== ДОБАВЛЕНИЕ КНОПКИ ВЫЙТИ В НАСТРОЙКИ ==========
+
+function addLogoutButtonToSettings() {
+    const settingsPage = document.getElementById('settings');
+    if (!settingsPage) return;
+    
+    // Проверяем, есть ли уже кнопка выхода
+    let logoutButton = document.getElementById('logoutButtonContainer');
+    
+    if (!logoutButton) {
+        logoutButton = document.createElement('div');
+        logoutButton.id = 'logoutButtonContainer';
+        logoutButton.className = 'settings-section';
+        logoutButton.style.marginTop = '30px';
+        logoutButton.style.paddingTop = '20px';
+        logoutButton.style.borderTop = '1px solid var(--border)';
+        
+        logoutButton.innerHTML = `
+            <button class="btn btn-danger" onclick="logout()" style="width: 100%;">
+                <i class="fas fa-sign-out-alt"></i> ${translations[currentLanguage].logout}
+            </button>
+            <p style="text-align: center; margin-top: 10px; color: var(--text-light); font-size: 14px;">
+                ${currentLanguage === 'ru' ? 'Выйти из текущего аккаунта' :
+                 currentLanguage === 'en' ? 'Log out from current account' :
+                 'Ағымдағы аккаунтан шығу'}
+            </p>
+        `;
+        
+        // Добавляем кнопку в конец настроек
+        settingsPage.appendChild(logoutButton);
+    }
+}
+
+// ========== ОБНОВЛЕННЫЙ AI ПОМОЩНИК С ПРОМПТОМ ==========
+
+function getAIResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    // Базовые ответы из промпта
+    const baseResponses = {
+        ru: [
+            "Сегодня можем разобрать траты, поставить цель или просто сэкономить немного денег.",
+            "В этот раз я научу тебя простому и понятному управлению деньгами.",
+            "Хочешь попробовать челлендж — сэкономить 5 000 ₸ за 3 дня?",
+            "Сегодня могу дать тебе финансовый совет дня — это займёт меньше минуты.",
+            "Давай начнём с малого: посмотрим, куда уходят твои деньги.",
+            "Могу помочь составить план расходов на ближайшие 3 дня.",
+            "Сегодня научу тебя откладывать деньги так, чтобы это было незаметно.",
+            "Если не знаешь, что спросить — я предложу полезную тему сам."
+        ],
+        en: [
+            "Today we can analyze expenses, set a goal, or just save some money.",
+            "This time I'll teach you simple and understandable money management.",
+            "Want to try a challenge - save 5,000 ₸ in 3 days?",
+            "Today I can give you a financial tip of the day - it will take less than a minute.",
+            "Let's start small: let's see where your money goes.",
+            "I can help create a spending plan for the next 3 days.",
+            "Today I'll teach you how to save money so it's unnoticeable.",
+            "If you don't know what to ask - I'll suggest a useful topic myself."
+        ],
+        kz: [
+            "Бүгін шығындарды талдай аламыз, мақсат қоя аламыз немесе жай ғана ақша үнемдей аламыз.",
+            "Осы жолы мен сізге қарапайым және түсінікті ақшаны басқаруды үйретемін.",
+            "Сынақты байқап көргіңіз келе ме — 3 күнде 5 000 ₸ үнемдеу?",
+            "Бүгін сізге күннің қаржылық кеңесін бере аламын — бұл бір минуттан аз уақыт алады.",
+            "Кішкене нәрседен бастайық: ақшаңыз қайда кететінін қарайық.",
+            "Келесі 3 күнге шығындар жоспарын құруға көмектесе аламын.",
+            "Бүгін сізге ақшаны байқалмайтындай етіп үнемдеуді үйретемін.",
+            "Егер не сұрау керектігін білмесеңіз — мен пайдалы тақырыпты өзім ұсынамын."
+        ]
+    };
+    
+    // Универсальные фразы из промпта
+    const universalPhrases = {
+        ru: [
+            "Хочешь, я дам тебе 5 финансовых советов на сегодня?",
+            "Опиши свою ситуацию, и я подскажу решение.",
+            "Хочешь быстрый совет или подробный разбор?",
+            "Могу предложить несколько вариантов, а ты выберешь.",
+            "Я объясню это простыми словами и на примере."
+        ],
+        en: [
+            "Want me to give you 5 financial tips for today?",
+            "Describe your situation and I'll suggest a solution.",
+            "Want a quick tip or detailed analysis?",
+            "I can suggest several options, and you choose.",
+            "I'll explain it in simple words and with examples."
+        ],
+        kz: [
+            "Бүгін сізге 5 қаржылық кеңес бергім келе ме?",
+            "Жағдайыңызды сипаттаңыз, мен шешімді ұсынамын.",
+            "Жылдам кеңес немесе егжей-тегжейлі талдау керек пе?",
+            "Бірнеше нұсқаны ұсына аламын, ал сіз таңдайсыз.",
+            "Мен оны қарапайым сөздермен және мысалдармен түсіндіремін."
+        ]
+    };
+    
+    // Ответы на конкретные вопросы из промпта
+    if (lowerMessage.includes('что будем делать') || lowerMessage.includes('what shall we do') || lowerMessage.includes('не істейік')) {
+        const responses = {
+            ru: [
+                "Давай проверим твои последние расходы и найдём, где можно сэкономить. Могу составить план на неделю или помочь с целями.",
+                "Сегодня можем проанализировать твои траты за месяц. Хочешь, покажу самые крупные расходы и дам советы по оптимизации?",
+                "Предлагаю начать с постановки финансовой цели. О чём ты мечтаешь? Помогу разбить на шаги и рассчитать сроки."
+            ],
+            en: [
+                "Let's check your recent expenses and find where you can save. I can create a weekly plan or help with goals.",
+                "Today we can analyze your monthly spending. Want me to show the biggest expenses and give optimization tips?",
+                "I suggest starting with setting a financial goal. What are you dreaming about? I'll help break it down into steps and calculate timelines."
+            ],
+            kz: [
+                "Соңғы шығындарыңызды тексеріп, үнемдеуге болатын жерлерді табайық. Апталық жоспар құра аламын немесе мақсаттарға көмектесе аламын.",
+                "Бүгін айлық шығындарыңызды талдай аламыз. Ең үлкен шығындарды көрсетіп, оңтайландыру бойынша кеңестер бергім келе ме?",
+                "Қаржылық мақсатты белгілеуден бастауды ұсынамын. Сіз не туралы армандайсыз? Оны қадамдарға бөлуге және мерзімдерді есептеуге көмектесемін."
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomUniversal}`;
+    }
+    
+    if (lowerMessage.includes('чему ты меня научишь') || lowerMessage.includes('what will you teach me') || lowerMessage.includes('маған не үйретесің')) {
+        const responses = {
+            ru: [
+                "Научу основам бюджетирования и помогу наладить контроль над финансами. Начнём с анализа текущих расходов?",
+                "Покажу, как ставить реальные финансовые цели и достигать их. Хочешь попробовать создать первую цель прямо сейчас?",
+                "Расскажу про разные методы экономии и помогу выбрать подходящий именно тебе. Давай обсудим твои привычки в тратах."
+            ],
+            en: [
+                "I'll teach you the basics of budgeting and help you gain control over your finances. Let's start with analyzing current expenses?",
+                "I'll show you how to set realistic financial goals and achieve them. Want to try creating your first goal right now?",
+                "I'll tell you about different saving methods and help you choose the one that suits you. Let's discuss your spending habits."
+            ],
+            kz: [
+                "Бюджеттеудің негіздерін үйретемін және қаржыларды бақылауға көмектесемін. Ағымдағы шығындарды талдаудан бастайық?",
+                "Реалистік қаржылық мақсаттарды қалай белгілеуге және оларға қалай жетуге болатынын көрсетемін. Дәл қазір бірінші мақсатыңызды құруға тырысқыңыз келе ме?",
+                "Әртүрлі үнемдеу әдістері туралы айтып, сізге лайықтысын таңдауға көмектесемін. Шығындар әдеттеріңізді талқылайық."
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    if (lowerMessage.includes('как сэкономить 5000') || lowerMessage.includes('how to save 5000') || lowerMessage.includes('5000 үнемдеу')) {
+        const response = {
+            ru: "Мы временно сократим мелкие траты: еду вне дома, спонтанные покупки и ненужные подписки. Хочешь, я составлю простой план на 3 дня или дам быстрый чек-лист?",
+            en: "We'll temporarily reduce small expenses: eating out, spontaneous purchases, and unnecessary subscriptions. Want me to create a simple 3-day plan or give a quick checklist?",
+            kz: "Біз уақытша кішкентай шығындарды азайтамыз: үйден тыс тамақтану, импульстік сатып алулар және қажетсіз жазылымдар. 3 күндік қарапайым жоспар құрайын ба, әлде жылдам тексеру тізімін берейін бе?"
+        };
+        
+        return response[currentLanguage];
+    }
+    
+    // Приветственные сообщения
+    if (lowerMessage.includes('привет') || lowerMessage.includes('hello') || lowerMessage.includes('hi') || 
+        lowerMessage.includes('сәлем') || lowerMessage.includes('салем') || lowerMessage.includes('здравствуй')) {
+        const greetings = {
+            ru: [
+                "Привет! Рад тебя видеть. Сегодня можем разобрать траты или поставить новую финансовую цель. С чего начнём?",
+                "Здравствуй! Готов помочь с финансами. Хочешь быстрый совет или планируем что-то серьёзное?",
+                "Приветствую! Вижу, ты зашёл проверить свои финансы. Давай сделаем это продуктивно - что тебя беспокоит?"
+            ],
+            en: [
+                "Hello! Glad to see you. Today we can analyze expenses or set a new financial goal. Where shall we start?",
+                "Hi! Ready to help with finances. Want a quick tip or planning something serious?",
+                "Welcome! I see you've come to check your finances. Let's make it productive - what's bothering you?"
+            ],
+            kz: [
+                "Сәлем! Сені көргеніме қуаныштымын. Бүгін шығындарды талдай аламыз немесе жаңа қаржылық мақсат қоя аламыз. Қайдан бастайық?",
+                "Сәлеметсіз бе! Қаржыларыңызға көмектесуге дайынмын. Жылдам кеңес керек пе, әлде бір нәрсені жоспарлайсыз ба?",
+                "Қош келдіңіз! Қаржыларыңызды тексеруге келгеніңізді көріп тұрмын. Оны өнімді етейік - сізді не мазалайды?"
+            ]
+        };
+        
+        const randomGreeting = greetings[currentLanguage][Math.floor(Math.random() * greetings[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomGreeting} ${randomUniversal}`;
+    }
+    
+    // Вопросы о расходах
+    if (lowerMessage.includes('расход') || lowerMessage.includes('expense') || lowerMessage.includes('трат') || 
+        lowerMessage.includes('шығын') || lowerMessage.includes('қанша жұмсадым')) {
+        const responses = {
+            ru: [
+                "Чтобы добавить расход, перейдите в раздел 'Аналитика' и нажмите 'Добавить расход'. Но давай сначала посмотрим твою статистику - есть интересные закономерности.",
+                "Я вижу твои последние траты. Хочешь, покажу категории, где можно сэкономить? Или лучше составим план на следующую неделю?",
+                "Работа с расходами - основа финансового контроля. Сегодня могу дать тебе 3 простых советы по оптимизации трат. Интересно?"
+            ],
+            en: [
+                "To add an expense, go to the 'Analytics' section and click 'Add Expense'. But let's first look at your statistics - there are interesting patterns.",
+                "I see your recent expenses. Want me to show categories where you can save? Or better create a plan for next week?",
+                "Working with expenses is the basis of financial control. Today I can give you 3 simple tips for optimizing spending. Interested?"
+            ],
+            kz: [
+                "Шығын қосу үшін 'Аналитика' бөліміне өтіп, 'Шығын қосу' түймесін басыңыз. Бірақ алдымен статистикаңызды қарайық - қызықты заңдылықтар бар.",
+                "Соңғы шығындарыңызды көріп тұрмын. Үнемдеуге болатын санаттарды көрсетейін бе? Немесе келесі аптаға жоспар құрайық?",
+                "Шығындармен жұмыс істеу - қаржылық бақылаудың негізі. Бүгін сізге шығындарды оңтайландыру бойынша 3 қарапайым кеңес бере аламын. Қызықты ма?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    // Вопросы о накоплениях
+    if (lowerMessage.includes('накоп') || lowerMessage.includes('save') || lowerMessage.includes('экономи') || 
+        lowerMessage.includes('жинақ') || lowerMessage.includes('үнемдеу')) {
+        const responses = {
+            ru: [
+                "Для накоплений рекомендую установить финансовые цели. Но давай начнём с малого - попробуй откладывать 10% от любой суммы, которую получаешь. Работает безотказно!",
+                "Вижу, у тебя уже есть цели. Хочешь, оптимизируем их или поставим новую? Могу показать, как быстрее достичь желаемого.",
+                "Секрет накоплений - в регулярности. Сегодня научу тебя трём методикам, которые действительно работают. Готов узнать?"
+            ],
+            en: [
+                "For savings, I recommend setting financial goals. But let's start small - try saving 10% of any amount you receive. Works flawlessly!",
+                "I see you already have goals. Want to optimize them or set a new one? I can show you how to achieve what you want faster.",
+                "The secret of savings is regularity. Today I'll teach you three methods that really work. Ready to learn?"
+            ],
+            kz: [
+                "Жинақтар үшін қаржылық мақсаттарды белгілеуді ұсынамын. Бірақ кішкене нәрседен бастайық - алатын кез келген соманың 10% үнемдеуге тырысыңыз. Жақсы жұмыс істейді!",
+                "Сізде мақсаттар бар екенін көріп тұрмын. Оларды оңтайландырайық ба, әлде жаңасын белгілейік бе? Қалаған нәрсеңізге тезірек қалай жетуге болатынын көрсете аламын.",
+                "Жинақтардың құпиясы - үнемділікте. Бүгін сізге шынымен жұмыс істейтін үш әдісті үйретемін. Білгіңіз келе ме?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomUniversal}`;
+    }
+    
+    // Вопросы о бюджете
+    if (lowerMessage.includes('бюджет') || lowerMessage.includes('budget')) {
+        const responses = {
+            ru: [
+                "Бюджетирование - ключ к финансовому успеху. Попробуй правило 50/30/20. Хочешь, помогу адаптировать его под твои доходы?",
+                "Вижу, ты интересуешься планированием. Могу составить персональный бюджет на месяц. Для этого нужно знать твои основные категории расходов.",
+                "Работа с бюджетом не должна быть сложной. Сегодня научу тебя простой системе, которую можно вести за 5 минут в день. Начнём?"
+            ],
+            en: [
+                "Budgeting is key to financial success. Try the 50/30/20 rule. Want me to help adapt it to your income?",
+                "I see you're interested in planning. I can create a personal monthly budget. For this, I need to know your main expense categories.",
+                "Working with a budget shouldn't be difficult. Today I'll teach you a simple system that can be maintained in 5 minutes a day. Shall we start?"
+            ],
+            kz: [
+                "Бюджеттеу - қаржылық табысқа жетудің кілті. 50/30/20 ережесін пайдаланып көріңіз. Оны сіздің табысыңызға бейімдеуге көмектесейін бе?",
+                "Жоспарлауға қызығатыныңызды көріп тұрмын. Жеке айлық бюджет құра аламын. Бұл үшін сіздің негізгі шығын санаттарыңызды білуім керек.",
+                "Бюджетпен жұмыс істеу қиын болмауы керек. Бүгін сізге күніне 5 минутта жүргізуге болатын қарапайым жүйені үйретемін. Бастайық па?"
+            ]
+        };
+        
+        const randomResponse = responses[currentLanguage][Math.floor(Math.random() * responses[currentLanguage].length)];
+        const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+        
+        return `${randomResponse} ${randomBase}`;
+    }
+    
+    // Если вопрос не распознан - используем комбинацию из промпта
+    const randomBase = baseResponses[currentLanguage][Math.floor(Math.random() * baseResponses[currentLanguage].length)];
+    const randomUniversal = universalPhrases[currentLanguage][Math.floor(Math.random() * universalPhrases[currentLanguage].length)];
+    
+    return `${randomBase} ${randomUniversal}`;
 }
 
 // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ==========
@@ -2778,6 +3017,432 @@ function saveSecuritySettings() {
     
     closeModal('securityModal');
 }
+
+// ========== ОБНОВЛЕННЫЕ ФУНКЦИИ ДЛЯ КНОПОК ЛИЧНОГО КАБИНЕТА ==========
+
+function handleSettingsClick(section) {
+    console.log('Opening section:', section);
+    
+    switch(section) {
+        case 'personalData':
+            openPersonalDataSection();
+            break;
+        case 'security':
+            openSecuritySection();
+            break;
+        case 'languageTheme':
+            openLanguageThemeSection();
+            break;
+        case 'teenAccounts':
+            openTeenAccountsSection();
+            break;
+        case 'familyConnections':
+            openFamilyConnectionsSection();
+            break;
+        default:
+            console.log('Unknown section:', section);
+    }
+}
+
+function openPersonalDataSection() {
+    // Создаем или показываем модальное окно для персональных данных
+    const modalId = 'personalDataModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].personalDataTitle}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="form-group">
+                        <label>${translations[currentLanguage].nameLabel}</label>
+                        <input type="text" id="editName" class="form-input" 
+                               value="${currentUser?.name || ''}" 
+                               placeholder="${translations[currentLanguage].namePlaceholder}">
+                    </div>
+                    <div class="form-group">
+                        <label>${translations[currentLanguage].lastNameLabel}</label>
+                        <input type="text" id="editLastName" class="form-input" 
+                               value="${currentUser?.lastName || ''}" 
+                               placeholder="${translations[currentLanguage].lastNamePlaceholder}">
+                    </div>
+                    <div class="form-group">
+                        <label>${translations[currentLanguage].emailLabel}</label>
+                        <input type="email" id="editEmail" class="form-input" 
+                               value="${currentUser?.email || ''}" 
+                               placeholder="${translations[currentLanguage].emailPlaceholder}">
+                    </div>
+                    <div class="form-group">
+                        <label>${translations[currentLanguage].accountTypeTeen}</label>
+                        <div class="account-type-display">
+                            <span class="user-role-badge ${currentUser?.accountType || 'adult'}">
+                                ${getAccountTypeDisplayName(currentUser?.accountType || 'adult')}
+                            </span>
+                            <small style="color: var(--text-light); margin-top: 5px; display: block;">
+                                ${currentLanguage === 'ru' ? 'Тип аккаунта можно изменить при регистрации' :
+                                 currentLanguage === 'en' ? 'Account type can be changed during registration' :
+                                 'Аккаунт түрін тіркелу кезінде өзгертуге болады'}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-primary" onclick="savePersonalData()" style="width: 100%;">
+                        <i class="fas fa-save"></i> ${translations[currentLanguage].saveChanges}
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Показываем уведомление
+    showNotification(translations[currentLanguage].personalDataDesc, 'info');
+}
+
+function openSecuritySection() {
+    // Создаем или показываем модальное окно для безопасности
+    const modalId = 'securityModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].securityTitle}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="security-section">
+                        <div class="security-item">
+                            <div class="security-info">
+                                <i class="fas fa-key" style="color: var(--primary);"></i>
+                                <div>
+                                    <h4>${translations[currentLanguage].password}</h4>
+                                    <p>${translations[currentLanguage].lastChanged}</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" onclick="changePassword()">
+                                ${translations[currentLanguage].changePassword}
+                            </button>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <i class="fas fa-sign-in-alt" style="color: var(--primary);"></i>
+                                <div>
+                                    <h4>${translations[currentLanguage].loginMethods}</h4>
+                                    <p>${translations[currentLanguage].emailPassword}</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge active">${translations[currentLanguage].active}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <i class="fas fa-fingerprint" style="color: var(--primary);"></i>
+                                <div>
+                                    <h4>${translations[currentLanguage].biometricLogin}</h4>
+                                    <p>${currentLanguage === 'ru' ? 'Используйте отпечаток пальца или Face ID' :
+                                       currentLanguage === 'en' ? 'Use fingerprint or Face ID' :
+                                       'Саусақ ізі немесе Face ID пайдаланыңыз'}</p>
+                                </div>
+                            </div>
+                            <div class="security-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="biometricToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <i class="fas fa-shield-alt" style="color: var(--primary);"></i>
+                                <div>
+                                    <h4>${translations[currentLanguage].twoFactorAuth}</h4>
+                                    <p>${currentLanguage === 'ru' ? 'Дополнительная защита аккаунта' :
+                                       currentLanguage === 'en' ? 'Additional account protection' :
+                                       'Аккаунтты қосымша қорғау'}</p>
+                                </div>
+                            </div>
+                            <div class="security-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="twoFactorToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()" style="width: 100%;">
+                        <i class="fas fa-save"></i> ${translations[currentLanguage].saveChanges}
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Показываем уведомление
+    showNotification(translations[currentLanguage].securitySettingsDesc, 'info');
+}
+
+function openTeenAccountsSection() {
+    // Проверяем, что пользователь - родитель
+    if (!currentUser || currentUser.accountType !== 'parent') {
+        showNotification(
+            currentLanguage === 'ru' ? 'Эта функция доступна только для родительских аккаунтов' :
+            currentLanguage === 'en' ? 'This feature is only available for parent accounts' :
+            'Бұл функция тек ата-ана аккаунттары үшін қолжетімді',
+            'error'
+        );
+        return;
+    }
+    
+    // Создаем или показываем модальное окно для управления подростковыми аккаунтами
+    const modalId = 'teenAccountsModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].teenAccountsTitle}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="teen-accounts-header">
+                        <button class="btn btn-primary" onclick="addTeenAccount()">
+                            <i class="fas fa-plus"></i> ${translations[currentLanguage].addTeenAccount}
+                        </button>
+                    </div>
+                    
+                    <div class="teen-accounts-list" id="teenAccountsList">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>${currentLanguage === 'ru' ? 'Подключенных подростковых аккаунтов пока нет' :
+                               currentLanguage === 'en' ? 'No connected teen accounts yet' :
+                               'Қосылған жастар аккаунттары әлі жоқ'}</p>
+                            <small>${currentLanguage === 'ru' ? 'Нажмите "Добавить подростковый аккаунт" для подключения' :
+                                   currentLanguage === 'en' ? 'Click "Add Teen Account" to connect' :
+                                   'Қосу үшін "Жастар аккаунтын қосу" түймесін басыңыз'}</small>
+                        </div>
+                    </div>
+                    
+                    <div class="teen-accounts-info">
+                        <h4><i class="fas fa-info-circle"></i> ${currentLanguage === 'ru' ? 'Как это работает' :
+                                                                 currentLanguage === 'en' ? 'How it works' :
+                                                                 'Бұл қалай жұмыс істейді'}</h4>
+                        <ul>
+                            <li>${currentLanguage === 'ru' ? 'Подключайте аккаунты своих детей для контроля расходов' :
+                                currentLanguage === 'en' ? 'Connect your children\'s accounts to monitor their spending' :
+                                'Балаларыңыздың шығындарын бақылау үшін олардың аккаунттарын қосыңыз'}</li>
+                            <li>${currentLanguage === 'ru' ? 'Устанавливайте лимиты расходов по категориям' :
+                                currentLanguage === 'en' ? 'Set spending limits by category' :
+                                'Санаттар бойынша шығындар шектерін орнатыңыз'}</li>
+                            <li>${currentLanguage === 'ru' ? 'Получайте уведомления о крупных тратах' :
+                                currentLanguage === 'en' ? 'Receive notifications about large expenses' :
+                                'Үлкен шығындар туралы хабарламалар алыңыз'}</li>
+                            <li>${currentLanguage === 'ru' ? 'Отслеживайте прогресс в выполнении миссий' :
+                                currentLanguage === 'en' ? 'Track mission completion progress' :
+                                'Миссияларды орындау прогресін бақылаңыз'}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Загружаем список подростковых аккаунтов
+    loadTeenAccountsList();
+    
+    // Показываем уведомление
+    showNotification(translations[currentLanguage].manageTeenAccounts, 'info');
+}
+
+function openFamilyConnectionsSection() {
+    // Создаем или показываем модальное окно для семейных подключений
+    const modalId = 'familyConnectionsModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].familyConnectionsTitle}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="family-connections-container">
+                        <div class="connection-type-section">
+                            <h4><i class="fas fa-user-shield"></i> ${currentLanguage === 'ru' ? 'Вы - родитель' :
+                                                                   currentLanguage === 'en' ? 'You are a parent' :
+                                                                   'Сіз - ата-анасыз'}</h4>
+                            <div class="connection-actions">
+                                <button class="btn btn-primary" onclick="generateParentLink()">
+                                    <i class="fas fa-link"></i> ${translations[currentLanguage].generateLink}
+                                </button>
+                                <p class="help-text">
+                                    ${currentLanguage === 'ru' ? 'Сгенерируйте ссылку для подключения ребенка' :
+                                     currentLanguage === 'en' ? 'Generate a link to connect your child' :
+                                     'Балаңызды қосу үшін сілтеме жасаңыз'}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="connection-type-section">
+                            <h4><i class="fas fa-child"></i> ${currentLanguage === 'ru' ? 'Вы - ребенок' :
+                                                             currentLanguage === 'en' ? 'You are a child' :
+                                                             'Сіз - баласыз'}</h4>
+                            <div class="connection-actions">
+                                <div class="form-group">
+                                    <label>${currentLanguage === 'ru' ? 'Код подключения от родителя' :
+                                           currentLanguage === 'en' ? 'Connection code from parent' :
+                                           'Ата-анадан қосылым коды'}</label>
+                                    <input type="text" id="parentConnectionCode" class="form-input" 
+                                           placeholder="${currentLanguage === 'ru' ? 'Введите код...' :
+                                                       currentLanguage === 'en' ? 'Enter code...' :
+                                                       'Кодты енгізіңіз...'}">
+                                </div>
+                                <button class="btn btn-primary" onclick="connectToParentFromCode()">
+                                    <i class="fas fa-user-plus"></i> ${translations[currentLanguage].connectChild}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="current-connections" id="currentConnections">
+                            <h4><i class="fas fa-network-wired"></i> ${translations[currentLanguage].familyConnections}</h4>
+                            <div class="empty-state">
+                                <i class="fas fa-unlink"></i>
+                                <p>${translations[currentLanguage].noConnections}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Загружаем текущие подключения
+    loadCurrentConnections();
+    
+    // Показываем уведомление
+    showNotification(translations[currentLanguage].familyConnections, 'info');
+}
+
+function openLanguageThemeSection() {
+    // Создаем или показываем модальное окно для языка и темы
+    const modalId = 'languageThemeModal';
+    let modal = document.getElementById(modalId);
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>${translations[currentLanguage].languageSettingsTitle}</h3>
+                    <button class="modal-close" onclick="closeModal('${modalId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="language-section">
+                        <h4>${translations[currentLanguage].currentLanguage}</h4>
+                        <div class="language-buttons">
+                            <button class="lang-btn ${currentLanguage === 'ru' ? 'active' : ''}" 
+                                    data-lang="ru" onclick="changeLanguage('ru')">
+                                ${translations[currentLanguage].languageRussianBtn}
+                            </button>
+                            <button class="lang-btn ${currentLanguage === 'kz' ? 'active' : ''}" 
+                                    data-lang="kz" onclick="changeLanguage('kz')">
+                                ${translations[currentLanguage].languageKazakhBtn}
+                            </button>
+                            <button class="lang-btn ${currentLanguage === 'en' ? 'active' : ''}" 
+                                    data-lang="en" onclick="changeLanguage('en')">
+                                ${translations[currentLanguage].languageEnglishBtn}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-section" style="margin-top: 30px;">
+                        <h4>${translations[currentLanguage].theme}</h4>
+                        <div class="theme-buttons">
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'light' ? 'active' : ''}" 
+                                    onclick="changeTheme('light')">
+                                <i class="fas fa-sun"></i> ${translations[currentLanguage].themeLight}
+                            </button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'dark' ? 'active' : ''}" 
+                                    onclick="changeTheme('dark')">
+                                <i class="fas fa-moon"></i> ${translations[currentLanguage].themeDark}
+                            </button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'auto' ? 'active' : ''}" 
+                                    onclick="changeTheme('auto')">
+                                <i class="fas fa-adjust"></i> ${translations[currentLanguage].themeAuto}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-primary" onclick="closeModal('${modalId}')" style="width: 100%;">
+                        ${translations[currentLanguage].closeReport}
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    modal.style.display = 'flex';
+    fadeInElement(modal);
+    
+    // Показываем уведомление
+    showNotification(translations[currentLanguage].languageSettingsTitle, 'info');
+}
+
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ МОДАЛЬНЫХ ОКОН ==========
 
 function loadTeenAccountsList() {
     const teenAccountsList = document.getElementById('teenAccountsList');
@@ -3194,173 +3859,220 @@ function disconnectAccount(connectionType) {
     }
 }
 
-// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+// ========== ИСПРАВЛЕНИЕ КНОПОК ==========
 
-function showLoginForm() {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
+function fixButtonSizes() {
+    const primaryButtons = document.querySelectorAll('.btn-primary, .btn-outline, .mission-complete-btn, .buy-btn, .earn-btn, .store-btn');
+    primaryButtons.forEach(btn => {
+        if (!btn.classList.contains('btn-icon') && !btn.classList.contains('small')) {
+            btn.style.height = '48px';
+            btn.style.padding = '12px 20px';
+            btn.style.fontSize = '16px';
+            btn.style.borderRadius = '14px';
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.style.width = 'auto';
+            btn.style.minWidth = '0';
+        }
+    });
     
-    if (!loginForm || !registerForm) {
-        console.error('Формы логина или регистрации не найдены');
-        return;
-    }
+    const settingsButtons = document.querySelectorAll('.settings-item, .security-item, .category-btn, .language-btn, .theme-btn, .chart-filter-btn, .chart-type-btn');
+    settingsButtons.forEach(btn => {
+        btn.style.height = '56px';
+        btn.style.padding = '16px';
+        btn.style.fontSize = '16px';
+        btn.style.display = 'flex';
+        btn.style.alignItems = 'center';
+        btn.style.marginBottom = '8px';
+        btn.style.borderRadius = '12px';
+        btn.style.width = '100%';
+    });
     
-    registerForm.style.display = 'none';
-    loginForm.style.display = 'block';
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.style.padding = '12px';
+        item.style.height = 'auto';
+        item.style.minHeight = 'auto';
+    });
     
-    const emailField = document.getElementById('email');
-    const passwordField = document.getElementById('password');
-    if (emailField) emailField.value = '';
-    if (passwordField) passwordField.value = '';
+    const cardButtons = document.querySelectorAll('.goal-delete-btn, .btn-danger, .share-btn');
+    cardButtons.forEach(btn => {
+        btn.style.height = '44px';
+        btn.style.padding = '10px 16px';
+        btn.style.fontSize = '14px';
+    });
     
-    clearFormErrors();
-    
-    fadeInElement(loginForm);
-}
-
-function showRegisterForm() {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    
-    if (!loginForm || !registerForm) {
-        console.error('Формы логина или регистрации не найдены');
-        return;
-    }
-    
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-    
-    const regName = document.getElementById('regName');
-    const regLastName = document.getElementById('regLastName');
-    const regEmail = document.getElementById('regEmail');
-    const regPassword = document.getElementById('regPassword');
-    
-    if (regName) regName.value = '';
-    if (regLastName) regLastName.value = '';
-    if (regEmail) regEmail.value = '';
-    if (regPassword) regPassword.value = '';
-    
-    clearFormErrors();
-    
-    setTimeout(() => {
-        initializeFloatingLabels();
-    }, 50);
-    
-    updateRegisterButtonState();
-    
-    fadeInElement(registerForm);
-}
-
-function fadeInElement(element) {
-    element.style.opacity = '0';
-    element.style.transition = 'opacity 0.15s ease';
-    
-    setTimeout(() => {
-        element.style.opacity = '1';
-    }, 10);
-}
-
-function clearFormErrors() {
-    const errorElements = document.querySelectorAll('.error-message');
-    errorElements.forEach(el => el.remove());
-    
-    const inputFields = document.querySelectorAll('.form-input');
-    inputFields.forEach(field => {
-        field.classList.remove('error');
+    const iconButtons = document.querySelectorAll('.btn-icon, .header-icon, .chat-send-btn');
+    iconButtons.forEach(btn => {
+        btn.style.width = '44px';
+        btn.style.height = '44px';
+        btn.style.display = 'flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.flexShrink = '0';
     });
 }
 
-function updateRegisterButtonState() {
-    const regName = document.getElementById('regName');
-    const regEmail = document.getElementById('regEmail');
-    const regPassword = document.getElementById('regPassword');
-    const registerBtn = document.querySelector('#registerForm .register-btn');
+function updateActiveNavigation(page) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
     
-    if (!regName || !regEmail || !regPassword || !registerBtn) return;
-    
-    const isFormValid = regName.value.trim() && 
-                       regEmail.value.trim() && 
-                       regPassword.value.length >= 6 &&
-                       selectedAccountType !== null;
-    
-    if (isFormValid) {
-        registerBtn.disabled = false;
-        registerBtn.style.opacity = '1';
-        registerBtn.style.cursor = 'pointer';
-    } else {
-        registerBtn.disabled = true;
-        registerBtn.style.opacity = '0.7';
-        registerBtn.style.cursor = 'not-allowed';
+    const activeNavItem = document.querySelector(`.nav-item[onclick*="${page}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
     }
 }
 
-function togglePasswordVisibility(fieldId) {
-    const passwordField = document.getElementById(fieldId);
-    if (!passwordField) return;
-    
-    const toggleButton = passwordField.parentElement.querySelector('.toggle-password');
-    
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        if (toggleButton) {
-            toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
-            toggleButton.classList.add('active');
-        }
-    } else {
-        passwordField.type = 'password';
-        if (toggleButton) {
-            toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-            toggleButton.classList.remove('active');
-        }
+function updatePageContent(page) {
+    switch(page) {
+        case 'dashboard': updateDashboard(); break;
+        case 'analytics': updateAnalytics(); break;
+        case 'missions': updateMissions(); break;
+        case 'store': updateStore(); break;
+        case 'settings': updateSettings(); break;
+        case 'chat': updateChat(); break;
+        case 'adminPanel': updateAdminPanel(); break;
     }
 }
 
-function resetAllData() {
-    const confirmText = currentLanguage === 'ru' ? 'Вы уверены, что хотите сбросить все данные? Это удалит все ваши настройки, расходы и цели.' :
-                      currentLanguage === 'en' ? 'Are you sure you want to reset all data? This will delete all your settings, expenses and goals.' :
-                      'Барлық деректерді қалпына келтіруді сенімдісіз бе? Бұл сіздің барлық баптауларыңызды, шығындарыңызды және мақсаттарыңызды жояды.';
+function updateDashboard() {
+    loadUserData();
+    updateUserInterface();
+    updateExpenseStats();
+    renderGoals();
+    updateAIAdvice();
+    updateActiveMissionDisplay();
+}
+
+function updateAnalytics() {
+    updateExpenseStats();
+    updateCharts();
+    updateExpenseList();
     
-    if (confirm(confirmText)) {
-        localStorage.clear();
+    if (expenses.length > 0) {
+        const emptyLineChart = document.getElementById('emptyLineChart');
+        const emptyPieChart = document.getElementById('emptyPieChart');
         
-        const emailField = document.getElementById('email');
-        const passwordField = document.getElementById('password');
-        const regName = document.getElementById('regName');
-        const regLastName = document.getElementById('regLastName');
-        const regEmail = document.getElementById('regEmail');
-        const regPassword = document.getElementById('regPassword');
-        
-        if (emailField) emailField.value = '';
-        if (passwordField) passwordField.value = '';
-        if (regName) regName.value = '';
-        if (regLastName) regLastName.value = '';
-        if (regEmail) regEmail.value = '';
-        if (regPassword) regPassword.value = '';
-        
-        currentUser = null;
-        expenses = [];
-        goals = [];
-        fincoins = 20;
-        missions = [];
-        purchasedItems = [];
-        selectedCategory = null;
-        activeMission = null;
-        chatHistory = [];
-        selectedAccountType = null;
-        familyConnections = [];
-        
-        const successText = currentLanguage === 'ru' ? 'Все данные сброшены! Теперь вы можете зарегистрироваться заново.' :
-                          currentLanguage === 'en' ? 'All data has been reset! You can now register again.' :
-                          'Барлық деректер қалпына келтірілді! Енді қайта тіркеле аласыз.';
-        
-        showNotification(successText, 'success');
-        showAccountTypeSelection();
-        
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
+        if (emptyLineChart) emptyLineChart.style.display = 'none';
+        if (emptyPieChart) emptyPieChart.style.display = 'none';
     }
 }
+
+function updateMissions() {
+    renderMissions();
+    updateFincoinsBalance();
+    updateActiveMissionDisplay();
+}
+
+function updateStore() {
+    updateFincoinsBalance();
+}
+
+function updateSettings() {
+    if (currentUser) {
+        const profileNameInput = document.getElementById('profileNameInput');
+        const profileLastNameInput = document.getElementById('profileLastNameInput');
+        const profileEmailInput = document.getElementById('profileEmailInput');
+        
+        if (profileNameInput) profileNameInput.value = currentUser.name || '';
+        if (profileLastNameInput) profileLastNameInput.value = currentUser.lastName || '';
+        if (profileEmailInput) profileEmailInput.value = currentUser.email || '';
+    }
+    
+    updateLanguageSettings();
+    updateSettingsForAccountType(currentUser?.accountType || 'adult');
+    
+    const savedTheme = localStorage.getItem('appTheme') || 'dark';
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const activeThemeBtn = document.querySelector(`.theme-btn[onclick*="'${savedTheme}'"]`);
+    if (activeThemeBtn) {
+        activeThemeBtn.classList.add('active');
+    }
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const activeLangBtn = document.querySelector(`.lang-btn[data-lang="${currentLanguage}"]`);
+    if (activeLangBtn) {
+        activeLangBtn.classList.add('active');
+    }
+    
+    updateSettingsInterface();
+    
+    setTimeout(fixProfileScroll, 50);
+}
+
+function updateChat() {
+    renderChatMessagesWithHistory();
+    setTimeout(() => {
+        scrollChatToBottom();
+        fixChatScroll();
+        addClearChatButton();
+    }, 50);
+}
+
+function updateAdminPanel() {
+    if (currentUser && currentUser.role === 'admin') {
+        loadAdminData();
+    } else {
+        showNotification(translations[currentLanguage].adminPanel + ' - ' + 
+                        (currentLanguage === 'ru' ? 'Доступ запрещен' : 
+                         currentLanguage === 'en' ? 'Access denied' : 'Қол жетімсіз'), 'error');
+        showPage('dashboard');
+    }
+}
+
+// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА НАСТРОЕК ==========
+
+function updateSettingsInterface() {
+    const personalDataTitle = document.querySelector('#personalDataItem .settings-item-title');
+    const securityTitle = document.querySelector('#securityItem .settings-item-title');
+    const teenAccountsTitle = document.querySelector('#teenAccountsItem .settings-item-title');
+    const familyConnectionsTitle = document.querySelector('#familySection h3');
+    const languageThemeTitle = document.querySelector('#languageThemeItem .settings-item-title');
+    
+    if (personalDataTitle) personalDataTitle.textContent = translations[currentLanguage].personalDataTitle;
+    if (securityTitle) securityTitle.textContent = translations[currentLanguage].securityTitle;
+    if (teenAccountsTitle) teenAccountsTitle.textContent = translations[currentLanguage].teenAccountsTitle;
+    if (familyConnectionsTitle) familyConnectionsTitle.textContent = translations[currentLanguage].familyConnectionsTitle;
+    if (languageThemeTitle) languageThemeTitle.textContent = translations[currentLanguage].languageSettingsTitle;
+    
+    const lightThemeBtn = document.querySelector('.theme-btn[onclick*="light"]');
+    const darkThemeBtn = document.querySelector('.theme-btn[onclick*="dark"]');
+    const autoThemeBtn = document.querySelector('.theme-btn[onclick*="auto"]');
+    
+    if (lightThemeBtn) lightThemeBtn.textContent = translations[currentLanguage].themeLight;
+    if (darkThemeBtn) darkThemeBtn.textContent = translations[currentLanguage].themeDark;
+    if (autoThemeBtn) autoThemeBtn.textContent = translations[currentLanguage].themeAuto;
+    
+    const saveProfileBtn = document.querySelector('#personalDataItem .btn-primary');
+    if (saveProfileBtn) saveProfileBtn.textContent = translations[currentLanguage].saveProfile;
+    
+    const changePasswordBtn = document.querySelector('#securityItem .btn-outline');
+    if (changePasswordBtn) changePasswordBtn.textContent = translations[currentLanguage].changePassword;
+    
+    const manageTeenBtn = document.querySelector('#teenAccountsItem .btn-primary');
+    if (manageTeenBtn) manageTeenBtn.textContent = translations[currentLanguage].manageTeenAccounts;
+    
+    const connectChildBtn = document.querySelector('#familySection .btn-primary');
+    if (connectChildBtn) connectChildBtn.textContent = translations[currentLanguage].connectChild;
+    
+    const personalDataDesc = document.querySelector('#personalDataItem .settings-item-desc');
+    const securityDesc = document.querySelector('#securityItem .settings-item-desc');
+    const teenAccountsDesc = document.querySelector('#teenAccountsItem .settings-item-desc');
+    
+    if (personalDataDesc) personalDataDesc.textContent = translations[currentLanguage].personalDataDesc;
+    if (securityDesc) securityDesc.textContent = translations[currentLanguage].securitySettingsDesc;
+    if (teenAccountsDesc) teenAccountsDesc.textContent = translations[currentLanguage].parentAccountDesc;
+}
+
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+
+// УБИРАЕМ РЕГИСТРАЦИЮ И ЛОГИН - СРАЗУ ПОКАЗЫВАЕМ ПРИЛОЖЕНИЕ
 
 function logout() {
     const confirmText = translations[currentLanguage].logoutConfirm || "Вы уверены, что хотите выйти из аккаунта?";
@@ -3389,187 +4101,85 @@ function logoutAndReset() {
         missionProgressInterval = null;
     }
     
-    const appHeader = document.getElementById('appHeader');
-    const bottomNav = document.getElementById('bottomNav');
-    const dashboard = document.getElementById('dashboard');
-    
-    if (appHeader) appHeader.style.display = 'none';
-    if (bottomNav) bottomNav.style.display = 'none';
-    if (dashboard) dashboard.style.display = 'none';
-    
-    const pages = ['analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
-    pages.forEach(page => {
-        const pageElement = document.getElementById(page);
-        if (pageElement) pageElement.style.display = 'none';
-    });
-    
-    showAccountTypeSelection();
-    
-    const logoutText = currentLanguage === 'ru' ? 'Вы вышли из системы' :
-                     currentLanguage === 'en' ? 'You have logged out' :
-                     'Сіз жүйеден шықтыңыз';
-    
-    showNotification(logoutText, 'info');
+    // Создаем автоматически пользователя при выходе
+    autoCreateUserAndShowApp();
 }
 
-function register() {
-    const name = document.getElementById('regName')?.value.trim();
-    const lastName = document.getElementById('regLastName')?.value.trim();
-    const email = document.getElementById('regEmail')?.value.trim();
-    const password = document.getElementById('regPassword')?.value;
-    
-    if (!name || !email || !password) {
-        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все обязательные поля' :
-                        currentLanguage === 'en' ? 'Please fill in all required fields' :
-                        'Барлық міндетті өрістерді толтырыңыз';
-        showNotification(errorText, 'error');
-        return;
-    }
-    
-    if (!selectedAccountType) {
-        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, выберите тип аккаунта' :
-                        currentLanguage === 'en' ? 'Please select account type' :
-                        'Аккаунт түрін таңдаңыз';
-        showNotification(errorText, 'error');
-        return;
-    }
-    
-    if (password.length < 6) {
-        const errorText = currentLanguage === 'ru' ? 'Пароль должен содержать минимум 6 символов' :
-                        currentLanguage === 'en' ? 'Password must be at least 6 characters long' :
-                        'Құпия сөз кемінде 6 таңбадан тұруы керек';
-        showNotification(errorText, 'error');
-        return;
-    }
-    
-    if (!validateEmail(email)) {
-        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, введите корректный email адрес' :
-                        currentLanguage === 'en' ? 'Please enter a valid email address' :
-                        'Дұрыс email мекенжайын енгізіңіз';
-        showNotification(errorText, 'error');
-        return;
-    }
-    
-    const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
-    
-    if (users.find(u => u.email === email)) {
-        const errorText = currentLanguage === 'ru' ? 'Пользователь с таким email уже существует. Используйте другой email или войдите в систему.' :
-                        currentLanguage === 'en' ? 'User with this email already exists. Use another email or login.' :
-                        'Бұл email-мен пайдаланушы бар. Басқа email пайдаланыңыз немесе кіріңіз.';
-        showNotification(errorText, 'error');
-        return;
-    }
-    
-    const newUser = {
-        id: Date.now().toString(),
-        name: name,
-        lastName: lastName,
-        email: email,
-        password: password,
+function autoCreateUserAndShowApp() {
+    // Создаем пользователя автоматически
+    const autoUser = {
+        id: 'auto_user_' + Date.now().toString(),
+        name: 'Гость',
+        lastName: 'Пользователь',
+        email: 'guest@financemind.com',
+        password: 'guest123',
         role: 'user',
-        accountType: selectedAccountType,
+        accountType: 'adult',
         createdAt: new Date().toISOString(),
-        profile: { lastName: lastName },
+        profile: { lastName: 'Пользователь' },
         settings: { 
-            language: 'ru', 
+            language: currentLanguage, 
             theme: 'dark',
-            interfaceStyle: getDefaultInterfaceStyle(selectedAccountType)
+            interfaceStyle: 'professional'
         }
     };
     
-    users.push(newUser);
-    localStorage.setItem('financemind_users', JSON.stringify(users));
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
+    localStorage.setItem('currentUser', JSON.stringify(autoUser));
     localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userAccountType', selectedAccountType);
-    
-    currentUser = newUser;
-    initializeUserData(newUser.id);
+    currentUser = autoUser;
+    initializeUserData(autoUser.id);
     showAppInterface();
-    
-    const successText = currentLanguage === 'ru' ? 'Регистрация выполнена успешно! Добро пожаловать в FinanceMind!' :
-                      currentLanguage === 'en' ? 'Registration successful! Welcome to FinanceMind!' :
-                      'Тіркелу сәтті аяқталды! FinanceMind-қа қош келдіңіз!';
-    
-    showNotification(successText, 'success');
 }
 
-function getDefaultInterfaceStyle(accountType) {
-    const styles = {
-        'teen': 'gamified',
-        'parent': 'simple',
-        'adult': 'professional'
-    };
-    return styles[accountType] || 'professional';
-}
-
-function login() {
-    const email = document.getElementById('email')?.value.trim();
-    const password = document.getElementById('password')?.value;
+function showAppInterface() {
+    // Прячем все страницы авторизации
+    const authPage = document.getElementById('authPage');
+    const accountTypePage = document.getElementById('accountTypePage');
     
-    if (!email || !password) {
-        const errorText = currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' :
-                        currentLanguage === 'en' ? 'Please fill in all fields' :
-                        'Барлық өрістерді толтырыңыз';
-        showNotification(errorText, 'error');
-        return;
+    if (authPage) {
+        authPage.style.display = 'none';
+    }
+    if (accountTypePage) {
+        accountTypePage.style.display = 'none';
     }
     
-    if (email === 'admin@financemind.com' && password === 'admin123') {
-        const adminUser = {
-            id: 'admin',
-            name: 'Администратор',
-            email: 'admin@financemind.com',
-            role: 'admin',
-            accountType: 'adult',
-            createdAt: new Date().toISOString(),
-            profile: { lastName: '', role: 'Администратор' },
-            settings: { language: 'ru', theme: 'dark' }
-        };
-        
-        localStorage.setItem('currentUser', JSON.stringify(adminUser));
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userAccountType', 'adult');
-        currentUser = adminUser;
-        loadUserData();
-        showAppInterface();
-        
-        const successText = currentLanguage === 'ru' ? 'Вход выполнен успешно! Админ панель активирована.' :
-                          currentLanguage === 'en' ? 'Login successful! Admin panel activated.' :
-                          'Кіру сәтті аяқталды! Әкімші панелі белсендірілді.';
-        
-        showNotification(successText, 'success');
-        return;
+    // Показываем основной интерфейс во весь экран
+    const appHeader = document.getElementById('appHeader');
+    const bottomNav = document.getElementById('bottomNav');
+    
+    if (appHeader) {
+        appHeader.style.display = 'flex';
     }
     
-    const users = JSON.parse(localStorage.getItem('financemind_users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userAccountType', user.accountType || 'adult');
-        currentUser = user;
-        loadUserData();
-        loadFamilyConnections();
-        showAppInterface();
-        
-        const successText = currentLanguage === 'ru' ? 'Вход выполнен успешно! Рады снова видеть вас!' :
-                          currentLanguage === 'en' ? 'Login successful! Glad to see you again!' :
-                          'Кіру сәтті аяқталды! Сізді қайта көргенімізге қуаныштымыз!';
-        
-        showNotification(successText, 'success');
-    } else {
-        const errorText = currentLanguage === 'ru' ? 'Неверный email или пароль. Проверьте данные или сбросьте настройки.' :
-                        currentLanguage === 'en' ? 'Invalid email or password. Check your data or reset settings.' :
-                        'Қате email немесе құпия сөз. Деректеріңізді тексеріңіз немесе баптауларды қалпына келтіріңіз.';
-        showNotification(errorText, 'error');
+    if (bottomNav) {
+        bottomNav.style.display = 'flex';
     }
-}
-
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    
+    // Загружаем данные
+    loadUserData();
+    loadChatHistory();
+    loadFamilyConnections();
+    
+    // Показываем админ панель если нужно
+    if (currentUser && currentUser.role === 'admin') {
+        const adminButton = document.getElementById('adminButton');
+        if (adminButton) adminButton.style.display = 'flex';
+    }
+    
+    // Инициализируем интерфейс
+    initLanguage();
+    updateInterfaceForAccountType();
+    startMissionProgressTracking();
+    checkUrlConnectionParams();
+    
+    // Показываем главную страницу
+    setTimeout(() => {
+        showPage('dashboard');
+        fixScrollIssues();
+        fixButtonSizes();
+        fixAccountManagementButtons();
+        addLogoutButtonToSettings();
+    }, 100);
 }
 
 function initializeUserData(userId) {
@@ -3603,91 +4213,7 @@ function initializeUserData(userId) {
     saveChatHistory();
 }
 
-function showAppInterface() {
-    const authPage = document.getElementById('authPage');
-    const accountTypePage = document.getElementById('accountTypePage');
-    const appHeader = document.getElementById('appHeader');
-    const bottomNav = document.getElementById('bottomNav');
-    
-    if (authPage) {
-        authPage.style.display = 'none';
-    }
-    if (accountTypePage) {
-        accountTypePage.style.display = 'none';
-    }
-    
-    if (appHeader) {
-        appHeader.style.display = 'flex';
-    }
-    
-    if (bottomNav) {
-        bottomNav.style.display = 'flex';
-    }
-    
-    loadChatHistory();
-    loadFamilyConnections();
-    
-    if (currentUser && currentUser.role === 'admin') {
-        const adminButton = document.getElementById('adminButton');
-        if (adminButton) adminButton.style.display = 'flex';
-    }
-    
-    initLanguage();
-    updateInterfaceForAccountType();
-    startMissionProgressTracking();
-    checkUrlConnectionParams();
-    
-    setTimeout(() => {
-        showPage('dashboard');
-        fixScrollIssues();
-        fixButtonSizes();
-        fixAccountManagementButtons();
-        addLogoutButtonToSettings();
-    }, 100);
-}
-
-function checkUrlConnectionParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const connectionCode = urlParams.get('connect');
-    
-    if (connectionCode && currentUser && currentUser.accountType === 'teen') {
-        connectToParent(connectionCode);
-        
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-    }
-}
-
 // ========== ВЫБОР ТИПА АККАУНТА ==========
-
-function selectAccountType(type) {
-    selectedAccountType = type;
-    
-    document.querySelectorAll('.account-type-button').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    
-    const selectedBtn = event.currentTarget;
-    selectedBtn.classList.add('selected');
-    
-    localStorage.setItem('selectedAccountType', type);
-    updateRegisterButtonState();
-    
-    const description = document.getElementById('accountTypeDescription');
-    if (description) {
-        const descriptions = {
-            'teen': translations[currentLanguage].teenAccountDesc,
-            'parent': translations[currentLanguage].parentAccountDesc,
-            'adult': translations[currentLanguage].adultAccountDesc
-        };
-        
-        description.innerHTML = `
-            <h3>${translations[currentLanguage].accountTypeDescription}</h3>
-            <p><strong>${getAccountTypeDisplayName(type)}</strong>: ${descriptions[type] || ''}</p>
-        `;
-        description.style.display = 'block';
-    }
-}
 
 function getAccountTypeDisplayName(type) {
     const names = {
@@ -3696,42 +4222,6 @@ function getAccountTypeDisplayName(type) {
         'adult': translations[currentLanguage].accountTypeAdult
     };
     return names[type] || type;
-}
-
-// ========== ПЛАВАЮЩИЕ ЛЕЙБЛЫ ==========
-
-function initializeFloatingLabels() {
-    const formInputs = document.querySelectorAll('.form-input');
-    
-    formInputs.forEach(input => {
-        const formGroup = input.closest('.form-group');
-        if (!formGroup) return;
-        
-        const label = formGroup.querySelector('label');
-        if (!label) return;
-        
-        formGroup.classList.add('floating-label-group');
-        
-        if (input.value) {
-            formGroup.classList.add('focused');
-            formGroup.classList.add('has-value');
-        }
-        
-        input.addEventListener('focus', function() {
-            formGroup.classList.add('focused');
-        });
-        
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                formGroup.classList.remove('focused');
-            }
-            formGroup.classList.toggle('has-value', !!this.value);
-        });
-        
-        input.addEventListener('input', function() {
-            formGroup.classList.toggle('has-value', !!this.value);
-        });
-    });
 }
 
 // ========== ОБНОВЛЕННЫЙ ИНТЕРФЕЙС ==========
@@ -3930,281 +4420,6 @@ function updateHeaderTitle(page) {
     };
     
     headerTitle.textContent = titles[page] || 'FinanceMind';
-}
-
-// ========== ИСПРАВЛЕНИЕ КНОПОК ==========
-
-function fixButtonSizes() {
-    const primaryButtons = document.querySelectorAll('.btn-primary, .btn-outline, .mission-complete-btn, .buy-btn, .earn-btn, .store-btn');
-    primaryButtons.forEach(btn => {
-        if (!btn.classList.contains('btn-icon') && !btn.classList.contains('small')) {
-            btn.style.height = '48px';
-            btn.style.padding = '12px 20px';
-            btn.style.fontSize = '16px';
-            btn.style.borderRadius = '14px';
-            btn.style.display = 'flex';
-            btn.style.alignItems = 'center';
-            btn.style.justifyContent = 'center';
-            btn.style.width = 'auto';
-            btn.style.minWidth = '0';
-        }
-    });
-    
-    const settingsButtons = document.querySelectorAll('.settings-item, .security-item, .category-btn, .language-btn, .theme-btn, .chart-filter-btn, .chart-type-btn');
-    settingsButtons.forEach(btn => {
-        btn.style.height = '56px';
-        btn.style.padding = '16px';
-        btn.style.fontSize = '16px';
-        btn.style.display = 'flex';
-        btn.style.alignItems = 'center';
-        btn.style.marginBottom = '8px';
-        btn.style.borderRadius = '12px';
-        btn.style.width = '100%';
-    });
-    
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.style.padding = '12px';
-        item.style.height = 'auto';
-        item.style.minHeight = 'auto';
-    });
-    
-    const cardButtons = document.querySelectorAll('.goal-delete-btn, .btn-danger, .share-btn');
-    cardButtons.forEach(btn => {
-        btn.style.height = '44px';
-        btn.style.padding = '10px 16px';
-        btn.style.fontSize = '14px';
-    });
-    
-    const iconButtons = document.querySelectorAll('.btn-icon, .header-icon, .chat-send-btn');
-    iconButtons.forEach(btn => {
-        btn.style.width = '44px';
-        btn.style.height = '44px';
-        btn.style.display = 'flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-        btn.style.flexShrink = '0';
-    });
-}
-
-function showPage(page) {
-    const mainPages = ['dashboard', 'analytics', 'missions', 'store', 'settings', 'chat', 'adminPanel'];
-    
-    mainPages.forEach(p => {
-        const pageElement = document.getElementById(p);
-        if (pageElement) {
-            pageElement.style.display = 'none';
-        }
-    });
-    
-    const targetPage = document.getElementById(page);
-    if (targetPage) {
-        targetPage.style.display = 'block';
-        fadeInElement(targetPage);
-        targetPage.classList.add('scroll-container');
-    }
-    
-    const modals = document.querySelectorAll('.modal-overlay');
-    modals.forEach(modal => {
-        if (modal.id !== 'goalModal' && modal.id !== 'instructionModal' && modal.id !== 'reportModal') {
-            modal.style.display = 'none';
-        }
-    });
-    
-    updateHeaderTitle(page);
-    updateActiveNavigation(page);
-    
-    if (page === 'chat') {
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            scrollChatToBottom();
-            fixChatScroll();
-            renderChatMessagesWithHistory();
-            addClearChatButton();
-        }, 100);
-    } else {
-        document.body.style.overflow = 'auto';
-    }
-    
-    if (page === 'analytics' && currentUser) {
-        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
-        userData.analyticsViews = (userData.analyticsViews || 0) + 1;
-        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
-    }
-    
-    if (currentUser && page === 'dashboard') {
-        const userData = JSON.parse(localStorage.getItem(`userData_${currentUser.id}`) || '{}');
-        userData.appVisits = (userData.appVisits || 0) + 1;
-        localStorage.setItem(`userData_${currentUser.id}`, JSON.stringify(userData));
-        updateMissionsProgress();
-    }
-    
-    updatePageContent(page);
-    
-    setTimeout(() => {
-        fixButtonSizes();
-        fixScrollIssues();
-        if (page === 'settings') {
-            fixAccountManagementButtons();
-            addLogoutButtonToSettings();
-        }
-    }, 50);
-}
-
-function updateActiveNavigation(page) {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    const activeNavItem = document.querySelector(`.nav-item[onclick*="${page}"]`);
-    if (activeNavItem) {
-        activeNavItem.classList.add('active');
-    }
-}
-
-function updatePageContent(page) {
-    switch(page) {
-        case 'dashboard': updateDashboard(); break;
-        case 'analytics': updateAnalytics(); break;
-        case 'missions': updateMissions(); break;
-        case 'store': updateStore(); break;
-        case 'settings': updateSettings(); break;
-        case 'chat': updateChat(); break;
-        case 'adminPanel': updateAdminPanel(); break;
-    }
-}
-
-function updateDashboard() {
-    loadUserData();
-    updateUserInterface();
-    updateExpenseStats();
-    renderGoals();
-    updateAIAdvice();
-    updateActiveMissionDisplay();
-}
-
-function updateAnalytics() {
-    updateExpenseStats();
-    updateCharts();
-    updateExpenseList();
-    
-    if (expenses.length > 0) {
-        const emptyLineChart = document.getElementById('emptyLineChart');
-        const emptyPieChart = document.getElementById('emptyPieChart');
-        
-        if (emptyLineChart) emptyLineChart.style.display = 'none';
-        if (emptyPieChart) emptyPieChart.style.display = 'none';
-    }
-}
-
-function updateMissions() {
-    renderMissions();
-    updateFincoinsBalance();
-    updateActiveMissionDisplay();
-}
-
-function updateStore() {
-    updateFincoinsBalance();
-}
-
-function updateSettings() {
-    if (currentUser) {
-        const profileNameInput = document.getElementById('profileNameInput');
-        const profileLastNameInput = document.getElementById('profileLastNameInput');
-        const profileEmailInput = document.getElementById('profileEmailInput');
-        
-        if (profileNameInput) profileNameInput.value = currentUser.name || '';
-        if (profileLastNameInput) profileLastNameInput.value = currentUser.lastName || '';
-        if (profileEmailInput) profileEmailInput.value = currentUser.email || '';
-    }
-    
-    updateLanguageSettings();
-    updateSettingsForAccountType(currentUser?.accountType || 'adult');
-    
-    const savedTheme = localStorage.getItem('appTheme') || 'dark';
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    const activeThemeBtn = document.querySelector(`.theme-btn[onclick*="'${savedTheme}'"]`);
-    if (activeThemeBtn) {
-        activeThemeBtn.classList.add('active');
-    }
-    
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    const activeLangBtn = document.querySelector(`.lang-btn[data-lang="${currentLanguage}"]`);
-    if (activeLangBtn) {
-        activeLangBtn.classList.add('active');
-    }
-    
-    updateSettingsInterface();
-    
-    setTimeout(fixProfileScroll, 50);
-}
-
-function updateChat() {
-    renderChatMessagesWithHistory();
-    setTimeout(() => {
-        scrollChatToBottom();
-        fixChatScroll();
-        addClearChatButton();
-    }, 50);
-}
-
-function updateAdminPanel() {
-    if (currentUser && currentUser.role === 'admin') {
-        loadAdminData();
-    } else {
-        showNotification(translations[currentLanguage].adminPanel + ' - ' + 
-                        (currentLanguage === 'ru' ? 'Доступ запрещен' : 
-                         currentLanguage === 'en' ? 'Access denied' : 'Қол жетімсіз'), 'error');
-        showPage('dashboard');
-    }
-}
-
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА НАСТРОЕК ==========
-
-function updateSettingsInterface() {
-    const personalDataTitle = document.querySelector('#personalDataItem .settings-item-title');
-    const securityTitle = document.querySelector('#securityItem .settings-item-title');
-    const teenAccountsTitle = document.querySelector('#teenAccountsItem .settings-item-title');
-    const familyConnectionsTitle = document.querySelector('#familySection h3');
-    const languageThemeTitle = document.querySelector('#languageThemeItem .settings-item-title');
-    
-    if (personalDataTitle) personalDataTitle.textContent = translations[currentLanguage].personalDataTitle;
-    if (securityTitle) securityTitle.textContent = translations[currentLanguage].securityTitle;
-    if (teenAccountsTitle) teenAccountsTitle.textContent = translations[currentLanguage].teenAccountsTitle;
-    if (familyConnectionsTitle) familyConnectionsTitle.textContent = translations[currentLanguage].familyConnectionsTitle;
-    if (languageThemeTitle) languageThemeTitle.textContent = translations[currentLanguage].languageSettingsTitle;
-    
-    const lightThemeBtn = document.querySelector('.theme-btn[onclick*="light"]');
-    const darkThemeBtn = document.querySelector('.theme-btn[onclick*="dark"]');
-    const autoThemeBtn = document.querySelector('.theme-btn[onclick*="auto"]');
-    
-    if (lightThemeBtn) lightThemeBtn.textContent = translations[currentLanguage].themeLight;
-    if (darkThemeBtn) darkThemeBtn.textContent = translations[currentLanguage].themeDark;
-    if (autoThemeBtn) autoThemeBtn.textContent = translations[currentLanguage].themeAuto;
-    
-    const saveProfileBtn = document.querySelector('#personalDataItem .btn-primary');
-    if (saveProfileBtn) saveProfileBtn.textContent = translations[currentLanguage].saveProfile;
-    
-    const changePasswordBtn = document.querySelector('#securityItem .btn-outline');
-    if (changePasswordBtn) changePasswordBtn.textContent = translations[currentLanguage].changePassword;
-    
-    const manageTeenBtn = document.querySelector('#teenAccountsItem .btn-primary');
-    if (manageTeenBtn) manageTeenBtn.textContent = translations[currentLanguage].manageTeenAccounts;
-    
-    const connectChildBtn = document.querySelector('#familySection .btn-primary');
-    if (connectChildBtn) connectChildBtn.textContent = translations[currentLanguage].connectChild;
-    
-    const personalDataDesc = document.querySelector('#personalDataItem .settings-item-desc');
-    const securityDesc = document.querySelector('#securityItem .settings-item-desc');
-    const teenAccountsDesc = document.querySelector('#teenAccountsItem .settings-item-desc');
-    
-    if (personalDataDesc) personalDataDesc.textContent = translations[currentLanguage].personalDataDesc;
-    if (securityDesc) securityDesc.textContent = translations[currentLanguage].securitySettingsDesc;
-    if (teenAccountsDesc) teenAccountsDesc.textContent = translations[currentLanguage].parentAccountDesc;
 }
 
 // ========== ФУНКЦИИ ДЛЯ РАБОТЫ С ДАННЫМИ ==========
@@ -5838,35 +6053,6 @@ function selectCalendarDate(date) {
     renderCalendar();
 }
 
-// ========== ФУНКЦИИ ДЛЯ КНОПОК ВЫБОРА ВОЗРАСТА ==========
-
-function showLoginFromSelection() {
-    const accountTypePage = document.getElementById('accountTypePage');
-    const authPage = document.getElementById('authPage');
-    
-    if (accountTypePage) accountTypePage.style.display = 'none';
-    if (authPage) {
-        authPage.style.display = 'block';
-        showLoginForm();
-    }
-}
-
-function showAccountTypeSelection() {
-    const authPage = document.getElementById('authPage');
-    const accountTypePage = document.getElementById('accountTypePage');
-    
-    if (authPage) authPage.style.display = 'none';
-    if (accountTypePage) {
-        accountTypePage.style.display = 'flex';
-        fadeInElement(accountTypePage);
-    }
-    
-    selectedAccountType = null;
-    document.querySelectorAll('.account-type-button').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-}
-
 // ========== ИНИЦИАЛИЗАЦИЯ ЯЗЫКА И ТЕМЫ ==========
 
 function initLanguage() {
@@ -6619,23 +6805,14 @@ banks = [
 // ========== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ==========
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Убираем проверку логина и сразу создаем пользователя
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const savedUser = localStorage.getItem('currentUser');
     
-    setTimeout(() => {
-        initializeFloatingLabels();
-    }, 100);
-    
-    const savedAccountType = localStorage.getItem('selectedAccountType');
-    if (savedAccountType) {
-        selectedAccountType = savedAccountType;
-        const accountTypeBtn = document.querySelector(`.account-type-button[onclick*="${savedAccountType}"]`);
-        if (accountTypeBtn) {
-            accountTypeBtn.classList.add('selected');
-        }
-    }
-    
-    if (isLoggedIn === 'true' && savedUser) {
+    // Если нет пользователя, создаем автоматически
+    if (!savedUser || isLoggedIn !== 'true') {
+        autoCreateUserAndShowApp();
+    } else {
         try {
             currentUser = JSON.parse(savedUser);
             loadUserData();
@@ -6654,11 +6831,15 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('chatHistory');
-            showAccountTypeSelection();
+            // Создаем пользователя автоматически
+            autoCreateUserAndShowApp();
         }
-    } else {
-        showAccountTypeSelection();
     }
+    
+    // Инициализация других элементов
+    setTimeout(() => {
+        initializeFloatingLabels();
+    }, 100);
     
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -6691,28 +6872,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            login();
-        });
-    }
-    
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            register();
-        });
-        
-        const regInputs = registerForm.querySelectorAll('input');
-        regInputs.forEach(input => {
-            input.addEventListener('input', updateRegisterButtonState);
-        });
-    }
-    
     window.addEventListener('resize', function() {
         fixScrollIssues();
         fixButtonSizes();
@@ -6720,7 +6879,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initLanguage();
     
-    console.log('FinanceMind инициализирован с исправленными функциями');
+    console.log('FinanceMind инициализирован с автоматическим входом');
 });
 
 // ========== ДОПОЛНИТЕЛЬНЫЕ КОНСТАНТЫ ==========
@@ -7051,6 +7210,5 @@ const missionIcons = {
     'planning': 'fas fa-tasks',
     'achievements': 'fas fa-trophy'
 };
-
 
 
