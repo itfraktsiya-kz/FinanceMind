@@ -3641,61 +3641,97 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
 }
 
 /* ============================================================
-   POPUP МЕНЮ ДЛЯ КНОПКИ +
+   POPUP МЕНЮ ДЛЯ КНОПКИ + (УЛУЧШЕННАЯ ВИДИМОСТЬ ТЕКСТА)
    ============================================================ */
+
 .plus-menu-container {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .plus-btn {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border: none;
     border-radius: 50%;
     background: rgba(37, 99, 235, 0.12);
     color: #2563EB;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .plus-btn:hover {
     background: rgba(37, 99, 235, 0.2);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.05);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
 }
+
+.plus-btn:active {
+    transform: scale(0.92);
+}
+
+.plus-btn.active {
+    background: rgba(37, 99, 235, 0.2);
+    transform: rotate(45deg);
+}
+
+/* ============================================================
+   POPUP МЕНЮ - ВСЕ ТЕКСТЫ ВИДНЫ И ЧИТАБЕЛЬНЫ
+   ============================================================ */
 
 .plus-popup {
     position: absolute;
-    bottom: calc(100% + 12px);
-    left: 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 8px;
-    min-width: 320px;
-    max-width: 400px;
-    max-height: 400px;
+    bottom: calc(100% + 16px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 20px;
+    padding: 12px 10px;
+    min-width: 380px;
+    max-width: 480px;
+    max-height: 480px;
     overflow-y: auto;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    overflow-x: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     display: none;
-    z-index: 100;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .plus-popup.show {
     display: block;
-    animation: popupSlideUp 0.25s ease;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    animation: popupSlideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1) forwards;
 }
 
 @keyframes popupSlideUp {
-    from { opacity: 0; transform: translateY(10px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(12px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
 }
 
+/* Стилизация скроллбара */
 .plus-popup::-webkit-scrollbar {
     width: 4px;
 }
@@ -3705,138 +3741,163 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
 }
 
 .plus-popup::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: rgba(37, 99, 235, 0.3);
     border-radius: 10px;
 }
+
+.plus-popup::-webkit-scrollbar-thumb:hover {
+    background: rgba(37, 99, 235, 0.5);
+}
+
+/* ============================================================
+   ПУНКТЫ МЕНЮ - ЧИТАБЕЛЬНЫЙ ТЕКСТ
+   ============================================================ */
 
 .popup-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
+    gap: 14px;
+    padding: 12px 16px;
     background: transparent;
     border: none;
-    border-radius: 10px;
-    color: var(--text-primary);
+    border-radius: 12px;
+    color: #0F172A !important;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     width: 100%;
     text-align: left;
+    min-height: 48px;
+    line-height: 1.4;
+    word-break: break-word;
+    white-space: normal;
 }
 
 .popup-item:hover {
-    background: rgba(37, 99, 235, 0.06);
-    color: #2563EB;
+    background: rgba(37, 99, 235, 0.08);
+    transform: translateX(4px);
+}
+
+.popup-item:active {
+    transform: scale(0.97);
 }
 
 .popup-item i {
-    width: 20px;
-    color: var(--text-muted);
-    font-size: 14px;
+    width: 24px;
+    min-width: 24px;
+    font-size: 18px;
+    color: #64748B;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
 }
 
 .popup-item:hover i {
-    color: #2563EB;
+    color: #2563EB !important;
+}
+
+/* Цвета иконок для каждого пункта */
+.popup-item[data-prompt="Проанализировать мои финансы"] i { color: #3b82f6; }
+.popup-item[data-prompt="Получить рекомендации по экономии"] i { color: #10b981; }
+.popup-item[data-prompt="Построить прогноз накоплений"] i { color: #f59e0b; }
+.popup-item[data-prompt="Найти необычные траты"] i { color: #ef4444; }
+.popup-item[data-prompt="Анализ банковской выписки"] i { color: #8b5cf6; }
+.popup-item[data-prompt="Сравнить этот месяц с прошлым"] i { color: #ec4899; }
+.popup-item[data-prompt="Проверить финансовые цели"] i { color: #fbbf24; }
+.popup-item[data-prompt="Оптимизировать бюджет"] i { color: #06b6d4; }
+.popup-item[data-prompt="Найти подписки"] i { color: #f472b6; }
+.popup-item[data-prompt="Полный финансовый отчет"] i { color: #f97316; }
+
+.popup-item:hover i {
+    color: #2563EB !important;
+}
+
+/* Текст пункта - гарантированно видимый и читабельный */
+.popup-item .popup-text {
+    color: #0F172A !important;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.popup-item:hover .popup-text {
+    color: #0F172A !important;
 }
 
 /* ============================================================
-   АДАПТИВ ДЛЯ AI
+   АДАПТИВ ДЛЯ МОБИЛЬНЫХ
    ============================================================ */
-@media (max-width: 992px) {
-    .ai-welcome-title {
-        font-size: 28px;
-    }
-}
 
 @media (max-width: 768px) {
-    .ai-modern-page {
-        top: var(--navbar-height);
-        height: calc(100vh - var(--navbar-height));
-    }
-    .ai-modern-container {
-        padding: 0 16px;
-    }
-    .ai-top-bar {
-        padding: 12px 0 8px 0;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .ai-top-right {
-        gap: 4px;
-    }
-    .ai-top-btn span {
-        display: none;
-    }
-    .ai-top-btn.new-chat-btn span {
-        display: inline;
-    }
-    .ai-top-btn.new-chat-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-    .ai-brand-name {
-        font-size: 15px;
-    }
-    .ai-brand-status .status-powered {
-        display: none;
-    }
-    .ai-welcome-title {
-        font-size: 22px;
-    }
-    .ai-welcome-subtitle {
-        font-size: 14px;
-    }
-    .ai-quick-actions {
-        gap: 6px;
-    }
-    .ai-quick-chip {
-        font-size: 11px;
-        padding: 6px 12px;
-    }
-    .ai-message-bubble {
-        font-size: 13px;
-        padding: 12px 14px;
-        max-width: 92%;
-    }
-    .ai-input-wrapper {
-        padding: 4px 4px 4px 12px;
-        border-radius: 12px;
-    }
-    .ai-input-field {
-        font-size: 14px;
-        padding: 10px 0;
-    }
-    .ai-input-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 16px;
-    }
     .plus-popup {
-        min-width: 280px;
-        max-width: 320px;
-        right: 0;
-        left: auto;
+        min-width: 320px;
+        max-width: 360px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-height: 420px;
+        padding: 10px 8px;
+        border-radius: 18px;
+        bottom: calc(100% + 12px);
+    }
+    
+    .plus-popup.show {
+        transform: translateX(-50%) scale(1);
+    }
+    
+    .popup-item {
+        font-size: 13px;
+        padding: 10px 14px;
+        gap: 12px;
+        min-height: 44px;
+    }
+    
+    .popup-item .popup-text {
+        font-size: 13px;
+    }
+    
+    .popup-item i {
+        font-size: 16px;
+        width: 20px;
+        min-width: 20px;
     }
 }
 
 @media (max-width: 480px) {
-    .ai-welcome-icon {
-        font-size: 40px;
-        padding: 14px;
-    }
-    .ai-welcome-title {
-        font-size: 18px;
-    }
     .plus-popup {
-        min-width: 260px;
-        max-width: 280px;
-        right: -50px;
+        min-width: 290px;
+        max-width: 320px;
+        max-height: 380px;
+        padding: 8px 6px;
+        border-radius: 16px;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%);
     }
+    
+    .plus-popup.show {
+        transform: translateX(-50%) scale(1);
+    }
+    
     .popup-item {
-        font-size: 13px;
+        font-size: 12px;
         padding: 8px 12px;
+        gap: 10px;
+        min-height: 40px;
+        border-radius: 10px;
+    }
+    
+    .popup-item .popup-text {
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .popup-item i {
+        font-size: 15px;
+        width: 18px;
+        min-width: 18px;
     }
 }
 
