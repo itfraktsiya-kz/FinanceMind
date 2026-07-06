@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>FinanceMind - Управление финансами</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ФОНА -->
+    <div class="particles-container"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="decorative-line top"></div>
+    <div class="decorative-line middle"></div>
+    <div class="decorative-line bottom"></div>
+    <div class="dots-pattern"></div>
+
+    <div class="app-container">
+        <div id="mainApp">
+            <!-- ============================================================ -->
+            <!-- ВЕРХНЯЯ НАВИГАЦИЯ (ХЕДЕР) -->
+            <!-- ============================================================ -->
+            <nav class="navbar" id="mainNav">
+                <div class="navbar-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="logo">
+                        <a href="#" class="logo-img">
+                            <img src="https://i.ibb.co.com/zVc3hm6L/Chat-GPT-Image-13-2025-13-32-46.png" alt="FinanceMind Logo">
+                        </a>
+                        <span class="logo-text">FinanceMind</span>
+                    </div>
+                </div>
+                <div class="navbar-right"></div>
+            </nav>
+
+            <!-- ============================================================ -->
+            <!-- ВЫПАДАЮЩЕЕ МЕНЮ (АККОРДЕОН) -->
+            <!-- ============================================================ -->
+            <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-menu-inner">
+                    <div class="dropdown-user">
+                        <div class="dropdown-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-username" id="dropdownUserName">Пользователь</span>
+                            
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu-list">
+                        <li class="dropdown-menu-item active" data-page="home">
+                            <i class="fas fa-home"></i>
+                            <span>Главная</span>
+                        </li>
+                        <li class="dropdown-menu-item" data-page="analytics">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Аналитика</span>
+                        </li>
+                        <li class="dropdown-menu-item" data-page="banks">
+                            <i class="fas fa-university"></i>
+                            <span>Банки</span>
+                        </li>
+                        <li class="dropdown-menu-item" data-page="calendar">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Календарь</span>
+                        </li>
+                        <li class="dropdown-menu-item" data-page="ai-chat">
+                            <i class="fas fa-robot"></i>
+                            <span>ИИ-Помощник</span>
+                        </li>
+                        <li class="dropdown-menu-item" data-page="profile">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Кабинет</span>
+                        </li>
+                    </ul>
+                    <div class="dropdown-footer">
+                        <button class="btn btn-secondary btn-sm dropdown-logout" id="dropdownLogoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- МОБИЛЬНАЯ НИЖНЯЯ НАВИГАЦИЯ -->
+            <!-- ============================================================ -->
+            <div class="mobile-nav">
+                <div class="mobile-nav-item active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>Главная</span>
+                </div>
+                <div class="mobile-nav-item" data-page="analytics">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Аналитика</span>
+                </div>
+                <div class="mobile-nav-item" data-page="banks">
+                    <i class="fas fa-university"></i>
+                    <span>Банки</span>
+                </div>
+                <div class="mobile-nav-item" data-page="profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Кабинет</span>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- ОСНОВНОЙ КОНТЕНТ -->
+            <!-- ============================================================ -->
+            <main class="main-content" id="mainContent">
+                
+                <!-- ============================================================ -->
+                <!-- ГЛАВНАЯ СТРАНИЦА -->
+                <!-- ============================================================ -->
+                <section id="home-page" class="page active">
+                    <div class="page-header hero-block">
+                        <h1>Управляйте своими финансами</h1>
+                        <p>Анализируйте расходы, ставьте цели и достигайте финансовой свободы</p>
+                    </div>
+                    
+                    <div class="stats-premium-grid">
+                        <div class="stat-premium-card">
+                            <div class="stat-premium-icon expense-bg"><i class="fas fa-arrow-up"></i></div>
+                            <div class="stat-premium-content">
+                                <span class="stat-premium-label">Всего расходов</span>
+                                <div class="stat-premium-value-wrapper">
+                                    <span class="stat-premium-value" id="premiumTotalExpense">0</span>
+                                    <span class="stat-premium-currency">tenge</span>
+                                </div>
+                                <span class="stat-premium-trend" id="expenseTrend">0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-premium-icon goals-bg"><i class="fas fa-bullseye"></i></div>
+                            <div class="stat-premium-content">
+                                <span class="stat-premium-label">Активные цели</span>
+                                <div class="stat-premium-value-wrapper">
+                                    <span class="stat-premium-value" id="premiumActiveGoals">0</span>
+                                    <span class="stat-premium-currency">целей</span>
+                                </div>
+                                <span class="stat-premium-trend" id="goalsTrend">0 новых</span>
+                            </div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-premium-icon fincoin-bg"><i class="fas fa-gem"></i></div>
+                            <div class="stat-premium-content">
+                                <span class="stat-premium-label">Заработано FinCoin</span>
+                                <div class="stat-premium-value-wrapper">
+                                    <span class="stat-premium-value" id="premiumEarnedFincoin">0</span>
+                                    <span class="stat-premium-currency">tenge</span>
+                                </div>
+                                <span class="stat-premium-trend" id="fincoinTrend">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-premium-icon days-bg"><i class="fas fa-calendar-day"></i></div>
+                            <div class="stat-premium-content">
+                                <span class="stat-premium-label">Дней до цели</span>
+                                <div class="stat-premium-value-wrapper">
+                                    <span class="stat-premium-value" id="premiumDaysToGoal">0</span>
+                                    <span class="stat-premium-currency">дней</span>
+                                </div>
+                                <span class="stat-premium-trend" id="daysTrend">—</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-grid">
+                        <div class="card welcome-card">
+                            <h2>Добро пожаловать! 🎉</h2>
+                            <p>Загружайте банковские отчёты в формате CSV, Excel, PDF или изображения. Система автоматически распознает операции, категоризирует расходы и показывает подробную аналитику.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="goals-overview">
+                        <div class="overview-card">
+                            <div class="overview-item">
+                                <span class="overview-label">Всего целей</span>
+                                <span class="overview-value" id="totalGoals">0</span>
+                            </div>
+                            <div class="overview-item">
+                                <span class="overview-label">Накоплено</span>
+                                <span class="overview-value" id="totalSaved">0 FinCoin</span>
+                            </div>
+                            <div class="overview-item">
+                                <span class="overview-label">Прогресс</span>
+                                <span class="overview-value" id="overallProgress">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <h2>Финансовые цели</h2>
+                        <button class="btn btn-primary" id="addGoalBtn">
+                            <i class="fas fa-plus"></i>
+                            <span>Добавить цель</span>
+                        </button>
+                    </div>
+                    
+                    <div class="goals-container" id="goalsContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-bullseye"></i>
+                            <p>У вас пока нет целей</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- АНАЛИТИКА -->
+                <!-- ============================================================ -->
+                <section id="analytics-page" class="page">
+                    <div class="page-header">
+                        <h1>Аналитика расходов</h1>
+                        <p>Визуализация данных из ваших банковских выписок</p>
+                    </div>
+                    
+                    <div id="insightsContainer" class="insights-container"></div>
+                    
+                    <div class="summary-row">
+                        <div class="summary-item income">
+                            <span class="summary-icon"><i class="fas fa-arrow-down"></i></span>
+                            <div class="summary-info">
+                                <span class="summary-label">Доходы</span>
+                                <span class="summary-amount" id="totalIncome">0 FinCoin</span>
+                            </div>
+                        </div>
+                        <div class="summary-item expense">
+                            <span class="summary-icon"><i class="fas fa-arrow-up"></i></span>
+                            <div class="summary-info">
+                                <span class="summary-label">Расходы</span>
+                                <span class="summary-amount" id="totalExpense">0 FinCoin</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-row">
+                        <div class="filter-group-compact">
+                            <span class="filter-label"><i class="fas fa-calendar-alt"></i> Период</span>
+                            <select id="dateFilter" class="filter-select">
+                                <option value="all">Всё время</option>
+                                <option value="today">Сегодня</option>
+                                <option value="week">Неделя</option>
+                                <option value="month">Месяц</option>
+                                <option value="custom">Произвольный</option>
+                            </select>
+                        </div>
+                        <div class="filter-group-compact">
+                            <span class="filter-label"><i class="fas fa-tag"></i> Тип</span>
+                            <select id="typeFilter" class="filter-select">
+                                <option value="all">Все</option>
+                                <option value="income">Доходы</option>
+                                <option value="expense">Расходы</option>
+                            </select>
+                        </div>
+                        <div class="filter-group-compact" id="customDateRange" style="display: none;">
+                            <span class="filter-label"><i class="fas fa-calendar-day"></i> С</span>
+                            <input type="date" id="startDate" class="filter-date-input">
+                            <span class="filter-label">по</span>
+                            <input type="date" id="endDate" class="filter-date-input">
+                            <button class="btn btn-sm btn-primary" id="applyDateRange">Применить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bank-tabs-row" id="bankFilterTabs">
+                        <div class="bank-tab active" data-bank="all">Все банки</div>
+                    </div>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h2><i class="fas fa-chart-pie"></i> Расходы по категориям</h2>
+                            <div class="chart-container-small">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h2><i class="fas fa-chart-pie"></i> Доходы по категориям</h2>
+                            <div class="chart-container-small">
+                                <canvas id="incomePieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <h2>Список операций</h2>
+                        <span class="operations-counter" id="totalOperationsCount">0 операций</span>
+                    </div>
+                    
+                    <div class="operations-container-compact" id="operationsContainer">
+                        <div class="operations-search-compact">
+                            <input type="text" id="searchOperations" placeholder="Поиск по операциям...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="operations-by-date" id="operationsByDate">
+                            <div class="empty-state">
+                                <i class="fas fa-receipt"></i>
+                                <p>Загрузите банковскую выписку, чтобы увидеть операции</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- БАНКИ -->
+                <!-- ============================================================ -->
+                <section id="banks-page" class="page">
+                    <div class="page-header">
+                        <h1>Подключите банки для анализа расходов</h1>
+                    </div>
+                    
+                    <div class="banks-info">
+                        <div class="banks-stats">
+                            <span class="stat-label">Подключено банков:</span>
+                            <span class="stat-value" id="connectedBanksCount">0</span>
+                        </div>
+                        <div class="banks-stats">
+                            <span class="stat-label">Операций загружено:</span>
+                            <span class="stat-value" id="totalTransactionsCount">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="history-info">
+                        <span class="history-label">История загрузок</span>
+                        <span class="history-date" id="lastUploadInfo">Последняя загрузка: 25.06.2026, 22:18:14</span>
+                    </div>
+                    
+                    <div class="kaspi-analyzer-section">
+                        <div class="kaspi-card">
+                            <div class="kaspi-header">
+                                <i class="fas fa-mobile-alt kaspi-icon"></i>
+                                <div>
+                                    <h2>Анализ выписки Kaspi Bank</h2>
+                                    <p class="kaspi-subtitle">Поддерживаются форматы: CSV, Excel, PDF, TXT</p>
+                                </div>
+                            </div>
+                            
+                            <div class="upload-area" id="kaspiUploadArea">
+                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <p class="upload-main-text">Перетащите файл сюда</p>
+                                <p class="upload-sub-text">или нажмите на кнопку ниже</p>
+                                <button class="btn btn-primary upload-btn" id="selectKaspiFileBtn">
+                                    <i class="fas fa-file"></i> Выбрать файл
+                                </button>
+                                <p class="upload-size-limit">Максимальный размер файла: 50 МБ</p>
+                                <input type="file" id="kaspiFileInput" 
+                                       accept=".csv,.xls,.xlsx,.xlsm,.xlsb,.txt,.pdf,.png,.jpg,.jpeg" 
+                                       style="display: none;">
+                            </div>
+                            
+                            <div class="kaspi-results" id="kaspiResults" style="display: none;">
+                                <div class="results-grid">
+                                    <div class="result-item expense-item">
+                                        <div class="result-label"><i class="fas fa-arrow-up"></i><span>Расходы</span></div>
+                                        <div class="result-value" id="kaspiExpense">0 FinCoin</div>
+                                    </div>
+                                    <div class="result-item income-item">
+                                        <div class="result-label"><i class="fas fa-arrow-down"></i><span>Доходы</span></div>
+                                        <div class="result-value" id="kaspiIncome">0 FinCoin</div>
+                                    </div>
+                                </div>
+                                <div class="kaspi-file-info" id="kaspiFileInfo"></div>
+                            </div>
+                            
+                            <div class="kaspi-error" id="kaspiError" style="display: none;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span id="kaspiErrorMessage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- КАЛЕНДАРЬ -->
+                <!-- ============================================================ -->
+                <section id="calendar-page" class="page">
+                    <div class="page-header">
+                        <h1>Календарь платежей</h1>
+                        <p>Планируйте регулярные расходы и не пропускайте важные события</p>
+                    </div>
+                    
+                    <div class="calendar-controls">
+                        <button class="btn btn-primary btn-sm" id="addPaymentBtn">
+                            <i class="fas fa-plus"></i> Платёж
+                        </button>
+                        <button class="btn btn-primary btn-sm" id="addReminderBtn">
+                            <i class="fas fa-bell"></i> Напоминание
+                        </button>
+                    </div>
+                    
+                    <div class="calendar-wrapper">
+                        <div class="calendar-container" id="paymentCalendar">
+                            <div class="calendar-header">
+                                <button class="calendar-nav-btn" id="prevMonthBtn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <h2 class="calendar-month-title" id="calendarMonthTitle">Июнь 2026</h2>
+                                <button class="calendar-nav-btn" id="nextMonthBtn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div class="calendar-weekday">Пн</div>
+                                <div class="calendar-weekday">Вт</div>
+                                <div class="calendar-weekday">Ср</div>
+                                <div class="calendar-weekday">Чт</div>
+                                <div class="calendar-weekday">Пт</div>
+                                <div class="calendar-weekday">Сб</div>
+                                <div class="calendar-weekday">Вс</div>
+                            </div>
+                            <div class="calendar-days" id="calendarDaysGrid"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================ -->
+                <!-- ИИ-ПОМОЩНИК - ЧИСТЫЙ ЭКРАН, ВСЁ ЧЕРЕЗ КНОПКУ + -->
+                <!-- ============================================================ -->
+                <section id="ai-chat-page" class="page ai-modern-page">
+                    <div class="ai-modern-container">
+                        <div class="ai-top-bar">
+                            <div class="ai-top-left">
+                                <div class="ai-brand">
+                                    <div class="ai-brand-icon"><i class="fas fa-robot"></i></div>
+                                    <div class="ai-brand-info">
+                                        <span class="ai-brand-name">Финансовый AI</span>
+                                        <div class="ai-brand-status">
+                                            <span class="status-dot online"></span>
+                                            <span class="status-label">Online</span>
+                                            <span class="status-divider">•</span>
+                                            <span class="status-powered">Powered by FinanceMind AI</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ai-top-right">
+                                <button class="ai-top-btn new-chat-btn" id="aiNewChatBtn">
+                                    <i class="fas fa-plus"></i><span>Новый чат</span>
+                                </button>
+                                <button class="ai-top-btn" id="aiHistoryBtn" title="История чатов">
+                                    <i class="fas fa-clock-rotate-left"></i>
+                                </button>
+                                <button class="ai-top-btn" id="aiSettingsBtn" title="Настройки">
+                                    <i class="fas fa-sliders"></i>
+                                </button>
+                                <button class="ai-top-btn user-avatar-btn" id="aiUserBtn" title="Профиль">
+                                    <i class="fas fa-user-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="ai-main-content" id="aiMainContent">
+                            <!-- ============================================================ -->
+                            <!-- ПРИВЕТСТВЕННЫЙ ЭКРАН - БЕЗ БОЛЬШИХ КНОПОК! -->
+                            <!-- ============================================================ -->
+                            <div class="ai-welcome-screen" id="aiWelcomeScreen">
+                                <div class="ai-welcome-content">
+                                    <div class="ai-welcome-icon"><i class="fas fa-robot"></i></div>
+                                    <h1 class="ai-welcome-title">FinanceMind AI</h1>
+                                    <p class="ai-welcome-subtitle">
+                                        Здравствуйте!<br>
+                                        Я — ваш персональный AI-финансовый помощник.<br>
+                                        Я помогу проанализировать расходы, построить прогноз накоплений,<br>
+                                        проверить бюджет и найти возможности для экономии.
+                                    </p>
+                                    <!-- ============================================================ -->
+                                    <!-- ВСЕ БОЛЬШИЕ КНОПКИ УДАЛЕНЫ! -->
+                                    <!-- ТОЛЬКО ПРИВЕТСТВИЕ И ИКОНКА -->
+                                    <!-- ============================================================ -->
+                                    <div style="margin-top: 20px; font-size: 14px; color: var(--text-muted); opacity: 0.6;">
+                                        <i class="fas fa-plus-circle"></i> Нажмите <strong>+</strong> для быстрых действий
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ============================================================ -->
+                            <!-- КОНЕЦ ПРИВЕТСТВЕННОГО ЭКРАНА -->
+                            <!-- ============================================================ -->
+                            
+                            <div class="ai-chat-area" id="aiChatArea" style="display: none;">
+                                <div class="ai-messages-container" id="aiMessagesContainer"></div>
+                            </div>
+                        </div>
+
+                        <!-- ============================================================ -->
+                        <!-- ПОЛЕ ВВОДА С КНОПКОЙ + (ВСЕ 10 ФУНКЦИЙ В МЕНЮ) -->
+                        <!-- ============================================================ -->
+                        <div class="ai-input-area">
+                            <div class="ai-input-wrapper">
+                                <div class="plus-menu-container">
+                                    <button class="ai-input-btn plus-btn" id="aiPlusBtn">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <!-- ============================================================ -->
+                                    <!-- МЕНЮ ДЛЯ КНОПКИ + (ВСЕ 10 ФУНКЦИЙ В СПИСКЕ) -->
+                                    <!-- ============================================================ -->
+                                    <div class="plus-popup" id="aiPlusPopup" style="display: none;">
+                                        <button class="popup-item" data-prompt="Проанализировать мои финансы">
+                                            <i class="fas fa-chart-pie"></i> Проанализировать мои финансы
+                                        </button>
+                                        <button class="popup-item" data-prompt="Получить рекомендации по экономии">
+                                            <i class="fas fa-coins"></i> Получить рекомендации по экономии
+                                        </button>
+                                        <button class="popup-item" data-prompt="Построить прогноз накоплений">
+                                            <i class="fas fa-chart-line"></i> Построить прогноз накоплений
+                                        </button>
+                                        <button class="popup-item" data-prompt="Найти необычные траты">
+                                            <i class="fas fa-exclamation-triangle"></i> Найти необычные траты
+                                        </button>
+                                        <button class="popup-item" data-prompt="Анализ банковской выписки">
+                                            <i class="fas fa-file-invoice"></i> Анализ банковской выписки
+                                        </button>
+                                        <button class="popup-item" data-prompt="Сравнить этот месяц с прошлым">
+                                            <i class="fas fa-calendar-alt"></i> Сравнить этот месяц с прошлым
+                                        </button>
+                                        <button class="popup-item" data-prompt="Проверить финансовые цели">
+                                            <i class="fas fa-bullseye"></i> Проверить финансовые цели
+                                        </button>
+                                        <button class="popup-item" data-prompt="Оптимизировать бюджет">
+                                            <i class="fas fa-wrench"></i> Оптимизировать бюджет
+                                        </button>
+                                        <button class="popup-item" data-prompt="Найти подписки">
+                                            <i class="fas fa-credit-card"></i> Найти подписки
+                                        </button>
+                                        <button class="popup-item" data-prompt="Полный финансовый отчет">
+                                            <i class="fas fa-file-alt"></i> Полный финансовый отчет
+                                        </button>
+                                    </div>
+                                    <!-- ============================================================ -->
+                                    <!-- КОНЕЦ МЕНЮ ДЛЯ КНОПКИ + -->
+                                    <!-- ============================================================ -->
+                                </div>
+                                <textarea class="ai-input-field" id="aiInputField" rows="1" placeholder="Напишите финансовый вопрос..."></textarea>
+                                <button class="ai-input-btn send-btn" id="aiSendBtn" title="Отправить">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <button class="ai-input-btn stop-btn" id="aiStopBtn" style="display: none;" title="Остановить">
+                                    <i class="fas fa-stop"></i>
+                                </button>
+                            </div>
+                            <div class="ai-input-footer">
+                                <span>FinanceMind AI может ошибаться. Проверяйте важную информацию.</span>
+                            </div>
+                        </div>
+                        <!-- ============================================================ -->
+                        <!-- КОНЕЦ ПОЛЯ ВВОДА -->
+                        <!-- ============================================================ -->
+                        
+                    </div>
+                </section>
+                <!-- ============================================================ -->
+                <!-- КОНЕЦ ИИ-ПОМОЩНИКА -->
+                <!-- ============================================================ -->
+
+                <!-- ============================================================ -->
+<!-- ЛИЧНЫЙ КАБИНЕТ -->
+<!-- ============================================================ -->
+<section id="profile-page" class="page">
+    <div class="page-header">
+        <h1>Личный кабинет</h1>
+        <p>Настройки и прогресс</p>
+    </div>
+    
+    <div class="profile-grid">
+        <!-- Карточка профиля -->
+        <div class="card profile-card-compact">
+            <div class="profile-header-compact">
+                <div class="avatar" id="profileAvatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info-compact">
+                    <h2 id="profileUserName">Пользователь</h2>
+                    <!-- БЕЗ level-badge, xp-badge, fincoin-badge -->
+                </div>
+            </div>
+            
+            <!-- ============================================================ -->
+            <!-- УДАЛЕНО: УРОВЕНЬ, XP, FINCOIN -->
+            <!-- ============================================================ -->
+            <!-- <div class="profile-stats-row"> УДАЛЕНО </div> -->
+            
+            <!-- ТОЛЬКО КУРСЫ ВАЛЮТ -->
+            <div class="exchange-rates-compact" style="margin-top: 16px;">
+                <span class="rate-label"><i class="fas fa-chart-line"></i> Курсы валют</span>
+                <div class="rates-row">
+                    <span class="rate-item"><strong>USD</strong> <span id="usd-rate">460 ₸</span></span>
+                    <span class="rate-item"><strong>EUR</strong> <span id="eur-rate">500 ₸</span></span>
+                    <span class="rate-item"><strong>RUB</strong> <span id="rub-rate">5 ₸</span></span>
+                    <span class="rate-item"><strong>CNY</strong> <span id="cny-rate">64 ₸</span></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Карточка настроек -->
+        <div class="card settings-card-compact">
+            <h2><i class="fas fa-cog"></i> Настройки</h2>
+            <div class="settings-row">
+                <div class="setting-item">
+                    <span class="setting-label"><i class="fas fa-globe"></i> Язык</span>
+                    <select id="profileLanguage" class="setting-select">
+                        <option value="kk">Қазақша</option>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <!-- ============================================================ -->
+                <!-- УДАЛЕНА НАСТРОЙКА ВАЛЮТЫ FinCoin -->
+                <!-- ============================================================ -->
+                <!-- <div class="setting-item"> УДАЛЕНО </div> -->
+            </div>
+            
+            <!-- КНОПКА СБРОСА -->
+            <button class="btn btn-danger btn-sm reset-btn" id="resetDataBtn">
+                <i class="fas fa-redo"></i> Сбросить данные
+            </button>
+        </div>
+    </div>
+</section>
+<!-- ============================================================ -->
+<!-- КОНЕЦ ЛИЧНОГО КАБИНЕТА -->
+<!-- ============================================================ -->
+        
+        <!-- ============================================================ -->
+        <!-- МОДАЛЬНЫЕ ОКНА -->
+        <!-- ============================================================ -->
+        
+        <div id="authModal" class="modal auth-modal">
+            <div class="modal-content auth-modal-content">
+                <div class="modal-header auth-header">
+                    <h2 id="authModalTitle">Вход в аккаунт</h2>
+                    <button class="close-modal" id="closeAuthModalBtn">&times;</button>
+                </div>
+                <div class="modal-body auth-body">
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" placeholder="Введите email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Пароль</label>
+                            <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="loginBtn">Войти</button>
+                        </div>
+                        <p class="auth-switch">Нет аккаунта? <span class="auth-link" id="switchToRegister">Зарегистрироваться</span></p>
+                    </form>
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerUsername">Имя пользователя</label>
+                            <input type="text" id="registerUsername" placeholder="Придумайте имя" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" placeholder="Введите email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Пароль</label>
+                            <input type="password" id="registerPassword" placeholder="Придумайте пароль" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerConfirmPassword">Подтвердите пароль</label>
+                            <input type="password" id="registerConfirmPassword" placeholder="Повторите пароль" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
+                        </div>
+                        <p class="auth-switch">Уже есть аккаунт? <span class="auth-link" id="switchToLogin">Войти</span></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="bankSelectionModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Выберите банк вручную</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Система не смогла автоматически определить банк. Пожалуйста, выберите вручную:</p>
+                    <div class="bank-selection-list"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="addGoalModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-bullseye"></i> Добавить финансовую цель</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="goalForm">
+                        <div class="form-group">
+                            <label for="goalName">Название цели:</label>
+                            <input type="text" id="goalName" required placeholder="Например: Накопить на MacBook">
+                        </div>
+                        <div class="form-group">
+                            <label for="goalAmount">Целевая сумма (FinCoin):</label>
+                            <input type="number" id="goalAmount" required min="1" step="1" placeholder="10000">
+                        </div>
+                        <div class="form-group">
+                            <label for="goalDeadline">Срок достижения (необязательно):</label>
+                            <input type="date" id="goalDeadline">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary close-modal">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Создать цель</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ============================================================ -->
+        <!-- УВЕДОМЛЕНИЯ -->
+        <!-- ============================================================ -->
+        <div id="notification" class="notification">
+            <div class="notification-content">
+                <i class="fas fa-check-circle"></i>
+                <span id="notificationText"></span>
+            </div>
+        </div>
+        
+        <!-- ПИТОМЕЦ -->
+        <div id="petContainer"></div>
+    </div>
+    
+    <!-- Подключение JavaScript -->
+    <script src="script.js"></script>
+    <script src="api.js"></script>
+    <script src="state.js"></script>
+    <script src="util.js"></script>
+    <script src="translation.js"></script>
+</body>
+</html>
