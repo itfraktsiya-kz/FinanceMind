@@ -5637,7 +5637,24 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
    ============================================================================ */
 
 .mobile-nav {
-    display: none;
+    display: none !important;
+}
+
+.mobile-nav-item {
+    display: none !important;
+}
+
+/* Убираем отступ снизу на мобильных, так как панель скрыта */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .main-content {
+        margin-bottom: 0 !important;
+        padding-bottom: 20px !important;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -5709,65 +5726,26 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
 }
 
 @media (max-width: 768px) {
-    body {
-        overflow-x: hidden;
-        padding-bottom: 60px;
-    }
-    
     .nav-menu {
         display: none !important;
     }
     
     .mobile-nav {
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(20px);
-        justify-content: space-around;
-        padding: 8px 0;
-        z-index: 1000;
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+        display: none !important;
     }
     
     .mobile-nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        cursor: pointer;
-        padding: 6px 10px;
-        border-radius: 30px;
-        transition: all 0.2s ease;
-        color: var(--text-secondary);
-        font-size: 10px;
-    }
-    
-    .mobile-nav-item i {
-        font-size: 18px;
-    }
-    
-    .mobile-nav-item.active {
-        color: var(--primary);
-        background: rgba(255, 255, 255, 0.3);
-    }
-    
-    .mobile-nav-item:hover {
-        color: var(--primary);
-        transform: translateY(-1px);
+        display: none !important;
     }
     
     .mobile-menu-btn {
-        display: none;
+        display: none !important;
     }
     
     .main-content {
         padding: 14px;
         margin-top: 70px;
-        margin-bottom: 60px;
+        margin-bottom: 0px;
     }
     
     .dropdown-menu-inner {
@@ -6086,18 +6064,6 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
     
     .summary-amount {
         font-size: 24px;
-    }
-    
-    .mobile-nav-item {
-        padding: 5px 6px;
-    }
-    
-    .mobile-nav-item i {
-        font-size: 16px;
-    }
-    
-    .mobile-nav-item span {
-        font-size: 9px;
     }
     
     .upload-area .upload-icon i {
@@ -6752,7 +6718,7 @@ select,
 .custom-category-input input,
 .date-range input,
 .form-group input {
-    font-size: 16px !important; /* СПАСАЕТ ОТ ЗУМА НА IPHONE */
+    font-size: 16px !important;
     -webkit-appearance: none !important;
     appearance: none !important;
 }
@@ -7006,7 +6972,9 @@ a::after,
 
 /* КНОПКА МЕНЮ (БУРГЕР) */
 .menu-toggle {
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     color: var(--text-primary);
@@ -7021,6 +6989,15 @@ a::after,
 
 .menu-toggle:hover {
     background: rgba(255, 255, 255, 0.2);
+}
+
+.menu-toggle.active {
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--primary);
+}
+
+.menu-toggle:active {
+    transform: scale(0.95);
 }
 
 .navbar-left {
@@ -7323,6 +7300,7 @@ a::after,
         display: none !important;
     }
 }
+
 /* ============================================================================
    ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ AI-КНОПОК И СКРОЛЛА (ДОБАВЛЕНО)
    ============================================================================ */
@@ -7378,10 +7356,10 @@ a::after,
     gap: 8px !important;
     justify-content: center !important;
     padding: 10px 5px !important;
-    max-height: 180px !important; /* Ограничиваем высоту */
-    overflow-y: auto !important; /* ВКЛЮЧАЕМ СКРОЛЛ */
+    max-height: 180px !important;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
-    scrollbar-width: thin !important; /* Тонкий скроллбар для Firefox */
+    scrollbar-width: thin !important;
     scroll-behavior: smooth !important;
     width: 100% !important;
     border-radius: 16px !important;
@@ -7412,7 +7390,7 @@ a::after,
 
 /* Стили для самих кнопок */
 .ai-quick-chip {
-    flex-shrink: 0 !important; /* Не сжимать кнопки */
+    flex-shrink: 0 !important;
     padding: 8px 16px !important;
     border: 1px solid rgba(37, 99, 235, 0.2) !important;
     border-radius: 24px !important;
@@ -7515,7 +7493,7 @@ a::after,
     .ai-quick-chip {
         font-size: 11px !important;
         padding: 6px 12px !important;
-        white-space: normal !important; /* Разрешаем перенос текста на мобильных */
+        white-space: normal !important;
         min-height: 32px !important;
         min-width: 36px !important;
     }
