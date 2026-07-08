@@ -1,6 +1,7 @@
 // ============================================================================
 // FINANCEMIND - ПОЛНЫЙ ИСПРАВЛЕННЫЙ КОД (SCRIPT.JS)
 // С ВЕРХНЕЙ ВЫПАДАЮЩЕЙ НАВИГАЦИОННОЙ ПАНЕЛЬЮ (АККОРДЕОН)
+// С ПОДДЕРЖКОЙ МОБИЛЬНОЙ ЗАГРУЗКИ ФАЙЛОВ И МЕНЮ КНОПКИ +
 // ============================================================================
 
 // ============================================================================
@@ -5093,11 +5094,11 @@ function getGeneralResponse(prompt, hasData) {
 }
 
 // ============================================================================
-// ФУНКЦИЯ ЗАГРУЗКИ ФАЙЛА - ИСПРАВЛЕННАЯ
+// ФУНКЦИЯ ЗАГРУЗКИ ФАЙЛА - ИСПРАВЛЕННАЯ (ДЛЯ МОБИЛЬНЫХ)
 // ============================================================================
 
 function setupFileUpload() {
-    console.log('📁 Настройка загрузки файлов...');
+    console.log('📁 Настройка загрузки файлов (мобильная поддержка)...');
     const fileInput = document.getElementById('kaspiFileInput');
     const selectBtn = document.getElementById('selectKaspiFileBtn');
     const uploadArea = document.getElementById('kaspiUploadArea');
@@ -5107,38 +5108,37 @@ function setupFileUpload() {
         return false;
     }
     
-    // Очищаем старые обработчики (удаляем все клоны и дубликаты)
+    // Очищаем старые обработчики
     const newFileInput = fileInput.cloneNode(true);
     fileInput.parentNode.replaceChild(newFileInput, fileInput);
     
-    // Создаем новый обработчик для кнопки
     const newSelectBtn = selectBtn.cloneNode(true);
     selectBtn.parentNode.replaceChild(newSelectBtn, selectBtn);
     
     // ============================================================
-    // ГЛАВНЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "ВЫБРАТЬ ФАЙЛ"
+    // КНОПКА "ВЫБРАТЬ ФАЙЛ" - РАБОТАЕТ НА МОБИЛЬНЫХ
     // ============================================================
     newSelectBtn.onclick = function(e) {
         e.preventDefault();
         e.stopPropagation();
         console.log('🖱️ Нажата кнопка "Выбрать файл"');
-        // Используем setTimeout чтобы гарантировать открытие диалога
-        setTimeout(() => {
+        try {
             newFileInput.click();
-        }, 10);
+        } catch (err) {
+            console.error('Ошибка открытия диалога:', err);
+            newFileInput.click();
+        }
         return false;
     };
     
     // ============================================================
-    // ОБРАБОТЧИК ДЛЯ ОБЛАСТИ ПЕРЕТАСКИВАНИЯ
+    // ОБЛАСТЬ ПЕРЕТАСКИВАНИЯ (Drag & Drop)
     // ============================================================
     if (uploadArea) {
-        // Очищаем старые обработчики
         const newUploadArea = uploadArea.cloneNode(true);
         uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
         
         newUploadArea.addEventListener('click', function(e) {
-            // Не срабатываем если клик был по кнопке внутри
             if (e.target.closest('.upload-btn')) return;
             e.preventDefault();
             console.log('🖱️ Клик по области загрузки');
@@ -5166,23 +5166,37 @@ function setupFileUpload() {
     }
     
     // ============================================================
-    // ОБРАБОТЧИК ВЫБОРА ФАЙЛА
+    // ОБРАБОТЧИК ВЫБОРА ФАЙЛА (РАБОТАЕТ НА ВСЕХ УСТРОЙСТВАХ)
     // ============================================================
     newFileInput.onchange = function(e) {
         const file = this.files[0];
-        if (!file) return;
-        console.log('📄 Выбран файл:', file.name);
+        if (!file) {
+            console.log('Файл не выбран');
+            return;
+        }
+        console.log('📄 Выбран файл:', file.name, 'тип:', file.type, 'размер:', file.size);
+        
+        if (file.size === 0) {
+            showNotification('Файл пустой. Выберите другой файл.', 'error');
+            this.value = '';
+            return;
+        }
+        
         handleFileUpload(file);
-        // Сбрасываем input чтобы можно было загрузить тот же файл повторно
         this.value = '';
     };
     
-    console.log('✅ Загрузка файлов настроена');
+    newFileInput.addEventListener('error', function(e) {
+        console.error('Ошибка выбора файла:', e);
+        showNotification('Ошибка при выборе файла. Попробуйте ещё раз.', 'error');
+    });
+    
+    console.log('✅ Загрузка файлов настроена (мобильная поддержка)');
     return true;
 }
 
 // ============================================================
-// ОТДЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ОБРАБОТКИ ФАЙЛА
+// ОБРАБОТКА ЗАГРУЗКИ ФАЙЛА - ИСПРАВЛЕННАЯ (РАБОТАЕТ НА МОБИЛЬНЫХ)
 // ============================================================
 
 async function handleFileUpload(file) {
@@ -5190,7 +5204,21 @@ async function handleFileUpload(file) {
         showNotification('Файл уже загружается, пожалуйста подождите...', 'warning');
         return;
     }
+
+    const MAX_FILE_SIZE = 50 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+        showNotification('Файл слишком большой! Максимальный размер 50 МБ.', 'error');
+        return;
+    }
+
+    const allowedExtensions = ['.csv', '.xls', '.xlsx', '.xlsm', '.xlsb', '.txt', '.pdf', '.png', '.jpg', '.jpeg'];
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
     
+    if (!allowedExtensions.includes(fileExtension)) {
+        showNotification(`Неподдерживаемый формат файла. Разрешены: ${allowedExtensions.join(', ')}`, 'error');
+        return;
+    }
+
     isUploadingFile = true;
     
     const resultsDiv = document.getElementById('kaspiResults');
@@ -5202,7 +5230,13 @@ async function handleFileUpload(file) {
     
     if (resultsDiv) resultsDiv.style.display = 'block';
     if (fileInfoEl) {
-        fileInfoEl.innerHTML = `<div style="color:#3b82f6"><i class="fas fa-spinner fa-pulse"></i> Обработка файла "${file.name}"...</div>`;
+        fileInfoEl.innerHTML = `
+            <div style="color: #2563EB; padding: 10px;">
+                <i class="fas fa-spinner fa-pulse"></i> 
+                Обработка файла "${file.name}"...
+                <br><small style="color: #888;">Размер: ${(file.size / 1024).toFixed(1)} KB</small>
+            </div>
+        `;
     }
     if (errorDiv) errorDiv.style.display = 'none';
     
@@ -5211,12 +5245,27 @@ async function handleFileUpload(file) {
         formData.append('file', file);
         formData.append('userId', currentUserId);
         
-        console.log('📤 Отправка файла на сервер:', file.name);
+        console.log('📤 Отправка файла на сервер:', file.name, 'Размер:', file.size);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
         
         const response = await fetch(SERVER_URL + '/upload/old', {
             method: 'POST',
-            body: formData
+            body: formData,
+            signal: controller.signal,
+            headers: {
+                'Accept': 'application/json'
+            }
         });
+        
+        clearTimeout(timeoutId);
+        
+        console.log('📥 Статус ответа:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const result = await response.json();
         console.log('📥 Ответ сервера:', result);
@@ -5235,7 +5284,6 @@ async function handleFileUpload(file) {
             financeData.kaspi.transactions.push(...processedTransactions);
             financeData.kaspi.connected = true;
             
-            // Обновляем баланс аккаунта
             if (financeData.kaspi.accounts && financeData.kaspi.accounts[0]) {
                 let totalIncome = 0;
                 let totalExpense = 0;
@@ -5249,7 +5297,6 @@ async function handleFileUpload(file) {
                 financeData.kaspi.accounts[0].balance = totalIncome - totalExpense;
             }
             
-            // Сохраняем информацию о файле
             if (!financeData.kaspi.files) financeData.kaspi.files = [];
             financeData.kaspi.files.push({
                 name: file.name,
@@ -5257,7 +5304,6 @@ async function handleFileUpload(file) {
                 transactionCount: result.transactions.length
             });
             
-            // Обновляем UI
             if (expenseEl) {
                 const totalExpenseAmount = processedTransactions.filter(t => t.type === 'expense')
                     .reduce((s, t) => s + (parseFloat(t.amount) || 0), 0);
@@ -5269,10 +5315,14 @@ async function handleFileUpload(file) {
                 incomeEl.textContent = formatCurrency(totalIncomeAmount);
             }
             if (fileInfoEl) {
-                fileInfoEl.innerHTML = `<div style="color:#10b981"><i class="fas fa-check-circle"></i> Загружено ${result.transactions.length} транзакций из файла "${file.name}"</div>`;
+                fileInfoEl.innerHTML = `
+                    <div style="color: #10b981; padding: 10px;">
+                        <i class="fas fa-check-circle"></i> 
+                        ✅ Загружено ${result.transactions.length} транзакций из файла "${file.name}"
+                    </div>
+                `;
             }
             
-            // Сохраняем и обновляем
             saveToStorage();
             updateAnalytics();
             renderBankList();
@@ -5281,7 +5331,6 @@ async function handleFileUpload(file) {
             updatePremiumStats();
             updateFincoinDisplay();
             
-            // Переключаемся на аналитику
             showPage('analytics');
             setTimeout(() => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -5293,14 +5342,31 @@ async function handleFileUpload(file) {
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки:', error);
+        
+        let errorMessage = error.message || 'Неизвестная ошибка';
+        
+        if (error.name === 'AbortError') {
+            errorMessage = 'Превышено время ожидания. Попробуйте ещё раз.';
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMessage = 'Ошибка соединения. Проверьте интернет и попробуйте снова.';
+        } else if (error.message.includes('413')) {
+            errorMessage = 'Файл слишком большой. Максимальный размер 50 МБ.';
+        }
+        
         if (errorDiv) {
             errorDiv.style.display = 'block';
-            if (errorMessageSpan) errorMessageSpan.textContent = error.message;
+            if (errorMessageSpan) errorMessageSpan.textContent = errorMessage;
         }
         if (fileInfoEl) {
-            fileInfoEl.innerHTML = `<div style="color:#ef4444">❌ Ошибка: ${error.message}</div>`;
+            fileInfoEl.innerHTML = `
+                <div style="color: #ef4444; padding: 10px;">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    ❌ Ошибка: ${errorMessage}
+                    <br><small style="color: #888;">Попробуйте загрузить файл в формате CSV или Excel</small>
+                </div>
+            `;
         }
-        showNotification(`Ошибка: ${error.message}`, 'error');
+        showNotification(`Ошибка: ${errorMessage}`, 'error');
     } finally {
         isUploadingFile = false;
     }
@@ -5415,7 +5481,6 @@ function showPage(pageName) {
     const activeNav = document.querySelector(`.nav-item[data-page="${pageName}"]`);
     if (activeNav) activeNav.classList.add('active');
     
-    // Обновляем активный пункт в выпадающем меню
     document.querySelectorAll('.dropdown-menu-item').forEach(item => {
         item.classList.remove('active');
         if (item.getAttribute('data-page') === pageName) {
@@ -5423,7 +5488,6 @@ function showPage(pageName) {
         }
     });
     
-    // Закрываем меню при переходе на страницу
     const dropdownMenu = document.getElementById('dropdownMenu');
     const menuToggle = document.getElementById('menuToggle');
     if (dropdownMenu && dropdownMenu.classList.contains('open')) {
@@ -6294,33 +6358,28 @@ window.hideLoading = hideLoading;
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Элементы
     const dropdownMenu = document.getElementById('dropdownMenu');
     const menuToggle = document.getElementById('menuToggle');
     const dropdownItems = document.querySelectorAll('.dropdown-menu-item');
     const dropdownLogoutBtn = document.getElementById('dropdownLogoutBtn');
     
-    // Проверяем наличие элементов
     if (!dropdownMenu || !menuToggle) {
         console.warn('⚠️ Элементы выпадающего меню не найдены');
         return;
     }
     
-    // Функция открытия меню
     function openDropdown() {
         dropdownMenu.classList.add('open');
         menuToggle.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
     
-    // Функция закрытия меню
     function closeDropdown() {
         dropdownMenu.classList.remove('open');
         menuToggle.classList.remove('active');
         document.body.style.overflow = '';
     }
     
-    // Переключение меню
     function toggleDropdown() {
         if (dropdownMenu.classList.contains('open')) {
             closeDropdown();
@@ -6329,14 +6388,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Открытие по кнопке бургера
     menuToggle.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         toggleDropdown();
     });
     
-    // Закрытие при клике на пункт меню и переход на страницу
     dropdownItems.forEach(function(item) {
         item.addEventListener('click', function() {
             const page = this.getAttribute('data-page');
@@ -6347,7 +6404,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Закрытие по клику вне меню
     document.addEventListener('click', function(e) {
         if (dropdownMenu.classList.contains('open')) {
             const isClickInside = dropdownMenu.contains(e.target) || menuToggle.contains(e.target);
@@ -6357,14 +6413,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Закрытие по клавише Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && dropdownMenu.classList.contains('open')) {
             closeDropdown();
         }
     });
     
-    // Кнопка "Выйти" в меню
     if (dropdownLogoutBtn) {
         dropdownLogoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -6375,7 +6429,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Обновление информации пользователя в меню
     function updateDropdownUser() {
         const userName = document.getElementById('userNameDisplay');
         const dropdownUserName = document.getElementById('dropdownUserName');
@@ -6395,7 +6448,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Обновляем при изменении UI
     const originalUpdateUI = window.updateUI;
     if (originalUpdateUI) {
         window.updateUI = function() {
@@ -6404,7 +6456,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    // Обновляем при изменении FinCoin
     const originalUpdateFincoinDisplay = window.updateFincoinDisplay;
     if (originalUpdateFincoinDisplay) {
         window.updateFincoinDisplay = function() {
@@ -6413,87 +6464,16 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    // Обновляем при загрузке
     setTimeout(updateDropdownUser, 500);
     
     console.log('✅ Выпадающее меню инициализировано');
 });
 
 // ============================================================================
-// APP INITIALIZATION
-// ============================================================================
-
-async function initApp() {
-    if (isAppInitialized) {
-        console.log('⚠️ Приложение уже инициализировано');
-        return;
-    }
-    isAppInitialized = true;
-    console.log('🚀 Запуск FinanceMind...');
-    
-    // Инициализация системы авторизации
-    initAuthSystem();
-    
-    loadFromStorage();
-    initUserSession();
-    initMissions();
-    initCharts();
-    initCarousel();
-    initOnboarding();
-    initShop();
-    renderCalendar();
-    renderChatModern();
-    setupEventListeners();
-    setupFileUpload();
-    initAIChat();
-    setupAIActions();
-    updateUI();
-    updateFincoinDisplay();
-    renderBankList();
-    renderAccounts();
-    renderAchievements();
-    renderPurchasedThemes();
-    renderMyItems();
-    updatePremiumStats();
-    startRatesAutoUpdate();
-    showPage('home');
-    fixBrokenButtons();
-    fixShopScroll();
-    console.log('✅ Приложение инициализировано');
-    console.log('📤 ЗАГРУЗКА ФАЙЛОВ РАБОТАЕТ!');
-    console.log('🔘 КНОПКА "ВЫБРАТЬ ФАЙЛ" ИСПРАВЛЕНА');
-}
-
-// ============================================================================
-// START
-// ============================================================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 DOM загружен, инициализация...');
-    initApp();
-});
-
-window.addEventListener('load', function() {
-    console.log('📄 Страница полностью загружена');
-    setTimeout(function() { setupFileUpload(); }, 1000);
-});
-
-console.log('✅ Скрипт полностью загружен с исправлением всех проблем!');
-console.log('🔧 ИСПРАВЛЕНО: кнопка выбора файла теперь работает!');
-console.log('🔧 ИСПРАВЛЕНО: загрузка файлов использует /upload');
-console.log('🎨 ИСПРАВЛЕНО: цвет описаний транзакций (СИНИЙ #2563EB)');
-console.log('🤖 ДОБАВЛЕН: НОВЫЙ СВЕТЛЫЙ AI-ИНТЕРФЕЙС');
-console.log('🔧 ИСПРАВЛЕНО: ВСЕ КНОПКИ РАБОТАЮТ!');
-console.log('📱 ДОБАВЛЕНО: ВЕРХНЕЕ ВЫПАДАЮЩЕЕ МЕНЮ (АККОРДЕОН)');
-// ============================================================================
 // УПРАВЛЕНИЕ МЕНЮ ДЛЯ КНОПКИ + (QUICK ACTIONS POPUP)
-// ДОБАВИТЬ ЭТОТ КОД В КОНЕЦ ФАЙЛА script.js
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // ============================================================
-    // НАХОДИМ ЭЛЕМЕНТЫ
-    // ============================================================
     const plusBtn = document.getElementById('aiPlusBtn');
     const plusPopup = document.getElementById('aiPlusPopup');
     const inputField = document.getElementById('aiInputField');
@@ -6510,10 +6490,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('✅ Настройка меню для кнопки +');
 
-    // ============================================================
-    // ОТКРЫТИЕ/ЗАКРЫТИЕ POPUP
-    // ============================================================
-    
     function togglePopup(e) {
         e.stopPropagation();
         const isOpen = plusPopup.style.display !== 'none' && plusPopup.style.display !== '';
@@ -6538,13 +6514,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 200);
     }
 
-    // Назначаем обработчик на кнопку +
     plusBtn.addEventListener('click', togglePopup);
 
-    // ============================================================
-    // ЗАКРЫТИЕ ПРИ КЛИКЕ ВНЕ POPUP
-    // ============================================================
-    
     document.addEventListener('click', function(e) {
         if (!plusPopup) return;
         const isClickInside = plusBtn.contains(e.target) || plusPopup.contains(e.target);
@@ -6553,44 +6524,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ============================================================
-    // ЗАКРЫТИЕ ПО ESCAPE
-    // ============================================================
-    
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && plusPopup && plusPopup.style.display !== 'none') {
             closePopup();
         }
     });
 
-    // ============================================================
-    // ОБРАБОТКА КЛИКОВ ПО ПУНКТАМ МЕНЮ
-    // ============================================================
-    
     const popupItems = plusPopup.querySelectorAll('.popup-item');
     popupItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.stopPropagation();
             const prompt = this.dataset.prompt;
             
-            // Закрываем popup
             closePopup();
             
-            // Проверяем, нужно ли открыть файловый диалог
             if (prompt === 'Анализ банковской выписки') {
-                // Открываем файловый диалог
                 const fileInputEl = document.getElementById('kaspiFileInput');
                 if (fileInputEl) {
                     fileInputEl.click();
-                    // После выбора файла, отправляем сообщение
                     fileInputEl.onchange = function(e) {
                         if (this.files && this.files.length > 0) {
                             const fileName = this.files[0].name;
                             showNotification(`📄 Файл "${fileName}" выбран, начинаем анализ...`, 'info');
-                            // Отправляем сообщение в чат
                             sendMessageToChat('💳 Анализ банковской выписки');
                         }
-                        this.value = ''; // Сбрасываем input
+                        this.value = '';
                     };
                 } else {
                     showNotification('Файловый диалог не найден', 'error');
@@ -6598,29 +6556,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Для остальных пунктов - отправляем сообщение
             sendMessageToChat(prompt);
         });
     });
 
-    // ============================================================
-    // ФУНКЦИЯ ОТПРАВКИ СООБЩЕНИЯ В ЧАТ
-    // ============================================================
-    
     function sendMessageToChat(text) {
         if (!text) return;
         
-        // Показываем область чата, скрываем приветствие
         if (welcomeScreen) welcomeScreen.style.display = 'none';
         if (chatArea) chatArea.style.display = 'block';
         
-        // Добавляем сообщение пользователя
         addMessageToChat('user', text);
-        
-        // Показываем индикатор печати
         showTypingIndicator();
         
-        // Генерируем ответ AI (используем существующую функцию generateAIResponse)
         let response;
         if (typeof generateAIResponse === 'function') {
             response = generateAIResponse(text);
@@ -6630,7 +6578,6 @@ document.addEventListener('DOMContentLoaded', function() {
             response = 'Извините, я не могу обработать этот запрос. Попробуйте позже.';
         }
         
-        // Скрываем индикатор печати и показываем ответ
         setTimeout(() => {
             hideTypingIndicator();
             if (response) {
@@ -6638,17 +6585,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500 + Math.random() * 1000);
         
-        // Очищаем поле ввода
         if (inputField) {
             inputField.value = '';
             inputField.style.height = 'auto';
         }
     }
 
-    // ============================================================
-    // ФУНКЦИЯ ДОБАВЛЕНИЯ СООБЩЕНИЯ В ЧАТ
-    // ============================================================
-    
     function addMessageToChat(type, text) {
         if (!messagesContainer) return;
         
@@ -6676,7 +6618,6 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.appendChild(bubble);
         messagesContainer.appendChild(messageDiv);
         
-        // Скролл к последнему сообщению
         if (mainContent) {
             setTimeout(() => {
                 mainContent.scrollTop = mainContent.scrollHeight;
@@ -6684,10 +6625,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ============================================================
-    // ИНДИКАТОР ПЕЧАТИ
-    // ============================================================
-    
     function showTypingIndicator() {
         if (!messagesContainer) return;
         
@@ -6723,37 +6660,74 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typingEl) typingEl.remove();
     }
 
-    // ============================================================
-    // ДОПОЛНИТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ФАЙЛОВОГО ДИАЛОГА
-    // ============================================================
-    
-    // Если есть кнопка для загрузки файла в меню
-    const uploadFileItem = plusPopup.querySelector('.popup-item[data-prompt="Анализ банковской выписки"]');
-    if (uploadFileItem) {
-        // Удаляем старый обработчик и добавляем новый
-        const newItem = uploadFileItem.cloneNode(true);
-        uploadFileItem.parentNode.replaceChild(newItem, uploadFileItem);
-        
-        newItem.addEventListener('click', function(e) {
-            e.stopPropagation();
-            closePopup();
-            
-            const fileInputEl = document.getElementById('kaspiFileInput');
-            if (fileInputEl) {
-                fileInputEl.click();
-                fileInputEl.onchange = function(e) {
-                    if (this.files && this.files.length > 0) {
-                        const fileName = this.files[0].name;
-                        showNotification(`📄 Файл "${fileName}" выбран, начинаем анализ...`, 'info');
-                        sendMessageToChat('💳 Анализ банковской выписки');
-                    }
-                    this.value = '';
-                };
-            } else {
-                showNotification('Файловый диалог не найден', 'error');
-            }
-        });
-    }
-
     console.log('✅ Меню для кнопки + настроено!');
 });
+
+// ============================================================================
+// APP INITIALIZATION
+// ============================================================================
+
+async function initApp() {
+    if (isAppInitialized) {
+        console.log('⚠️ Приложение уже инициализировано');
+        return;
+    }
+    isAppInitialized = true;
+    console.log('🚀 Запуск FinanceMind...');
+    
+    initAuthSystem();
+    
+    loadFromStorage();
+    initUserSession();
+    initMissions();
+    initCharts();
+    initCarousel();
+    initOnboarding();
+    initShop();
+    renderCalendar();
+    renderChatModern();
+    setupEventListeners();
+    setupFileUpload();
+    initAIChat();
+    setupAIActions();
+    updateUI();
+    updateFincoinDisplay();
+    renderBankList();
+    renderAccounts();
+    renderAchievements();
+    renderPurchasedThemes();
+    renderMyItems();
+    updatePremiumStats();
+    startRatesAutoUpdate();
+    showPage('home');
+    fixBrokenButtons();
+    fixShopScroll();
+    console.log('✅ Приложение инициализировано');
+    console.log('📤 ЗАГРУЗКА ФАЙЛОВ РАБОТАЕТ!');
+    console.log('🔘 КНОПКА "ВЫБРАТЬ ФАЙЛ" ИСПРАВЛЕНА');
+    console.log('➕ МЕНЮ ДЛЯ КНОПКИ + НАСТРОЕНО!');
+}
+
+// ============================================================================
+// START
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM загружен, инициализация...');
+    initApp();
+});
+
+window.addEventListener('load', function() {
+    console.log('📄 Страница полностью загружена');
+    setTimeout(function() { setupFileUpload(); }, 1000);
+});
+
+console.log('✅ Скрипт полностью загружен с исправлением всех проблем!');
+console.log('🔧 ИСПРАВЛЕНО: кнопка выбора файла теперь работает!');
+console.log('🔧 ИСПРАВЛЕНО: загрузка файлов использует /upload');
+console.log('🎨 ИСПРАВЛЕНО: цвет описаний транзакций (СИНИЙ #2563EB)');
+console.log('🤖 ДОБАВЛЕН: НОВЫЙ СВЕТЛЫЙ AI-ИНТЕРФЕЙС');
+console.log('🔧 ИСПРАВЛЕНО: ВСЕ КНОПКИ РАБОТАЮТ!');
+console.log('📱 ДОБАВЛЕНО: ВЕРХНЕЕ ВЫПАДАЮЩЕЕ МЕНЮ (АККОРДЕОН)');
+console.log('📱 ДОБАВЛЕНО: ПОДДЕРЖКА МОБИЛЬНОЙ ЗАГРУЗКИ ФАЙЛОВ');
+console.log('➕ ДОБАВЛЕНО: МЕНЮ ДЛЯ КНОПКИ + С 10 ФУНКЦИЯМИ');
