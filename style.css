@@ -4930,7 +4930,7 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
 }
 
 /* ============================================================================
-   ОБЛАСТЬ ЗАГРУЗКИ - МИНИМАЛИСТИЧНЫЙ ДИЗАЙН
+   ОБЛАСТЬ ЗАГРУЗКИ - МИНИМАЛИСТИЧНЫЙ ДИЗАЙН + МОБИЛЬНАЯ ПОДДЕРЖКА
    ============================================================================ */
 
 .upload-area {
@@ -4945,6 +4945,9 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
     position: relative !important;
     overflow: hidden !important;
     margin: 0 !important;
+    min-height: 180px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .upload-area:hover {
@@ -4982,8 +4985,8 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
 }
 
 .upload-area .upload-btn {
-    padding: 12px 32px !important;
-    font-size: 15px !important;
+    padding: 14px 28px !important;
+    font-size: 16px !important;
     border-radius: 40px !important;
     margin-bottom: 20px;
     background: var(--accent-gradient) !important;
@@ -4995,6 +4998,8 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
     align-items: center !important;
     gap: 10px !important;
     box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15) !important;
+    min-height: 50px !important;
+    touch-action: manipulation !important;
 }
 
 .upload-area .upload-btn:hover {
@@ -5011,6 +5016,86 @@ button:not(.navbar button):not(.mobile-menu-btn):not(.particles-container button
     font-size: 13px;
     color: var(--text-tertiary);
     margin-top: 4px;
+}
+
+/* Стиль для мобильных индикаторов загрузки */
+.upload-status-mobile {
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 14px;
+}
+
+.upload-status-mobile .status-icon {
+    margin-right: 10px;
+}
+
+.upload-status-mobile.success {
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+.upload-status-mobile.error {
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.upload-status-mobile.loading {
+    border-color: rgba(37, 99, 235, 0.3);
+    color: #2563EB;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .upload-area {
+        min-height: 140px !important;
+        padding: 20px 12px !important;
+    }
+    
+    .upload-area .upload-icon i {
+        font-size: 40px !important;
+    }
+    
+    .upload-area .upload-main-text {
+        font-size: 15px !important;
+    }
+    
+    .upload-area .upload-sub-text {
+        font-size: 13px !important;
+    }
+    
+    .upload-area .upload-btn {
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+        min-height: 44px !important;
+    }
+    
+    .upload-area .upload-size-limit {
+        font-size: 11px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-area {
+        min-height: 120px !important;
+        padding: 16px 10px !important;
+    }
+    
+    .upload-area .upload-icon i {
+        font-size: 32px !important;
+    }
+    
+    .upload-area .upload-main-text {
+        font-size: 14px !important;
+    }
+    
+    .upload-area .upload-btn {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+        min-height: 40px !important;
+    }
 }
 
 /* Результаты анализа */
@@ -7655,6 +7740,216 @@ a::after,
         padding: 10px 20px !important;
         font-size: 14px !important;
     }
+}
+/* Добавьте эти анимации в конец вашего файла globals.css */
+
+/* ============================================================================
+   АНИМАЦИИ ДЛЯ ANIMATEDBACKGROUND
+   ============================================================================ */
+
+@keyframes gradient {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.3;
+  }
+  33% { 
+    transform: translate(30px, -30px) scale(1.1) rotate(2deg);
+    opacity: 0.5;
+  }
+  66% { 
+    transform: translate(-20px, 20px) scale(0.9) rotate(-2deg);
+    opacity: 0.4;
+  }
+}
+
+@keyframes gradient-delay {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.25;
+  }
+  33% { 
+    transform: translate(-25px, 25px) scale(1.15) rotate(-3deg);
+    opacity: 0.45;
+  }
+  66% { 
+    transform: translate(20px, -20px) scale(0.85) rotate(3deg);
+    opacity: 0.35;
+  }
+}
+
+@keyframes gradient-slow {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+  50% { 
+    transform: translate(40px, -40px) scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+@keyframes pattern-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 100px; }
+}
+
+@keyframes pattern-move-slow {
+  0% { background-position: 0 0; }
+  100% { background-position: -80px 80px; }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  33% { 
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% { 
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+@keyframes float-delay {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  33% { 
+    transform: translate(-30px, 20px) scale(1.1);
+  }
+  66% { 
+    transform: translate(20px, -30px) scale(0.9);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes glow-pulse-delay {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes line-pulse {
+  0%, 100% { 
+    transform: scaleX(0.3);
+    opacity: 0.1;
+  }
+  50% { 
+    transform: scaleX(1);
+    opacity: 0.3;
+  }
+}
+
+@keyframes line-pulse-delay {
+  0%, 100% { 
+    transform: scaleX(0.5);
+    opacity: 0.08;
+  }
+  50% { 
+    transform: scaleX(0.8);
+    opacity: 0.25;
+  }
+}
+
+@keyframes line-pulse-slow {
+  0%, 100% { 
+    transform: scaleX(0.2);
+    opacity: 0.05;
+  }
+  50% { 
+    transform: scaleX(1.2);
+    opacity: 0.2;
+  }
+}
+
+@keyframes particle {
+  0% {
+    transform: translateY(100vh) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(50vh) scale(1) rotate(180deg);
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Классы анимаций для использования в Tailwind */
+.animate-gradient {
+  animation: gradient 25s ease-in-out infinite;
+}
+
+.animate-gradient-delay {
+  animation: gradient-delay 30s ease-in-out infinite;
+}
+
+.animate-gradient-slow {
+  animation: gradient-slow 35s ease-in-out infinite;
+}
+
+.animate-pattern-move {
+  animation: pattern-move 80s linear infinite;
+}
+
+.animate-pattern-move-slow {
+  animation: pattern-move-slow 120s linear infinite reverse;
+}
+
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-delay 25s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 30s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse-delay {
+  animation: glow-pulse-delay 5s ease-in-out infinite;
+}
+
+.animate-line-pulse {
+  animation: line-pulse 6s ease-in-out infinite;
+}
+
+.animate-line-pulse-delay {
+  animation: line-pulse-delay 8s ease-in-out infinite;
+}
+
+.animate-line-pulse-slow {
+  animation: line-pulse-slow 10s ease-in-out infinite;
+}
+
+.animate-particle {
+  animation: particle 20s linear infinite;
 }
 
 /* ============================================================================
